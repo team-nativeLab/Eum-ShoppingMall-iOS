@@ -11,6 +11,7 @@ enum EUMTypography {
     static let labelLarge = Font.custom("NotoSansKR-Medium", size: 16, relativeTo: .headline)
     static let labelMedium = Font.custom("NotoSansKR-Medium", size: 14, relativeTo: .subheadline)
     static let labelExtraSmall = Font.custom("NotoSansKR-Medium", size: 11, relativeTo: .caption2)
+    static let captionRegular = Font.custom("NotoSansKR-Regular", size: 12, relativeTo: .caption)
     static let captionMedium = Font.custom("NotoSansKR-Medium", size: 12, relativeTo: .caption)
     static let overline = Font.custom("NotoSansKR-Medium", size: 11, relativeTo: .caption)
 
