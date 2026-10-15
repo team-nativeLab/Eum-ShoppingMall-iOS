@@ -6,16 +6,17 @@ struct CartItemRow: View {
     let onQuantityChange: (Int) -> Void
     let onRemove: () -> Void
     let onOptionChange: () -> Void
+    let onQuoteRequest: () -> Void
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Button(action: onToggleSelection) {
-                CartCheckbox(isSelected: item.isSelected, isDisabled: item.isSoldOut)
+                CartCheckbox(isSelected: item.isSelected, isDisabled: item.isSoldOut || item.isQuoteProduct)
                     .frame(width: 20, height: 80, alignment: .top)
             }
             .buttonStyle(.plain)
-            .disabled(item.isSoldOut)
-            .accessibilityLabel(item.isSoldOut ? "품절 상품" : item.isSelected ? "선택됨" : "선택 안 됨")
+            .disabled(item.isSoldOut || item.isQuoteProduct)
+            .accessibilityLabel(selectionAccessibilityLabel)
 
             ZStack {
                 LinearGradient(
@@ -33,20 +34,28 @@ struct CartItemRow: View {
             .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 4) {
-                    if item.isSoldOut {
-                        Text("품절")
+                if item.isQuoteProduct {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("견적 상품")
                             .font(EUMTypography.labelExtraSmall)
-                            .foregroundStyle(EUMColor.inverseSwiftUI)
+                            .foregroundStyle(EUMColor.text2SwiftUI)
                             .padding(.horizontal, 6)
                             .frame(height: 20)
-                            .background(EUMColor.text2SwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.small))
+                            .overlay(RoundedRectangle(cornerRadius: EUMRadius.small).stroke(EUMColor.lineStrongSwiftUI, lineWidth: 1))
+                        productTitle
                     }
-                    Text(item.title)
-                        .font(EUMTypography.labelMedium)
-                        .tracking(-0.07)
-                        .foregroundStyle(item.isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
-                        .lineLimit(1)
+                } else {
+                    HStack(spacing: 4) {
+                        if item.isSoldOut {
+                            Text("품절")
+                                .font(EUMTypography.labelExtraSmall)
+                                .foregroundStyle(EUMColor.inverseSwiftUI)
+                                .padding(.horizontal, 6)
+                                .frame(height: 20)
+                                .background(EUMColor.text2SwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.small))
+                        }
+                        productTitle
+                    }
                 }
 
                 Text("옵션: \(item.option)")
@@ -59,8 +68,16 @@ struct CartItemRow: View {
                     .underline()
                     .buttonStyle(.plain)
 
+                if item.isQuoteProduct {
+                    Button("견적 문의 →", action: onQuoteRequest)
+                        .font(EUMTypography.captionMedium)
+                        .foregroundStyle(EUMColor.text2SwiftUI)
+                        .underline()
+                        .buttonStyle(.plain)
+                }
+
                 HStack {
-                    Text("₩00,000")
+                    Text(item.isQuoteProduct ? "가격 문의" : "₩00,000")
                         .font(.custom("NotoSansKR-Bold", size: 16))
                         .tracking(-0.08)
                         .foregroundStyle(item.isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
@@ -94,6 +111,20 @@ struct CartItemRow: View {
             .padding(.trailing, 4)
             .padding(.top, 4)
         }
+    }
+
+    private var productTitle: some View {
+        Text(item.title)
+            .font(EUMTypography.labelMedium)
+            .tracking(-0.07)
+            .foregroundStyle(item.isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
+            .lineLimit(1)
+    }
+
+    private var selectionAccessibilityLabel: String {
+        if item.isQuoteProduct { return "견적 상품은 주문 선택에서 제외됩니다." }
+        if item.isSoldOut { return "품절 상품" }
+        return item.isSelected ? "선택됨" : "선택 안 됨"
     }
 }
 

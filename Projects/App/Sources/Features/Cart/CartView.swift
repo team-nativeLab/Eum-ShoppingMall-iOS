@@ -7,29 +7,46 @@ struct CartItem: Identifiable, Equatable {
     let isSoldOut: Bool
     var quantity: Int
     var isSelected: Bool
+    var isQuoteProduct = false
 
     static let mockItems = [
         CartItem(id: "cart-1", title: "제품명", option: "사이즈 L", isSoldOut: false, quantity: 1, isSelected: true),
         CartItem(id: "cart-2", title: "제품명", option: "사이즈 L", isSoldOut: false, quantity: 1, isSelected: true),
         CartItem(id: "cart-3", title: "제품명", option: "사이즈 L", isSoldOut: true, quantity: 1, isSelected: false)
     ]
+
+    static let mixedPricingItems = [
+        CartItem(id: "cart-priced-1", title: "제품명", option: "사이즈 L", isSoldOut: false, quantity: 1, isSelected: true),
+        CartItem(id: "cart-priced-2", title: "제품명", option: "사이즈 L", isSoldOut: false, quantity: 1, isSelected: true),
+        CartItem(id: "cart-quote-1", title: "제품명", option: "사이즈 L", isSoldOut: false, quantity: 1, isSelected: false, isQuoteProduct: true)
+    ]
 }
 
 @MainActor
 final class CartViewModel: ObservableObject {
-    @Published private(set) var items = CartItem.mockItems
+    @Published private(set) var items: [CartItem]
+
+    init(items: [CartItem] = CartItem.mockItems) {
+        self.items = items
+    }
 
     var selectedCount: Int {
         items.filter(\.isSelected).count
     }
 
+    var selectionItemCount: Int {
+        items.filter { !$0.isQuoteProduct }.count
+    }
+
     var allAvailableItemsSelected: Bool {
-        let availableItems = items.filter { !$0.isSoldOut }
+        let availableItems = items.filter { !$0.isSoldOut && !$0.isQuoteProduct }
         return !availableItems.isEmpty && availableItems.allSatisfy(\.isSelected)
     }
 
     func toggleSelection(itemID: String) {
-        guard let index = items.firstIndex(where: { $0.id == itemID }), !items[index].isSoldOut else { return }
+        guard let index = items.firstIndex(where: { $0.id == itemID }),
+              !items[index].isSoldOut,
+              !items[index].isQuoteProduct else { return }
         items[index].isSelected.toggle()
     }
 
@@ -37,7 +54,7 @@ final class CartViewModel: ObservableObject {
         let shouldSelect = !allAvailableItemsSelected
         items = items.map { item in
             var updated = item
-            if !updated.isSoldOut { updated.isSelected = shouldSelect }
+            if !updated.isSoldOut && !updated.isQuoteProduct { updated.isSelected = shouldSelect }
             return updated
         }
     }
@@ -57,11 +74,29 @@ final class CartViewModel: ObservableObject {
 }
 
 struct CartView: View {
-    @StateObject private var viewModel = CartViewModel()
+    enum Presentation: Equatable {
+        case standard
+        case mixedPricing
+    }
+
+    @StateObject private var viewModel: CartViewModel
     @State private var presentedMessage: String?
 
     let cartCount: Int
+    let presentation: Presentation
     let onSelectTab: (EUMTabBar.Tab) -> Void
+
+    init(
+        cartCount: Int,
+        presentation: Presentation = .standard,
+        onSelectTab: @escaping (EUMTabBar.Tab) -> Void
+    ) {
+        self.cartCount = cartCount
+        self.presentation = presentation
+        self.onSelectTab = onSelectTab
+        let items = presentation == .mixedPricing ? CartItem.mixedPricingItems : CartItem.mockItems
+        _viewModel = StateObject(wrappedValue: CartViewModel(items: items))
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -109,32 +144,98 @@ struct CartView: View {
 
     private var cartContent: some View {
         ScrollView {
-            VStack(spacing: 16) {
-                guestNotice
-                    .padding(.top, 20)
-
+            VStack(spacing: presentation == .standard ? 16 : 0) {
+                if presentation == .standard {
+                    guestNotice.padding(.top, 20)
+                }
                 selectionBar
 
+                if presentation == .mixedPricing {
+                    groupHeader(title: "주문 가능한 상품 (\(viewModel.selectionItemCount))")
+                }
+
                 VStack(spacing: 0) {
-                    ForEach(viewModel.items) { item in
+                    ForEach(orderedItems) { item in
                         CartItemRow(
                             item: item,
                             onToggleSelection: { viewModel.toggleSelection(itemID: item.id) },
                             onQuantityChange: { viewModel.changeQuantity(itemID: item.id, by: $0) },
                             onRemove: { viewModel.remove(itemID: item.id) },
-                            onOptionChange: { presentedMessage = "옵션 변경은 상품 상세 화면에서 이용할 수 있어요." }
+                            onOptionChange: { presentedMessage = "옵션 변경은 상품 상세 화면에서 이용할 수 있어요." },
+                            onQuoteRequest: { presentedMessage = "견적 문의는 로그인 후 이용할 수 있어요." }
+                        )
+                    }
+                }
+
+                if presentation == .mixedPricing {
+                    quoteGroupHeader
+                    if let quoteItem = viewModel.items.first(where: \.isQuoteProduct) {
+                        CartItemRow(
+                            item: quoteItem,
+                            onToggleSelection: { viewModel.toggleSelection(itemID: quoteItem.id) },
+                            onQuantityChange: { viewModel.changeQuantity(itemID: quoteItem.id, by: $0) },
+                            onRemove: { viewModel.remove(itemID: quoteItem.id) },
+                            onOptionChange: { presentedMessage = "옵션 변경은 상품 상세 화면에서 이용할 수 있어요." },
+                            onQuoteRequest: { presentedMessage = "견적 문의는 로그인 후 이용할 수 있어요." }
                         )
                     }
                 }
 
                 if !viewModel.items.isEmpty {
-                    priceSummary
+                    priceSummary.padding(.top, presentation == .mixedPricing ? 16 : 0)
                 }
             }
             .padding(.bottom, 24)
         }
         .scrollIndicators(.hidden)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var orderedItems: [CartItem] {
+        viewModel.items.filter { !$0.isQuoteProduct }
+    }
+
+    private func groupHeader(title: String) -> some View {
+        Text(title)
+            .font(EUMTypography.labelLarge)
+            .tracking(-0.16)
+            .foregroundStyle(EUMColor.text1SwiftUI)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, EUMSpacing.homeContentInset)
+            .padding(.top, 24)
+            .padding(.bottom, 12)
+    }
+
+    private var quoteGroupHeader: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text("주문할 수 없는 상품 (\(viewModel.items.filter { $0.isQuoteProduct || $0.isSoldOut }.count))")
+                    .font(EUMTypography.labelLarge)
+                    .tracking(-0.16)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+                Spacer()
+                Button("전체 견적 문의") {
+                    presentedMessage = "견적 문의는 로그인 후 이용할 수 있어요."
+                }
+                .font(EUMTypography.labelMedium)
+                .tracking(-0.07)
+                .foregroundStyle(EUMColor.text1SwiftUI)
+                .underline()
+                .buttonStyle(.plain)
+            }
+            Text("가격 문의·품절 상품은 주문에서 제외됩니다.\n가격 문의 상품은 견적 문의로 구매할 수 있습니다.")
+                .font(EUMTypography.bodySmall)
+                .tracking(-0.07)
+                .foregroundStyle(EUMColor.text3SwiftUI)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.horizontal, EUMSpacing.homeContentInset)
+        .padding(.top, 24)
+        .padding(.bottom, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(alignment: .top) {
+            Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
+        }
     }
 
     private var guestNotice: some View {
@@ -159,7 +260,7 @@ struct CartView: View {
             Button(action: viewModel.toggleSelectAll) {
                 HStack(spacing: 8) {
                     CartCheckbox(isSelected: viewModel.allAvailableItemsSelected, isDisabled: viewModel.items.isEmpty)
-                    Text("전체 선택 (\(viewModel.selectedCount)/\(viewModel.items.count))")
+                    Text("전체 선택 (\(viewModel.selectedCount)/\(viewModel.selectionItemCount))")
                         .font(EUMTypography.labelMedium)
                         .tracking(-0.07)
                         .foregroundStyle(EUMColor.text1SwiftUI)
@@ -230,6 +331,21 @@ struct CartView: View {
 
     private var bottomArea: some View {
         VStack(spacing: 0) {
+            if presentation == .mixedPricing {
+                HStack(spacing: 6) {
+                    Image(systemName: "info.circle")
+                        .font(.system(size: 14, weight: .medium))
+                        .accessibilityHidden(true)
+                    Text("가격 문의·품절 상품 \(viewModel.items.filter { $0.isQuoteProduct || $0.isSoldOut }.count)개는 주문에서 제외됩니다.")
+                        .font(EUMTypography.captionMedium)
+                        .tracking(-0.07)
+                    Spacer(minLength: 0)
+                }
+                .foregroundStyle(EUMColor.text3SwiftUI)
+                .padding(.horizontal, EUMSpacing.homeContentInset)
+                .padding(.vertical, 8)
+                .background(EUMColor.surfaceSwiftUI)
+            }
             EUMButton(title: "₩00,000 주문하기 (\(viewModel.selectedCount))", size: .large) {
                 presentedMessage = "주문 기능은 로그인 및 결제 연동 후 이용할 수 있어요."
             }
