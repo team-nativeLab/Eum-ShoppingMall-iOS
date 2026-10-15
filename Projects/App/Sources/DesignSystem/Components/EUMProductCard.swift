@@ -59,7 +59,10 @@ struct EUMProductCard: View {
                                 .padding(.horizontal, 6)
                                 .frame(height: 20)
                                 .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.small))
-                                .overlay(RoundedRectangle(cornerRadius: EUMRadius.small).stroke(Color(uiColor: EUMColor.lineStrong), lineWidth: 1))
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: EUMRadius.small)
+                                        .stroke(Color(uiColor: EUMColor.lineStrong), lineWidth: 1)
+                                }
                                 .padding(8)
                         }
                     }
@@ -106,7 +109,16 @@ struct EUMProductCard: View {
             Image("ProductPlaceholder")
                 .resizable()
                 .scaledToFill()
-                .background(LinearGradient(colors: [Color(red: 0.949, green: 0.949, blue: 0.949), Color(red: 0.91, green: 0.91, blue: 0.91)], startPoint: .top, endPoint: .bottom))
+                .background {
+                    LinearGradient(
+                        colors: [
+                            Color(red: 0.949, green: 0.949, blue: 0.949),
+                            Color(red: 0.91, green: 0.91, blue: 0.91)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                }
         }
     }
 }
