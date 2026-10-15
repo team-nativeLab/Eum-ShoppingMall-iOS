@@ -21,6 +21,7 @@ struct LoginView: View {
     @State private var presentedMessage: String?
 
     let onClose: () -> Void
+    var onSignUpTap: () -> Void = {}
 
     var body: some View {
         VStack(spacing: 0) {
@@ -176,7 +177,7 @@ struct LoginView: View {
             linkDivider
             accountLink("비밀번호 찾기")
             linkDivider
-            accountLink("회원가입", emphasized: true)
+            accountLink("회원가입", emphasized: true, action: onSignUpTap)
         }
         .frame(maxWidth: .infinity)
     }
@@ -188,9 +189,13 @@ struct LoginView: View {
             .accessibilityHidden(true)
     }
 
-    private func accountLink(_ title: String, emphasized: Bool = false) -> some View {
+    private func accountLink(_ title: String, emphasized: Bool = false, action: (() -> Void)? = nil) -> some View {
         Button {
-            presentedMessage = "\(title) 화면은 아직 연결되지 않았어요."
+            if let action {
+                action()
+            } else {
+                presentedMessage = "\(title) 화면은 아직 연결되지 않았어요."
+            }
         } label: {
             Text(title)
                 .font(emphasized ? EUMTypography.labelMedium : EUMTypography.bodySmall)
