@@ -30,6 +30,7 @@ Figma source is read-only. Assets below are the only local assets currently conf
 | Drawer logout icon | `DrawerLogout.imageset` | Figma A-12 logout vector | Present; SVG in Asset Catalog, 20 × 20 pt |
 | Login info icon | `LoginInfo.imageset` | Figma A-13 inline notice vector | Present; SVG in Asset Catalog, 16 × 16 pt |
 | Quote inquiry paperclip | `QuotePaperclip.imageset` | Figma A-15 file attachment icon | Present; SVG in Asset Catalog, rendered at 20 × 20 pt |
+| Quote history document | `QuoteHistoryFile.imageset` | Figma A-25 file-text icon | Present; SVG in Asset Catalog, rendered at 16 × 16 pt |
 
 ## Outstanding asset audit
 
