@@ -7,6 +7,8 @@ struct HomeView: View {
     @State private var searchReturnTab = EUMTabBar.Tab.home
     @State private var selectedProductCategory: HomeCategory?
     @State private var selectedProduct: HomeProduct?
+    @State private var isShowingCheckoutAddress = false
+    @State private var presentedMessage: String?
 
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -19,10 +21,19 @@ struct HomeView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case let .content(content):
-                if let selectedProduct {
+                if isShowingCheckoutAddress {
+                    CheckoutAddressView(
+                        onBack: { isShowingCheckoutAddress = false },
+                        onNext: { presentedMessage = "결제 화면은 다음 단계에서 연결할 예정이에요." }
+                    )
+                } else if let selectedProduct {
                     ProductDetailView(product: selectedProduct, onBack: { self.selectedProduct = nil })
                 } else if selectedTab == .cart {
-                    CartView(cartCount: content.cartCount, onSelectTab: selectTab)
+                    CartView(
+                        cartCount: content.cartCount,
+                        onSelectTab: selectTab,
+                        onCheckout: { isShowingCheckoutAddress = true }
+                    )
                 } else if selectedTab == .search {
                     SearchView(
                         searchText: $searchText,
@@ -71,6 +82,14 @@ struct HomeView: View {
             }
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .alert("안내", isPresented: Binding(
+            get: { presentedMessage != nil },
+            set: { if !$0 { presentedMessage = nil } }
+        )) {
+            Button("확인", role: .cancel) { presentedMessage = nil }
+        } message: {
+            Text(presentedMessage ?? "")
+        }
         .task {
             if case .loading = viewModel.state {
                 await viewModel.load()
