@@ -151,6 +151,59 @@ struct CartCheckbox: View {
     }
 }
 
+struct CartGuestNotice: View {
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "info.circle")
+                .font(.system(size: 16, weight: .medium))
+                .accessibilityHidden(true)
+            Text("로그인하면 장바구니가 저장됩니다.")
+                .font(EUMTypography.bodySmall)
+                .tracking(-0.07)
+            Spacer(minLength: 0)
+        }
+        .foregroundStyle(EUMColor.text2SwiftUI)
+        .padding(.horizontal, 14)
+        .frame(height: 44)
+        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+    }
+}
+
+struct CartQuoteGroupHeader: View {
+    let count: Int
+    let onQuoteRequest: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text("주문할 수 없는 상품 (\(count))")
+                    .font(EUMTypography.labelLarge)
+                    .tracking(-0.16)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+                Spacer()
+                Button("전체 견적 문의", action: onQuoteRequest)
+                    .font(EUMTypography.labelMedium)
+                    .tracking(-0.07)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+                    .underline()
+                    .buttonStyle(.plain)
+            }
+            Text("가격 문의·품절 상품은 주문에서 제외됩니다.\n가격 문의 상품은 견적 문의로 구매할 수 있습니다.")
+                .font(EUMTypography.bodySmall)
+                .tracking(-0.07)
+                .foregroundStyle(EUMColor.text3SwiftUI)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.horizontal, EUMSpacing.homeContentInset)
+        .padding(.top, 24)
+        .padding(.bottom, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(alignment: .top) {
+            Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
+        }
+    }
+}
+
 private struct QuantityStepper: View {
     let quantity: Int
     let isDisabled: Bool

@@ -8,6 +8,9 @@ struct CartViewPreview: PreviewProvider {
 
             CartView(cartCount: 3, presentation: .mixedPricing, onSelectTab: { _ in })
                 .previewDisplayName("A-07h Mixed Pricing")
+
+            CartView(cartCount: 2, presentation: .zeroOrder, onSelectTab: { _ in })
+                .previewDisplayName("A-07h2 Zero Orderable Items")
         }
     }
 }

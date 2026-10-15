@@ -93,6 +93,7 @@ Components/instances observed in the `06 Design — App` page metadata. A name i
 - `HF/QuantityStepper` (A-07 instances `175:258` and `175:269`): S size is 112 × 36 pt with 36/40/36 pt minus/value/plus segments and 8 pt radius; min and disabled controls use disabled text color.
 - A-07 also uses a 44 pt inline login notice, 12 pt radius price summary, fixed 56 pt primary order button, and the five-item tab bar with selected cart state.
 - A-07h (`181:1738`) shows two selected priced items and one disabled quote item. The unavailable-items group header is 16 pt with 24/12 pt top/bottom padding; a two-line 14 pt note explains quote/sold-out exclusion. The quote row has an outlined `견적 상품` badge, `견적 문의 →` action, and `가격 문의` label.
+- A-07h2 (`181:1940`) shows zero orderable items and two disabled quote rows. The selection count is `0/0`, the price summary is `₩0`, and the 56 pt bottom CTA changes to `담은 상품으로 견적 문의 (2)`.
 - Remaining variants and complete per-screen usage mappings need per-node contexts; Figma Code Connect library enumeration is seat-gated.
 
 ## Observed names
