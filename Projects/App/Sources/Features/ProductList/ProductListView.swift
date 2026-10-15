@@ -38,6 +38,7 @@ struct ProductListView: View {
     let onBack: () -> Void
     let onFavoriteTap: (String) -> Void
     let onSelectTab: (EUMTabBar.Tab) -> Void
+    let onProductTap: (HomeProduct) -> Void
     let cartCount: Int
 
     private let categories = ["전체", "안전모", "보안경", "안전장갑", "방진마스크", "안전화"]
@@ -49,13 +50,15 @@ struct ProductListView: View {
         cartCount: Int,
         onBack: @escaping () -> Void,
         onFavoriteTap: @escaping (String) -> Void,
-        onSelectTab: @escaping (EUMTabBar.Tab) -> Void
+        onSelectTab: @escaping (EUMTabBar.Tab) -> Void,
+        onProductTap: @escaping (HomeProduct) -> Void
     ) {
         self.title = title
         self.cartCount = cartCount
         self.onBack = onBack
         self.onFavoriteTap = onFavoriteTap
         self.onSelectTab = onSelectTab
+        self.onProductTap = onProductTap
         _viewModel = StateObject(wrappedValue: ProductListViewModel(products: products))
     }
 
@@ -76,7 +79,8 @@ struct ProductListView: View {
                             isSoldOut: product.isSoldOut,
                             isPriceHidden: product.isPriceHidden,
                             isFavorite: product.isFavorite,
-                            onFavoriteTap: { onFavoriteTap(product.id) }
+                            onFavoriteTap: { onFavoriteTap(product.id) },
+                            onTap: { onProductTap(product) }
                         )
                     }
                 }
