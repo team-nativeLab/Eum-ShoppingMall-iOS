@@ -67,6 +67,7 @@ struct MyPageView: View {
     var onRecentlyViewedTap: () -> Void = {}
     var onCouponsTap: () -> Void = {}
     var onAddressesTap: () -> Void = {}
+    var onQuoteHistoryTap: () -> Void = {}
     var onReturnsHistoryTap: () -> Void = {}
     var onAccountVerificationTap: () -> Void = {}
 
@@ -257,6 +258,8 @@ struct MyPageView: View {
                         onAddressesTap()
                     } else if item.title == "취소·반품·교환 내역" {
                         onReturnsHistoryTap()
+                    } else if item.title == "견적 문의 내역" {
+                        onQuoteHistoryTap()
                     } else {
                         showUnavailable(item.title)
                     }

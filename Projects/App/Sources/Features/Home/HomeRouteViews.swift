@@ -61,6 +61,8 @@ struct AccountCollectionRouteView: View {
     let onEditAddress: (ShippingAddress) -> Void
     let onAction: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
+    let onNewQuoteInquiry: () -> Void
+    let onQuoteDocument: () -> Void
 
     @ViewBuilder
     var body: some View {
@@ -77,6 +79,8 @@ struct AccountCollectionRouteView: View {
             ProfileEditView(onBack: onBackToVerification, onAction: onAction)
         case .addresses:
             AddressesView(viewModel: addressViewModel, onBack: onBack, onAdd: onAddAddress, onEdit: onEditAddress)
+        case .quoteHistory:
+            QuoteHistoryView(onBack: onBack, onNewInquiry: onNewQuoteInquiry, onDocument: onQuoteDocument)
         }
     }
 }
