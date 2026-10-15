@@ -23,6 +23,7 @@ Figma source is read-only. Assets below are the only local assets currently conf
 | Checkout address controls | `ProductListBack.imageset`, `ProductOptionChevron.imageset` | Existing Figma back and disclosure vectors reused by A-08 | Present; progress indicators and section surfaces use native shapes |
 | My Page vectors | `MyPageProfile.imageset`, `MyPageOrder.imageset`, `MyPageFavorites.imageset`, `MyPageRecent.imageset`, `MyPageCoupons.imageset`, `MyPageInformation.imageset`, `MyPageAddress.imageset`, `MyPageReturns.imageset`, `MyPageQuoteInquiries.imageset`, `MyPageContactInquiries.imageset`, `MyPageSupport.imageset`, `MyPageNotices.imageset`, `MyPageChevron.imageset`, `MyPageSettings.imageset` | Figma A-11 vectors; SVG in Asset Catalog | Present; profile and menu/shortcut icons 20–36 pt, details in `A11_MYPAGE_PARITY.md` |
 | Drawer logout icon | `DrawerLogout.imageset` | Figma A-12 logout vector | Present; SVG in Asset Catalog, 20 × 20 pt |
+| Login info icon | `LoginInfo.imageset` | Figma A-13 inline notice vector | Present; SVG in Asset Catalog, 16 × 16 pt |
 
 ## Outstanding asset audit
 

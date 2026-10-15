@@ -9,7 +9,7 @@
 - Login prompt panel with the Figma copy and a 48 pt login/signup action.
 - Horizontally scrolling three-product recent-items row using the existing carousel card and placeholder art.
 - Public customer center and notice rows.
-- Login, settings, product, favorite and public-menu actions explain when their destination is not available.
+- The login action opens the A-13 login screen. Settings, product, favorite and public-menu actions explain when their destination is not available.
 
 ## Visual comparison
 
@@ -19,5 +19,5 @@
 
 ## Scope limits
 
-- No authentication service or login screen exists in the current project. The drawer's mock logout action now makes this separate guest-state screen reachable; the login action still shows an informational notice and does not authenticate.
+- No authentication service exists in the current project. The drawer's mock logout action makes this separate guest-state screen reachable; A-13 accepts mock credentials in the UI but does not authenticate or create a session.
 - Recent products use mock names and amounts. No order or account data is fetched.
