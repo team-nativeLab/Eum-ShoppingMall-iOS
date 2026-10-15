@@ -1,6 +1,6 @@
 import SwiftUI
 
-private enum HomeModalRoute {
+enum HomeModalRoute {
     case authentication
     case quoteInquiry(HomeProduct?)
     case accountCollection(AccountCollectionDestination)
@@ -10,9 +10,10 @@ private enum HomeModalRoute {
     case returnRequest(OrderHistoryItem)
     case returnHistory(backToOrderHistory: Bool)
     case accountVerification
+    case addressEditor(ShippingAddress?)
 }
 
-private enum AccountCollectionDestination {
+enum AccountCollectionDestination {
     case favorites
     case recentlyViewed
     case coupons
@@ -23,6 +24,7 @@ private enum AccountCollectionDestination {
 
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
+    @StateObject private var addressesViewModel = AddressesViewModel()
     @State private var searchText = ""
     @State private var selectedTab = EUMTabBar.Tab.home
     @State private var searchReturnTab = EUMTabBar.Tab.home
@@ -257,55 +259,34 @@ struct HomeView: View {
         case let .accountCollection(destination):
             AccountCollectionRouteView(
                 destination: destination,
+                addressViewModel: addressesViewModel,
                 onBack: { presentedRoute = nil },
                 onBackToCoupons: { presentedRoute = .accountCollection(.coupons) },
                 onBackToVerification: { presentedRoute = .accountVerification },
                 onPointsTap: { presentedRoute = .accountCollection(.points) },
-                onAddAddress: { presentedMessage = "배송지 추가 화면은 아직 연결되지 않았어요." },
-                onEditAddress: { _ in presentedMessage = "배송지 수정 화면은 아직 연결되지 않았어요." },
+                onAddAddress: { presentedRoute = .addressEditor(nil) },
+                onEditAddress: { presentedRoute = .addressEditor($0) },
                 onAction: { presentedMessage = $0 },
                 onProductTap: openProductDetail
             )
-        case .orderHistory:
-            OrderHistoryView(
+        case .orderHistory, .orderDetail, .deliveryTracking, .returnRequest, .returnHistory:
+            HomeOrderRouteView(
+                route: route,
                 onBack: { presentedRoute = nil },
-                onCancelReturn: { presentedRoute = .returnHistory(backToOrderHistory: true) },
-                onOrderDetail: { presentedRoute = .orderDetail($0) },
-                onCancelOrder: { _ in presentedMessage = "주문 취소는 서버 연동 후 이용할 수 있어요." },
-                onTrackDelivery: { _ in presentedMessage = "배송 조회는 서버 연동 후 이용할 수 있어요." },
-                onReorder: { _ in presentedMessage = "다시 담기는 장바구니 연결 후 이용할 수 있어요." }
-            )
-        case let .orderDetail(order):
-            OrderDetailView(
-                order: order,
-                onBack: { presentedRoute = .orderHistory },
-                onTrackDelivery: { presentedRoute = .deliveryTracking(order) },
-                onReturnExchange: { presentedRoute = .returnRequest(order) },
-                onDocumentDownload: { presentedMessage = "거래명세서는 주문 서비스 연동 후 다운로드할 수 있어요." },
-                onReceipt: { presentedMessage = "영수증은 주문 서비스 연동 후 확인할 수 있어요." }
-            )
-        case let .deliveryTracking(order):
-            DeliveryTrackingView(order: order, onBack: { presentedRoute = .orderDetail(order) })
-        case let .returnRequest(order):
-            ReturnRequestView(
-                order: order,
-                onBack: { presentedRoute = .orderDetail(order) },
-                onUnavailableKind: { presentedMessage = "\($0.rawValue) 화면은 별도 작업에서 연결할 예정이에요." },
-                onAddressChange: { presentedMessage = "배송지 변경은 배송지 관리 화면 연결 후 이용할 수 있어요." },
-                onSubmit: { presentedMessage = $0 }
-            )
-        case let .returnHistory(backToOrderHistory):
-            ReturnHistoryView(
-                onBack: { presentedRoute = backToOrderHistory ? .orderHistory : nil },
-                onDetail: { _ in presentedMessage = "신청 상세는 서버 연동 후 확인할 수 있어요." },
-                onWithdraw: { _ in presentedMessage = "신청 철회는 서버 연동 후 이용할 수 있어요." },
-                onRejectionReason: { item in presentedMessage = item.rejectionReason ?? "반려 사유가 없습니다." }
+                onRoute: { presentedRoute = $0 },
+                onMessage: { presentedMessage = $0 }
             )
         case .accountVerification:
             AccountVerificationRouteView(
                 onBack: { presentedRoute = nil },
                 onVerified: { presentedRoute = .accountCollection(.editProfile) },
                 onMessage: { presentedMessage = $0 }
+            )
+        case let .addressEditor(address):
+            AddressEditorRouteView(
+                address: address,
+                onBack: { presentedRoute = .accountCollection(.addresses) },
+                onSave: { addressesViewModel.save($0); presentedRoute = .accountCollection(.addresses) }
             )
         }
     }
@@ -326,58 +307,5 @@ struct HomeView: View {
             .frame(maxWidth: 180)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-
-}
-
-private struct AccountCollectionRouteView: View {
-    let destination: AccountCollectionDestination
-    let onBack: () -> Void
-    let onBackToCoupons: () -> Void
-    let onBackToVerification: () -> Void
-    let onPointsTap: () -> Void
-    let onAddAddress: () -> Void
-    let onEditAddress: (ShippingAddress) -> Void
-    let onAction: (String) -> Void
-    let onProductTap: (HomeProduct) -> Void
-
-    @ViewBuilder
-    var body: some View {
-        switch destination {
-        case .favorites:
-            FavoritesView(onBack: onBack, onProductTap: onProductTap)
-        case .recentlyViewed:
-            RecentlyViewedView(onBack: onBack, onProductTap: onProductTap)
-        case .coupons:
-            CouponsView(onBack: onBack, onPointsTap: onPointsTap)
-        case .points:
-            PointsView(onBack: onBackToCoupons)
-        case .editProfile:
-            ProfileEditView(onBack: onBackToVerification, onAction: onAction)
-        case .addresses:
-            AddressesView(onBack: onBack, onAdd: onAddAddress, onEdit: onEditAddress)
-        }
-    }
-}
-
-private struct AccountVerificationRouteView: View {
-    let onBack: () -> Void
-    let onVerified: () -> Void
-    let onMessage: (String) -> Void
-
-    var body: some View {
-        AccountVerificationView(onBack: onBack) { message in
-            if let message {
-                onMessage(message)
-            } else {
-                onVerified()
-            }
-        }
-    }
-}
-
-struct HomeViewPreview: PreviewProvider {
-    static var previews: some View {
-        HomeView(viewModel: HomeViewModel())
     }
 }

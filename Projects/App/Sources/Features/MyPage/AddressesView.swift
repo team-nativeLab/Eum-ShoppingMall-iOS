@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AddressesView: View {
-    @StateObject private var viewModel = AddressesViewModel()
+    @ObservedObject var viewModel: AddressesViewModel
 
     let onBack: () -> Void
     let onAdd: () -> Void
@@ -127,6 +127,6 @@ struct AddressesView: View {
 
 struct AddressesViewPreview: PreviewProvider {
     static var previews: some View {
-        AddressesView(onBack: {}, onAdd: {}, onEdit: { _ in })
+        AddressesView(viewModel: AddressesViewModel(), onBack: {}, onAdd: {}, onEdit: { _ in })
     }
 }
