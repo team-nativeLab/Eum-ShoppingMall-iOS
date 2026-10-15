@@ -63,6 +63,7 @@ struct MyPageView: View {
     let cartCount: Int
     let onSelectTab: (EUMTabBar.Tab) -> Void
     var onOrderHistoryTap: () -> Void = {}
+    var onReturnsHistoryTap: () -> Void = {}
     var onAccountVerificationTap: () -> Void = {}
 
     var body: some View {
@@ -242,7 +243,11 @@ struct MyPageView: View {
         VStack(spacing: 0) {
             ForEach(Array(viewModel.menuItems.enumerated()), id: \.element.id) { index, item in
                 Button {
-                    showUnavailable(item.title)
+                    if item.title == "취소·반품·교환 내역" {
+                        onReturnsHistoryTap()
+                    } else {
+                        showUnavailable(item.title)
+                    }
                 } label: {
                     HStack(spacing: 12) {
                         Image(item.iconName)
