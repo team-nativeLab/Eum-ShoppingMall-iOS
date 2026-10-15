@@ -8,6 +8,9 @@ enum EUMColor {
     static let background = UIColor.white
     static let backgroundSubtle = UIColor(red: 250 / 255, green: 250 / 255, blue: 250 / 255, alpha: 1)
     static let surface = UIColor(red: 245 / 255, green: 245 / 255, blue: 245 / 255, alpha: 1)
+    static let surfaceSecondary = UIColor(red: 235 / 255, green: 235 / 255, blue: 235 / 255, alpha: 1)
+    static let imagePlaceholderTop = UIColor(red: 242 / 255, green: 242 / 255, blue: 242 / 255, alpha: 1)
+    static let imagePlaceholderBottom = UIColor(red: 232 / 255, green: 232 / 255, blue: 232 / 255, alpha: 1)
     static let line = UIColor(red: 235 / 255, green: 235 / 255, blue: 235 / 255, alpha: 1)
     static let lineStrong = UIColor(red: 212 / 255, green: 212 / 255, blue: 212 / 255, alpha: 1)
     static let inverse = UIColor.white
@@ -23,6 +26,9 @@ enum EUMColor {
     static let backgroundSwiftUI = Color(uiColor: background)
     static let backgroundSubtleSwiftUI = Color(uiColor: backgroundSubtle)
     static let surfaceSwiftUI = Color(uiColor: surface)
+    static let surfaceSecondarySwiftUI = Color(uiColor: surfaceSecondary)
+    static let imagePlaceholderTopSwiftUI = Color(uiColor: imagePlaceholderTop)
+    static let imagePlaceholderBottomSwiftUI = Color(uiColor: imagePlaceholderBottom)
     static let lineSwiftUI = Color(uiColor: line)
     static let lineStrongSwiftUI = Color(uiColor: lineStrong)
     static let inverseSwiftUI = Color(uiColor: inverse)
