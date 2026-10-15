@@ -21,4 +21,4 @@ The Figma tab reads `사용 가능 0` while rendering four coupon tickets. The l
 
 ## Scope and limitations
 
-Coupon data and the 0 won points balance are mock values. Registration requires a backend contract. The points row is shown as a tappable visual link, but its destination is outside this screen issue; the Figma metadata inspected did not confirm prototype navigation.
+Coupon data and the 0 won points balance are mock values. Registration requires a backend contract. The points row opens the sibling A-22p points screen.
