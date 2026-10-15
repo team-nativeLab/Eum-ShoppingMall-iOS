@@ -17,6 +17,7 @@ final class ProductDetailViewModel: ObservableObject {
     @Published var showCartConfirmation = false
     @Published var isOptionsPresented = false
     @Published var showPurchaseConfirmation = false
+    @Published var showQuoteConfirmation = false
 
     init(isFavorite: Bool) {
         self.isFavorite = isFavorite
@@ -72,12 +73,22 @@ struct ProductDetailView: View {
         .alert("선택한 옵션으로 바로 구매합니다.", isPresented: $viewModel.showPurchaseConfirmation) {
             Button("확인", role: .cancel) {}
         }
+        .alert("견적 문의 화면은 별도 작업에서 연결됩니다.", isPresented: $viewModel.showQuoteConfirmation) {
+            Button("확인", role: .cancel) {}
+        }
         .sheet(isPresented: $viewModel.isOptionsPresented) {
             ProductOptionsSheet(
                 onAddToCart: { viewModel.showCartConfirmation = true },
-                onBuyNow: { viewModel.showPurchaseConfirmation = true }
+                onPrimaryAction: {
+                    if product.isPriceHidden {
+                        viewModel.showQuoteConfirmation = true
+                    } else {
+                        viewModel.showPurchaseConfirmation = true
+                    }
+                },
+                isPriceHidden: product.isPriceHidden
             )
-            .presentationDetents([.height(618)])
+            .presentationDetents([.height(product.isPriceHidden ? 636 : 618)])
             .presentationCornerRadius(12)
             .presentationDragIndicator(.hidden)
             .presentationBackground(EUMColor.backgroundSwiftUI)
@@ -281,7 +292,9 @@ struct ProductDetailView: View {
                 .accessibilityLabel(viewModel.isFavorite ? "찜 취소" : "찜하기")
 
                 if product.isPriceHidden {
-                    EUMButton(title: "견적 문의", size: .large) {}
+                    EUMButton(title: "견적 문의", size: .large) {
+                        viewModel.isOptionsPresented = true
+                    }
                 } else {
                     EUMButton(title: "장바구니 담기", size: .large) {
                     viewModel.isOptionsPresented = true
