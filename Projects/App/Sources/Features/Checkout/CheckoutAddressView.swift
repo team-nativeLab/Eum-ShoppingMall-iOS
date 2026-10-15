@@ -264,6 +264,7 @@ struct CheckoutAddressView: View {
 
 struct CheckoutProgress: View {
     let currentStep: Int
+    var marksCurrentStepComplete = false
 
     private let titles = ["배송지", "결제", "완료"]
 
@@ -278,8 +279,9 @@ struct CheckoutProgress: View {
                         .padding(.horizontal, 8)
                 }
                 VStack(spacing: 6) {
+                    let isComplete = index + 1 < currentStep || (marksCurrentStepComplete && index + 1 == currentStep)
                     Group {
-                        if index + 1 < currentStep {
+                        if isComplete {
                             Image(systemName: "checkmark")
                                 .font(.system(size: 12, weight: .semibold))
                                 .foregroundStyle(EUMColor.inverseSwiftUI)
@@ -290,8 +292,16 @@ struct CheckoutProgress: View {
                         }
                     }
                     .frame(width: 24, height: 24)
-                    .background(index + 1 <= currentStep ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI, in: Circle())
-                    .overlay(Circle().stroke(index + 1 <= currentStep ? Color.clear : EUMColor.lineStrongSwiftUI, lineWidth: 1))
+                    .background(
+                        isComplete || index + 1 == currentStep ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI,
+                        in: Circle()
+                    )
+                    .overlay {
+                        Circle().stroke(
+                            isComplete || index + 1 == currentStep ? Color.clear : EUMColor.lineStrongSwiftUI,
+                            lineWidth: 1
+                        )
+                    }
                     Text(titles[index])
                         .font(EUMTypography.labelExtraSmall)
                         .foregroundStyle(index + 1 <= currentStep ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI)
