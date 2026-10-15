@@ -100,6 +100,7 @@ Components/instances observed in the `06 Design — App` page metadata. A name i
 - A-14 (`182:2601`) uses the personal-member segmented control, email check row, password and confirmation fields, name field, phone verification group, four agreement controls, fixed helper copy, and bottom signup action. The business member design is documented separately at A-14b (`558:5787`).
 - A-15 (`182:2696`) uses a four-step process strip, quote-product summary, four inquiry-type radio choices, member information form, date picker, 1,000-character textarea, attachment area, required privacy agreement, and fixed bottom submit action.
 - A-16 (`350:3346`) uses six horizontally scrolling order-status chips, a period menu, and order cards with status badges, product placeholder, order-detail link, and status-dependent actions. The implementation reuses `ProductPlaceholder`, shared typography/colors, and `EUMButton`.
+- A-23 (`350:3490`) uses a lock confirmation panel, disabled email field, secure password field, and fixed bottom confirmation action. It reuses `HF/TextField`, `HF/Button`, the shared back icon, and a local SVG export of the Figma lock icon.
 - Remaining variants and complete per-screen usage mappings need per-node contexts; Figma Code Connect library enumeration is seat-gated.
 
 ## Observed names
