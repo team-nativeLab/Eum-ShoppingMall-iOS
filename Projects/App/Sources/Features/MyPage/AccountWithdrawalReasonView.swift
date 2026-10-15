@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AccountWithdrawalReasonView: View {
     @StateObject private var viewModel = AccountWithdrawalReasonViewModel()
+    @State private var isShowingConfirmation = false
 
     let onBack: () -> Void
     let onSubmit: () -> Void
@@ -26,6 +27,11 @@ struct AccountWithdrawalReasonView: View {
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             bottomAction
+        }
+        .overlay {
+            if isShowingConfirmation {
+                confirmationOverlay
+            }
         }
     }
 
@@ -187,11 +193,88 @@ struct AccountWithdrawalReasonView: View {
             Rectangle()
                 .fill(EUMColor.lineSwiftUI)
                 .frame(height: 1)
-            EUMButton(title: "탈퇴하기", size: .large, action: onSubmit)
+            EUMButton(title: "탈퇴하기", size: .large) {
+                isShowingConfirmation = true
+            }
                 .disabled(!viewModel.canSubmit)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
         }
         .background(EUMColor.backgroundSwiftUI)
+    }
+
+    private var confirmationOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.48)
+                .ignoresSafeArea()
+                .accessibilityHidden(true)
+            VStack(spacing: 24) {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 8) {
+                        Image("WithdrawalAlert")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                        Text("정말 탈퇴하시겠습니까?")
+                            .font(EUMTypography.heading3)
+                            .tracking(-0.27)
+                            .foregroundStyle(EUMColor.text1SwiftUI)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    Text("탈퇴하면 계정을 복구할 수 없습니다.\n아래 혜택은 즉시 소멸됩니다.")
+                        .font(EUMTypography.bodySmall)
+                        .tracking(-0.07)
+                        .foregroundStyle(EUMColor.text2SwiftUI)
+                        .fixedSize(horizontal: false, vertical: true)
+                    impactSummary
+                }
+                HStack(spacing: 8) {
+                    EUMButton(title: "취소", kind: .secondary, size: .medium) {
+                        isShowingConfirmation = false
+                    }
+                    EUMButton(title: "탈퇴하기", kind: .danger, size: .medium) {
+                        isShowingConfirmation = false
+                        onSubmit()
+                    }
+                }
+            }
+            .padding(24)
+            .frame(maxWidth: 350)
+            .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+            .shadow(color: EUMColor.text1SwiftUI.opacity(0.16), radius: 16, x: 0, y: 12)
+            .padding(.horizontal, 20)
+            .accessibilityAddTraits(.isModal)
+        }
+        .ignoresSafeArea()
+        .transition(.opacity)
+        .zIndex(2)
+    }
+
+    private var impactSummary: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image("CouponTicket")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 16, height: 16)
+                Text("쿠폰 0장 소멸")
+                    .font(EUMTypography.bodySmall)
+                    .tracking(-0.07)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+            }
+            HStack(spacing: 8) {
+                Image("CouponCoins")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 16, height: 16)
+                Text("적립금 0원 소멸")
+                    .font(EUMTypography.bodySmall)
+                    .tracking(-0.07)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 8))
     }
 }
