@@ -63,6 +63,7 @@ struct MyPageView: View {
     let cartCount: Int
     let onSelectTab: (EUMTabBar.Tab) -> Void
     var onOrderHistoryTap: () -> Void = {}
+    var onFavoritesTap: () -> Void = {}
     var onReturnsHistoryTap: () -> Void = {}
     var onAccountVerificationTap: () -> Void = {}
 
@@ -181,6 +182,8 @@ struct MyPageView: View {
                     Button {
                         if shortcut.title == "주문내역" {
                             onOrderHistoryTap()
+                        } else if shortcut.title == "찜한 상품" {
+                            onFavoritesTap()
                         } else {
                             showUnavailable(shortcut.title)
                         }

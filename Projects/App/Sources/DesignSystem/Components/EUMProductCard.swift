@@ -25,20 +25,6 @@ struct EUMProductCard: View {
                 productImage
                     .frame(width: layout.imageSize, height: layout.imageSize)
                     .clipShape(RoundedRectangle(cornerRadius: EUMRadius.medium))
-                    .overlay(alignment: .topTrailing) {
-                        Button(action: onFavoriteTap) {
-                            Image("ProductFavorite")
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20, height: 20)
-                                .foregroundStyle(isFavorite ? EUMColor.dangerSwiftUI : EUMColor.text1SwiftUI)
-                                .frame(width: 44, height: 44)
-                                .contentShape(Rectangle())
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(isFavorite ? "찜 취소" : "찜하기")
-                    }
                     .overlay {
                         if isSoldOut {
                             EUMColor.inverseSwiftUI.opacity(0.6)
@@ -66,6 +52,20 @@ struct EUMProductCard: View {
                                 }
                                 .padding(8)
                         }
+                    }
+                    .overlay(alignment: .topTrailing) {
+                        Button(action: onFavoriteTap) {
+                            Image(isFavorite ? "ProductFavoriteSelected" : "ProductFavorite")
+                                .renderingMode(.template)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .foregroundStyle(EUMColor.text1SwiftUI)
+                                .frame(width: 44, height: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(isFavorite ? "찜 취소" : "찜하기")
                     }
 
                 VStack(alignment: .leading, spacing: 4) {
