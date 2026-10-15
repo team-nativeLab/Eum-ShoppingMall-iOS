@@ -21,6 +21,8 @@ struct HomeView: View {
             case let .content(content):
                 if let selectedProduct {
                     ProductDetailView(product: selectedProduct, onBack: { self.selectedProduct = nil })
+                } else if selectedTab == .cart {
+                    CartView(cartCount: content.cartCount, onSelectTab: selectTab)
                 } else if selectedTab == .search {
                     SearchView(
                         searchText: $searchText,
