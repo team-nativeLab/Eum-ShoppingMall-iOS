@@ -66,6 +66,7 @@ struct MyPageView: View {
     var onFavoritesTap: () -> Void = {}
     var onRecentlyViewedTap: () -> Void = {}
     var onCouponsTap: () -> Void = {}
+    var onAddressesTap: () -> Void = {}
     var onReturnsHistoryTap: () -> Void = {}
     var onAccountVerificationTap: () -> Void = {}
 
@@ -252,7 +253,9 @@ struct MyPageView: View {
         VStack(spacing: 0) {
             ForEach(Array(viewModel.menuItems.enumerated()), id: \.element.id) { index, item in
                 Button {
-                    if item.title == "취소·반품·교환 내역" {
+                    if item.title == "배송지 관리" {
+                        onAddressesTap()
+                    } else if item.title == "취소·반품·교환 내역" {
                         onReturnsHistoryTap()
                     } else {
                         showUnavailable(item.title)

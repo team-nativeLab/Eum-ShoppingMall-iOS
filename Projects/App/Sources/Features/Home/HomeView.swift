@@ -18,6 +18,7 @@ private enum AccountCollectionDestination {
     case coupons
     case points
     case editProfile
+    case addresses
 }
 
 struct HomeView: View {
@@ -175,6 +176,7 @@ struct HomeView: View {
                 onFavoritesTap: { presentedRoute = .accountCollection(.favorites) },
                 onRecentlyViewedTap: { presentedRoute = .accountCollection(.recentlyViewed) },
                 onCouponsTap: { presentedRoute = .accountCollection(.coupons) },
+                onAddressesTap: { presentedRoute = .accountCollection(.addresses) },
                 onReturnsHistoryTap: { presentedRoute = .returnHistory(backToOrderHistory: false) },
                 onAccountVerificationTap: { presentedRoute = .accountVerification }
             )
@@ -259,6 +261,8 @@ struct HomeView: View {
                 onBackToCoupons: { presentedRoute = .accountCollection(.coupons) },
                 onBackToVerification: { presentedRoute = .accountVerification },
                 onPointsTap: { presentedRoute = .accountCollection(.points) },
+                onAddAddress: { presentedMessage = "배송지 추가 화면은 아직 연결되지 않았어요." },
+                onEditAddress: { _ in presentedMessage = "배송지 수정 화면은 아직 연결되지 않았어요." },
                 onAction: { presentedMessage = $0 },
                 onProductTap: openProductDetail
             )
@@ -332,6 +336,8 @@ private struct AccountCollectionRouteView: View {
     let onBackToCoupons: () -> Void
     let onBackToVerification: () -> Void
     let onPointsTap: () -> Void
+    let onAddAddress: () -> Void
+    let onEditAddress: (ShippingAddress) -> Void
     let onAction: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
 
@@ -348,6 +354,8 @@ private struct AccountCollectionRouteView: View {
             PointsView(onBack: onBackToCoupons)
         case .editProfile:
             ProfileEditView(onBack: onBackToVerification, onAction: onAction)
+        case .addresses:
+            AddressesView(onBack: onBack, onAdd: onAddAddress, onEdit: onEditAddress)
         }
     }
 }

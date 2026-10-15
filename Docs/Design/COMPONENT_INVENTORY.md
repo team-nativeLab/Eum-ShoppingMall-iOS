@@ -110,6 +110,7 @@ Components/instances observed in the `06 Design — App` page metadata. A name i
 - A-22 (`355:3895`) uses a coupon-code registration row, points-balance link, two coupon tabs, and perforated ticket cards with discount, expiry, and scope fields. Ticket internals are screen-specific; the code field and action reuse `HF/TextField`/`HF/Button` styles.
 - A-22p (`355:4019`) uses a points balance/expiry summary, four history filter chips, six history rows, and a usage notice. The info icon reuses the existing Figma export.
 - A-23e (`357:3977`) uses basic and business profile fields, a password-change menu row, SMS/email agreement checkboxes, withdrawal link, and fixed save action. It reuses the shared button and typography/color tokens plus Figma-exported key, check, and chevron vectors.
+- A-24 (`357:4081`) uses three address cards with default/non-default actions, a literal address limit notice, and a fixed add action. Cards reuse `HF/Button` sizing and shared typography/color tokens.
 - Remaining variants and complete per-screen usage mappings need per-node contexts; Figma Code Connect library enumeration is seat-gated.
 
 ## Observed names
