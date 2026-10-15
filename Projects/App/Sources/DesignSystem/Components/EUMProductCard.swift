@@ -75,7 +75,7 @@ struct EUMProductCard: View {
                         .foregroundStyle(isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
 
                     if isPriceHidden {
-                        Text("구매 불가")
+                        Text("가격 문의")
                             .font(EUMTypography.bodySmall)
                             .foregroundStyle(EUMColor.text2SwiftUI)
                     } else if let price {
