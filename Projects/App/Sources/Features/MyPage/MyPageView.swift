@@ -63,6 +63,7 @@ struct MyPageView: View {
     let cartCount: Int
     let onSelectTab: (EUMTabBar.Tab) -> Void
     var onOrderHistoryTap: () -> Void = {}
+    var onAccountVerificationTap: () -> Void = {}
 
     var body: some View {
         VStack(spacing: 0) {
@@ -130,7 +131,7 @@ struct MyPageView: View {
     private var profileGroup: some View {
         VStack(spacing: 0) {
             Button {
-                showUnavailable("내 정보 관리")
+                onAccountVerificationTap()
             } label: {
                 HStack(spacing: 16) {
                     Image("MyPageProfile")

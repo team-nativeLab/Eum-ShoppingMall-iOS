@@ -4,6 +4,7 @@ private enum HomeModalRoute {
     case authentication
     case quoteInquiry(HomeProduct?)
     case orderHistory
+    case accountVerification
 }
 
 struct HomeView: View {
@@ -157,7 +158,8 @@ struct HomeView: View {
             MyPageView(
                 cartCount: cartCount,
                 onSelectTab: selectTab,
-                onOrderHistoryTap: { presentedRoute = .orderHistory }
+                onOrderHistoryTap: { presentedRoute = .orderHistory },
+                onAccountVerificationTap: { presentedRoute = .accountVerification }
             )
         }
     }
@@ -241,6 +243,11 @@ struct HomeView: View {
                 onCancelOrder: { _ in presentedMessage = "주문 취소는 서버 연동 후 이용할 수 있어요." },
                 onTrackDelivery: { _ in presentedMessage = "배송 조회는 서버 연동 후 이용할 수 있어요." },
                 onReorder: { _ in presentedMessage = "다시 담기는 장바구니 연결 후 이용할 수 있어요." }
+            )
+        case .accountVerification:
+            AccountVerificationView(
+                onBack: { presentedRoute = nil },
+                onConfirm: { presentedMessage = $0 }
             )
         }
     }
