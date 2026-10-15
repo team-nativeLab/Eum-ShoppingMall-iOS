@@ -20,6 +20,7 @@ enum AccountCollectionDestination {
     case points
     case editProfile
     case addresses
+    case quoteHistory
 }
 
 struct HomeView: View {
@@ -179,6 +180,7 @@ struct HomeView: View {
                 onRecentlyViewedTap: { presentedRoute = .accountCollection(.recentlyViewed) },
                 onCouponsTap: { presentedRoute = .accountCollection(.coupons) },
                 onAddressesTap: { presentedRoute = .accountCollection(.addresses) },
+                onQuoteHistoryTap: { presentedRoute = .accountCollection(.quoteHistory) },
                 onReturnsHistoryTap: { presentedRoute = .returnHistory(backToOrderHistory: false) },
                 onAccountVerificationTap: { presentedRoute = .accountVerification }
             )
@@ -267,7 +269,9 @@ struct HomeView: View {
                 onAddAddress: { presentedRoute = .addressEditor(nil) },
                 onEditAddress: { presentedRoute = .addressEditor($0) },
                 onAction: { presentedMessage = $0 },
-                onProductTap: openProductDetail
+                onProductTap: openProductDetail,
+                onNewQuoteInquiry: { presentedRoute = .quoteInquiry(nil) },
+                onQuoteDocument: { presentedMessage = "견적서는 서비스 연동 후 확인할 수 있어요." }
             )
         case .orderHistory, .orderDetail, .deliveryTracking, .returnRequest, .returnHistory:
             HomeOrderRouteView(
