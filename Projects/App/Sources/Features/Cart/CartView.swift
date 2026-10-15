@@ -111,15 +111,18 @@ struct CartView: View {
     let cartCount: Int
     let presentation: Presentation
     let onSelectTab: (EUMTabBar.Tab) -> Void
+    let onCheckout: () -> Void
 
     init(
         cartCount: Int,
         presentation: Presentation = .standard,
-        onSelectTab: @escaping (EUMTabBar.Tab) -> Void
+        onSelectTab: @escaping (EUMTabBar.Tab) -> Void,
+        onCheckout: @escaping () -> Void = {}
     ) {
         self.cartCount = cartCount
         self.presentation = presentation
         self.onSelectTab = onSelectTab
+        self.onCheckout = onCheckout
         let items: [CartItem]
         switch presentation {
         case .standard: items = CartItem.mockItems
@@ -341,9 +344,11 @@ struct CartView: View {
                 .background(EUMColor.surfaceSwiftUI)
             }
             EUMButton(title: bottomActionTitle, size: .large) {
-                presentedMessage = presentation == .zeroOrder
-                    ? "견적 문의는 로그인 후 이용할 수 있어요."
-                    : "주문 기능은 로그인 및 결제 연동 후 이용할 수 있어요."
+                if presentation == .zeroOrder {
+                    presentedMessage = "견적 문의는 로그인 후 이용할 수 있어요."
+                } else {
+                    onCheckout()
+                }
             }
             .disabled(presentation == .zeroOrder ? viewModel.quoteItemCount == 0 : viewModel.selectedCount == 0)
             .padding(.horizontal, EUMSpacing.homeContentInset)
