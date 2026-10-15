@@ -12,6 +12,7 @@ enum HomeModalRoute {
     case accountVerification
     case addressEditor(ShippingAddress?)
     case accountWithdrawalNotice
+    case accountWithdrawalReason
 }
 
 enum AccountCollectionDestination {
@@ -27,6 +28,7 @@ enum AccountCollectionDestination {
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @StateObject private var addressesViewModel = AddressesViewModel()
+    @StateObject private var withdrawalNoticeViewModel = AccountWithdrawalNoticeViewModel()
     @State private var searchText = ""
     @State private var selectedTab = EUMTabBar.Tab.home
     @State private var searchReturnTab = EUMTabBar.Tab.home
@@ -290,8 +292,14 @@ struct HomeView: View {
             )
         case .accountWithdrawalNotice:
             AccountWithdrawalNoticeView(
+                viewModel: withdrawalNoticeViewModel,
                 onBack: { presentedRoute = .accountCollection(.editProfile) },
-                onContinue: { presentedMessage = "탈퇴 사유 선택은 다음 화면에서 이어집니다." }
+                onContinue: { presentedRoute = .accountWithdrawalReason }
+            )
+        case .accountWithdrawalReason:
+            AccountWithdrawalReasonView(
+                onBack: { presentedRoute = .accountWithdrawalNotice },
+                onSubmit: { presentedMessage = "회원 탈퇴 처리는 회원 서비스 연동 후 이용할 수 있어요." }
             )
         case let .addressEditor(address):
             AddressEditorRouteView(

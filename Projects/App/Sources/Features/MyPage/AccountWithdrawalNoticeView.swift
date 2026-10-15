@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AccountWithdrawalNoticeView: View {
-    @StateObject private var viewModel = AccountWithdrawalNoticeViewModel()
+    @ObservedObject var viewModel: AccountWithdrawalNoticeViewModel
 
     let onBack: () -> Void
     let onContinue: () -> Void
