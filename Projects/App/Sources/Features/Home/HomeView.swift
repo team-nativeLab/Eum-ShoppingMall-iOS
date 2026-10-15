@@ -6,6 +6,7 @@ private enum HomeModalRoute {
     case orderHistory
     case orderDetail(OrderHistoryItem)
     case deliveryTracking(OrderHistoryItem)
+    case returnRequest(OrderHistoryItem)
     case accountVerification
 }
 
@@ -251,12 +252,20 @@ struct HomeView: View {
                 order: order,
                 onBack: { presentedRoute = .orderHistory },
                 onTrackDelivery: { presentedRoute = .deliveryTracking(order) },
-                onReturnExchange: { presentedMessage = "교환·반품 신청은 다음 화면 작업에서 연결할 예정이에요." },
+                onReturnExchange: { presentedRoute = .returnRequest(order) },
                 onDocumentDownload: { presentedMessage = "거래명세서는 주문 서비스 연동 후 다운로드할 수 있어요." },
                 onReceipt: { presentedMessage = "영수증은 주문 서비스 연동 후 확인할 수 있어요." }
             )
         case let .deliveryTracking(order):
             DeliveryTrackingView(order: order, onBack: { presentedRoute = .orderDetail(order) })
+        case let .returnRequest(order):
+            ReturnRequestView(
+                order: order,
+                onBack: { presentedRoute = .orderDetail(order) },
+                onUnavailableKind: { presentedMessage = "\($0.rawValue) 화면은 별도 작업에서 연결할 예정이에요." },
+                onAddressChange: { presentedMessage = "배송지 변경은 배송지 관리 화면 연결 후 이용할 수 있어요." },
+                onSubmit: { presentedMessage = $0 }
+            )
         case .accountVerification:
             AccountVerificationView(
                 onBack: { presentedRoute = nil },

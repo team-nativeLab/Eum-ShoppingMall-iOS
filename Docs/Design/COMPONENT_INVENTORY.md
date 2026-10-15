@@ -103,6 +103,7 @@ Components/instances observed in the `06 Design — App` page metadata. A name i
 - A-23 (`350:3490`) uses a lock confirmation panel, disabled email field, secure password field, and fixed bottom confirmation action. It reuses `HF/TextField`, `HF/Button`, the shared back icon, and a local SVG export of the Figma lock icon.
 - A-17 (`351:3440`) uses product, shipping, payment, points, and document cards with a fixed delivery/return action row. It reuses the product placeholder, shared buttons/tokens, and local Figma SVG exports for document and receipt actions.
 - A-18 (`351:3570`) uses a delivery summary, five-step progress row, five-event timeline, product summary, and inline delay notice. It reuses the Figma timeline/check/info SVGs and shared placeholder color tokens.
+- A-19 (`353:3555`) uses a return/cancel/exchange segment, product selection and quantity controls, return reasons and detail field, photo attachments, pickup method, refund summary, notice, and fixed submit action. It reuses the shared product image, button, and color APIs plus Figma-exported checkbox, radio, quantity, photo, and remove icons.
 - Remaining variants and complete per-screen usage mappings need per-node contexts; Figma Code Connect library enumeration is seat-gated.
 
 ## Observed names
