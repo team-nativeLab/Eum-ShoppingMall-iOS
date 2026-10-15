@@ -4,13 +4,34 @@ struct SearchView: View {
     @Binding var searchText: String
 
     let cartCount: Int
+    let products: [HomeProduct]
+    let onFavoriteTap: (String) -> Void
+    let onProductTap: (HomeProduct) -> Void
     let onBack: () -> Void
     let onSelectTab: (EUMTabBar.Tab) -> Void
 
     @State private var recentSearches = ["안전모", "작업복", "안전장갑", "교통안전봉", "소화기"]
+    @State private var showsResults = false
     @FocusState private var isSearchFocused: Bool
 
     var body: some View {
+        if showsResults {
+            SearchResultsView(
+                searchText: $searchText,
+                products: products,
+                cartCount: cartCount,
+                onBackToSearch: { showsResults = false },
+                onCancel: onBack,
+                onFavoriteTap: onFavoriteTap,
+                onProductTap: onProductTap,
+                onSelectTab: onSelectTab
+            )
+        } else {
+            searchLanding
+        }
+    }
+
+    private var searchLanding: some View {
         VStack(spacing: 0) {
             searchTopBar
             searchBody
@@ -44,6 +65,7 @@ struct SearchView: View {
                     .tracking(-0.5)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                     .submitLabel(.search)
+                    .onSubmit { showsResults = true }
                     .focused($isSearchFocused)
                     .accessibilityLabel("검색어")
             }
@@ -105,7 +127,7 @@ struct SearchView: View {
                     ForEach(recentSearches, id: \.self) { term in
                         Button {
                             searchText = term
-                            isSearchFocused = true
+                            showsResults = true
                         } label: {
                             Text(term)
                                 .font(EUMTypography.labelMedium)
@@ -153,8 +175,8 @@ struct SearchView: View {
         VStack(spacing: 0) {
             ForEach(ranks, id: \.self) { rank in
                 Button {
-                    searchText = "인기 검색어"
-                    isSearchFocused = true
+                    searchText = "안전모"
+                    showsResults = true
                 } label: {
                     HStack(spacing: 8) {
                         Text("\(rank)")

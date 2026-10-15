@@ -25,6 +25,9 @@ struct HomeView: View {
                     SearchView(
                         searchText: $searchText,
                         cartCount: content.cartCount,
+                        products: content.recommendedProducts + content.bestSellerProducts,
+                        onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
+                        onProductTap: { selectedProduct = $0 },
                         onBack: { selectedTab = searchReturnTab },
                         onSelectTab: selectTab
                     )
