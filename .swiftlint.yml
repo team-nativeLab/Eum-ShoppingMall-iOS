@@ -1,0 +1,25 @@
+included:
+  - Projects
+excluded:
+  - Tuist
+  - .build
+  - Derived
+opt_in_rules:
+  - empty_count
+  - force_unwrapping
+  - closure_spacing
+disabled_rules:
+  - todo
+line_length:
+  warning: 140
+  error: 200
+function_body_length:
+  warning: 60
+  error: 100
+type_body_length:
+  warning: 300
+  error: 500
+identifier_name:
+  min_length:
+    warning: 2
+    error: 1

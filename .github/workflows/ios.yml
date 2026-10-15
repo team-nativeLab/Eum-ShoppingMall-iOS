@@ -1,0 +1,28 @@
+name: iOS checks
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+jobs:
+  lint:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SwiftLint
+        run: brew install swiftlint
+      - name: SwiftLint
+        run: |
+          if find Projects -name '*.swift' -print -quit | grep -q .; then
+            swiftlint lint --strict
+          else
+            echo 'No Swift sources yet; skipping SwiftLint.'
+          fi
+  tuist:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Tuist
+        run: brew install tuist
+      - name: Generate project
+        run: tuist generate --no-open
