@@ -17,7 +17,6 @@ final class ProductDetailViewModel: ObservableObject {
     @Published var showCartConfirmation = false
     @Published var isOptionsPresented = false
     @Published var showPurchaseConfirmation = false
-    @Published var showQuoteConfirmation = false
 
     init(isFavorite: Bool) {
         self.isFavorite = isFavorite
@@ -29,10 +28,12 @@ struct ProductDetailView: View {
 
     let product: HomeProduct
     let onBack: () -> Void
+    let onQuoteTap: () -> Void
 
-    init(product: HomeProduct, onBack: @escaping () -> Void) {
+    init(product: HomeProduct, onBack: @escaping () -> Void, onQuoteTap: @escaping () -> Void = {}) {
         self.product = product
         self.onBack = onBack
+        self.onQuoteTap = onQuoteTap
         _viewModel = StateObject(wrappedValue: ProductDetailViewModel(isFavorite: product.isFavorite))
     }
 
@@ -73,15 +74,12 @@ struct ProductDetailView: View {
         .alert("선택한 옵션으로 바로 구매합니다.", isPresented: $viewModel.showPurchaseConfirmation) {
             Button("확인", role: .cancel) {}
         }
-        .alert("견적 문의 화면은 별도 작업에서 연결됩니다.", isPresented: $viewModel.showQuoteConfirmation) {
-            Button("확인", role: .cancel) {}
-        }
         .sheet(isPresented: $viewModel.isOptionsPresented) {
             ProductOptionsSheet(
                 onAddToCart: { viewModel.showCartConfirmation = true },
                 onPrimaryAction: {
                     if product.isPriceHidden {
-                        viewModel.showQuoteConfirmation = true
+                        onQuoteTap()
                     } else {
                         viewModel.showPurchaseConfirmation = true
                     }
@@ -251,7 +249,10 @@ struct ProductDetailView: View {
     }
 
     private var detailSections: some View {
-        ProductDetailSections(isDetailExpanded: $viewModel.isDetailExpanded)
+        ProductDetailSections(
+            isDetailExpanded: $viewModel.isDetailExpanded,
+            onQuoteTap: onQuoteTap
+        )
     }
 
     private var relatedSection: some View {

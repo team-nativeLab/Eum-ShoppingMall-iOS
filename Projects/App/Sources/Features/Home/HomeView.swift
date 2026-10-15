@@ -1,5 +1,10 @@
 import SwiftUI
 
+private enum HomeModalRoute {
+    case authentication
+    case quoteInquiry(HomeProduct?)
+}
+
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @State private var searchText = ""
@@ -7,12 +12,12 @@ struct HomeView: View {
     @State private var searchReturnTab = EUMTabBar.Tab.home
     @State private var selectedProductCategory: HomeCategory?
     @State private var selectedProduct: HomeProduct?
+    @State private var presentedRoute: HomeModalRoute?
     @State private var isShowingDrawer = false
     @State private var isGuestAccount = false
     @State private var isShowingCheckoutAddress = false
     @State private var isShowingCheckoutPayment = false
     @State private var isShowingCheckoutComplete = false
-    @State private var isShowingAuthentication = false
     @State private var presentedMessage: String?
 
     init(viewModel: HomeViewModel) {
@@ -26,85 +31,7 @@ struct HomeView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case let .content(content):
-                if isShowingAuthentication {
-                    AuthenticationFlowView(onClose: { isShowingAuthentication = false })
-                } else if isShowingCheckoutComplete {
-                    CheckoutCompleteView(
-                        onClose: returnHome,
-                        onContinueShopping: returnHome,
-                        onOrderDetails: { presentedMessage = "주문 상세 화면은 아직 연결되지 않았어요." }
-                    )
-                } else if isShowingCheckoutPayment {
-                    CheckoutPaymentView(
-                        onBack: { isShowingCheckoutPayment = false },
-                        onPaymentComplete: { isShowingCheckoutComplete = true }
-                    )
-                } else if isShowingCheckoutAddress {
-                    CheckoutAddressView(
-                        onBack: { isShowingCheckoutAddress = false },
-                        onNext: { isShowingCheckoutPayment = true }
-                    )
-                } else if let selectedProduct {
-                    ProductDetailView(product: selectedProduct, onBack: { self.selectedProduct = nil })
-                } else if selectedTab == .cart {
-                    CartView(
-                        cartCount: content.cartCount,
-                        onSelectTab: selectTab,
-                        onCheckout: { isShowingCheckoutAddress = true }
-                    )
-                } else if selectedTab == .search {
-                    SearchView(
-                        searchText: $searchText,
-                        cartCount: content.cartCount,
-                        products: content.recommendedProducts + content.bestSellerProducts,
-                        onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
-                        onProductTap: { selectedProduct = $0 },
-                        onBack: { selectedTab = searchReturnTab },
-                        onSelectTab: selectTab
-                    )
-                } else if selectedTab == .account {
-                    if isGuestAccount {
-                        GuestMyPageView(
-                            cartCount: content.cartCount,
-                            onLoginTap: { isShowingAuthentication = true },
-                            onSelectTab: selectTab
-                        )
-                    } else {
-                        MyPageView(cartCount: content.cartCount, onSelectTab: selectTab)
-                    }
-                } else if selectedTab == .category {
-                    if let selectedProductCategory {
-                        ProductListView(
-                            title: selectedProductCategory.title,
-                            products: content.recommendedProducts + content.bestSellerProducts,
-                            cartCount: content.cartCount,
-                            onBack: { self.selectedProductCategory = nil },
-                            onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
-                            onSelectTab: selectTab,
-                            onProductTap: { self.selectedProduct = $0 }
-                        )
-                    } else {
-                        CategoryView(
-                            onSearchTap: { selectTab(.search) },
-                            onAllProductsTap: {
-                                selectedProductCategory = HomeCategory(id: "all", title: "전체 제품", iconName: "CategoryAll")
-                            },
-                            onCategoryTap: { categoryID in
-                                selectedProductCategory = content.categories.first { $0.id == categoryID }
-                            },
-                            onSelectTab: selectTab,
-                            cartCount: content.cartCount
-                        )
-                    }
-                } else {
-                    EUMTopBar(
-                        title: "이음산업건설",
-                        onMenuTap: { withAnimation(.easeOut(duration: 0.2)) { isShowingDrawer = true } },
-                        onNotificationTap: { presentedMessage = "알림 화면은 아직 연결되지 않았어요." }
-                    )
-                    homeContent(content)
-                    EUMTabBar(selectedTab: selectedTab, cartCount: content.cartCount, onSelect: selectTab)
-                }
+                contentView(content)
             case .failed:
                 loadError
             }
@@ -121,7 +48,11 @@ struct HomeView: View {
                     },
                     onDestination: { destination in
                         isShowingDrawer = false
-                        presentedMessage = "\(destination) 화면은 아직 연결되지 않았어요."
+                        if destination == "맞춤 제작·견적 문의" {
+                            presentedRoute = .quoteInquiry(nil)
+                        } else {
+                            presentedMessage = "\(destination) 화면은 아직 연결되지 않았어요."
+                        }
                     },
                     onSettings: {
                         isShowingDrawer = false
@@ -151,6 +82,125 @@ struct HomeView: View {
         }
     }
 
+    @ViewBuilder
+    private func contentView(_ content: HomeContent) -> some View {
+        if let presentedRoute {
+            routeView(presentedRoute)
+        } else if isShowingCheckoutComplete {
+            CheckoutCompleteView(
+                onClose: returnHome,
+                onContinueShopping: returnHome,
+                onOrderDetails: { presentedMessage = "주문 상세 화면은 아직 연결되지 않았어요." }
+            )
+        } else if isShowingCheckoutPayment {
+            CheckoutPaymentView(
+                onBack: { isShowingCheckoutPayment = false },
+                onPaymentComplete: { isShowingCheckoutComplete = true }
+            )
+        } else if isShowingCheckoutAddress {
+            CheckoutAddressView(
+                onBack: { isShowingCheckoutAddress = false },
+                onNext: { isShowingCheckoutPayment = true }
+            )
+        } else {
+            primaryContent(content)
+        }
+    }
+
+    @ViewBuilder
+    private func primaryContent(_ content: HomeContent) -> some View {
+        if let selectedProduct {
+            ProductDetailView(
+                product: selectedProduct,
+                onBack: { self.selectedProduct = nil },
+                onQuoteTap: { presentedRoute = .quoteInquiry(selectedProduct) }
+            )
+        } else {
+            tabContent(content)
+        }
+    }
+
+    @ViewBuilder
+    private func tabContent(_ content: HomeContent) -> some View {
+        switch selectedTab {
+        case .cart:
+            CartView(cartCount: content.cartCount, onSelectTab: selectTab, onCheckout: { isShowingCheckoutAddress = true })
+        case .search:
+            SearchView(
+                searchText: $searchText,
+                cartCount: content.cartCount,
+                products: content.recommendedProducts + content.bestSellerProducts,
+                onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
+                onProductTap: { selectedProduct = $0 },
+                onBack: { selectedTab = searchReturnTab },
+                onSelectTab: selectTab
+            )
+        case .account:
+            accountView(cartCount: content.cartCount)
+        case .category:
+            categoryView(content)
+        case .home:
+            homeView(content)
+        }
+    }
+
+    @ViewBuilder
+    private func accountView(cartCount: Int) -> some View {
+        if isGuestAccount {
+            GuestMyPageView(
+                cartCount: cartCount,
+                onLoginTap: { presentedRoute = .authentication },
+                onSelectTab: selectTab
+            )
+        } else {
+            MyPageView(cartCount: cartCount, onSelectTab: selectTab)
+        }
+    }
+
+    @ViewBuilder
+    private func categoryView(_ content: HomeContent) -> some View {
+        if let selectedProductCategory {
+            ProductListView(
+                title: selectedProductCategory.title,
+                products: content.recommendedProducts + content.bestSellerProducts,
+                cartCount: content.cartCount,
+                onBack: { self.selectedProductCategory = nil },
+                onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
+                onSelectTab: selectTab,
+                onProductTap: { self.selectedProduct = $0 }
+            )
+        } else {
+            CategoryView(
+                onSearchTap: { selectTab(.search) },
+                onAllProductsTap: {
+                    selectedProductCategory = HomeCategory(id: "all", title: "전체 제품", iconName: "CategoryAll")
+                },
+                onCategoryTap: { categoryID in
+                    selectedProductCategory = content.categories.first { $0.id == categoryID }
+                },
+                onSelectTab: selectTab,
+                cartCount: content.cartCount
+            )
+        }
+    }
+
+    private func homeView(_ content: HomeContent) -> some View {
+        VStack(spacing: 0) {
+            EUMTopBar(
+                title: "이음산업건설",
+                onMenuTap: { withAnimation(.easeOut(duration: 0.2)) { isShowingDrawer = true } },
+                onNotificationTap: { presentedMessage = "알림 화면은 아직 연결되지 않았어요." }
+            )
+            HomeLandingContentView(
+                content: content,
+                searchText: $searchText,
+                onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
+                onQuoteTap: { presentedRoute = .quoteInquiry(nil) }
+            )
+            EUMTabBar(selectedTab: selectedTab, cartCount: content.cartCount, onSelect: selectTab)
+    }
+    }
+
     private func selectTab(_ tab: EUMTabBar.Tab) {
         if tab == .search {
             if selectedTab != .search {
@@ -171,139 +221,14 @@ struct HomeView: View {
         selectedTab = .home
     }
 
-    private func homeContent(_ content: HomeContent) -> some View {
-        ScrollView(.vertical) {
-            VStack(alignment: .leading, spacing: 40) {
-                VStack(alignment: .leading, spacing: 28) {
-                    VStack(spacing: 16) {
-                        EUMSearchBar(text: $searchText, placeholder: "어떤 제품을 찾고 계신가요?")
-                            .padding(.horizontal, EUMSpacing.homeContentInset)
-
-                        EUMHeroBanner(pages: [
-                            .init(
-                                id: "home-hero",
-                                eyebrow: content.hero.eyebrow,
-                                title: content.hero.title,
-                                subtitle: content.hero.subtitle,
-                                imageName: content.hero.imageName,
-                                actionTitle: content.hero.actionTitle,
-                                action: {}
-                            )
-                        ])
-                        .padding(.horizontal, EUMSpacing.homeContentInset)
-                    }
-
-                    ScrollView(.horizontal) {
-                        HStack(spacing: 12) {
-                            ForEach(content.categories) { category in
-                                EUMCategoryItem(title: category.title, iconName: category.iconName) {}
-                            }
-                        }
-                        .padding(.horizontal, EUMSpacing.homeContentInset)
-                    }
-                    .scrollIndicators(.hidden)
-                }
-
-                recommendedSection(content.recommendedProducts)
-                bestSellerSection(content.bestSellerProducts)
-                quoteBanner
-                    .padding(.horizontal, EUMSpacing.homeContentInset)
-            }
-            .padding(.top, 8)
-            .padding(.bottom, 40)
+    @ViewBuilder
+    private func routeView(_ route: HomeModalRoute) -> some View {
+        switch route {
+        case .authentication:
+            AuthenticationFlowView(onClose: { presentedRoute = nil })
+        case let .quoteInquiry(product):
+            QuoteInquiryView(product: product, onBack: { presentedRoute = nil })
         }
-        .scrollIndicators(.hidden)
-    }
-
-    private func recommendedSection(_ products: [HomeProduct]) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
-            EUMSectionHeader(title: "추천 제품", action: {})
-                .padding(.horizontal, EUMSpacing.homeContentInset)
-
-            ScrollView(.horizontal) {
-                HStack(alignment: .top, spacing: 12) {
-                    ForEach(products) { product in
-                        productCard(product, layout: .carousel)
-                    }
-                }
-                .padding(.horizontal, EUMSpacing.homeContentInset)
-            }
-            .scrollIndicators(.hidden)
-        }
-    }
-
-    private func bestSellerSection(_ products: [HomeProduct]) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
-            EUMSectionHeader(title: "베스트 셀러", action: {})
-
-            LazyVGrid(
-                columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
-                alignment: .leading,
-                spacing: 24
-            ) {
-                ForEach(products) { product in
-                    productCard(product, layout: .grid)
-                }
-            }
-
-            EUMButton(title: "베스트 셀러 전체 보기", kind: .secondary) {}
-        }
-        .padding(.horizontal, EUMSpacing.homeContentInset)
-    }
-
-    private func productCard(_ product: HomeProduct, layout: EUMProductCard.Layout) -> some View {
-        EUMProductCard(
-            title: product.title,
-            price: product.price,
-            layout: layout,
-            imageName: product.imageName,
-            isSoldOut: product.isSoldOut,
-            isPriceHidden: product.isPriceHidden,
-            isFavorite: product.isFavorite,
-            onFavoriteTap: { viewModel.toggleFavorite(productID: product.id) }
-        )
-    }
-
-    private var quoteBanner: some View {
-        HStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("CUSTOM ORDER")
-                    .font(EUMTypography.overline)
-                    .tracking(1.76)
-                    .foregroundStyle(EUMColor.text3SwiftUI)
-
-                Text("맞춤 제작·대량 납품 견적")
-                    .font(EUMTypography.labelLarge)
-                    .tracking(-0.16)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
-
-                Text("현장에 맞는 수량·사양으로 제안해 드립니다.")
-                    .font(EUMTypography.bodySmall)
-                    .tracking(-0.07)
-                    .foregroundStyle(EUMColor.text2SwiftUI)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.85)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            Button {} label: {
-                Image("HeroBannerArrow")
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20, height: 20)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
-                    .frame(width: 36, height: 36)
-                    .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 18))
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("맞춤 제작 및 대량 납품 견적")
-        }
-        .padding(20)
-        .frame(height: 108)
-        .background(EUMColor.backgroundSubtleSwiftUI)
-        .overlay(RoundedRectangle(cornerRadius: EUMRadius.large).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
-        .clipShape(RoundedRectangle(cornerRadius: EUMRadius.large))
     }
 
     private var loadError: some View {
@@ -318,6 +243,7 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+
 }
 
 struct HomeViewPreview: PreviewProvider {

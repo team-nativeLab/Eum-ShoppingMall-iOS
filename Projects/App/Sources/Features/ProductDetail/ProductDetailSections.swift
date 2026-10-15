@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProductDetailSections: View {
     @Binding var isDetailExpanded: Bool
+    var onQuoteTap: () -> Void = {}
 
     var body: some View {
         VStack(spacing: 0) {
@@ -139,7 +140,7 @@ struct ProductDetailSections: View {
     }
 
     private var quoteLink: some View {
-        Button {} label: {
+        Button(action: onQuoteTap) {
             HStack(spacing: 10) {
                 Image("ProductDetailQuote")
                     .resizable()
