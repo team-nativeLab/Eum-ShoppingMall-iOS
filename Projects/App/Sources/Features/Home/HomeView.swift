@@ -3,6 +3,7 @@ import SwiftUI
 private enum HomeModalRoute {
     case authentication
     case quoteInquiry(HomeProduct?)
+    case favorites
     case orderHistory
     case orderDetail(OrderHistoryItem)
     case deliveryTracking(OrderHistoryItem)
@@ -163,6 +164,7 @@ struct HomeView: View {
                 cartCount: cartCount,
                 onSelectTab: selectTab,
                 onOrderHistoryTap: { presentedRoute = .orderHistory },
+                onFavoritesTap: { presentedRoute = .favorites },
                 onReturnsHistoryTap: { presentedRoute = .returnHistory(backToOrderHistory: false) },
                 onAccountVerificationTap: { presentedRoute = .accountVerification }
             )
@@ -240,6 +242,14 @@ struct HomeView: View {
             AuthenticationFlowView(onClose: { presentedRoute = nil })
         case let .quoteInquiry(product):
             QuoteInquiryView(product: product, onBack: { presentedRoute = nil })
+        case .favorites:
+            FavoritesView(
+                onBack: { presentedRoute = nil },
+                onProductTap: {
+                    presentedRoute = nil
+                    selectedProduct = $0
+                }
+            )
         case .orderHistory:
             OrderHistoryView(
                 onBack: { presentedRoute = nil },
