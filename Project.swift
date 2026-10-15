@@ -11,7 +11,11 @@ let project = Project(
             product: .app,
             bundleId: "com.teamnativelab.eumshoppingmall",
             deploymentTargets: .iOS("17.0"),
-            infoPlist: .extendingDefault(with: ["UILaunchScreen": [:]]),
+            infoPlist: .extendingDefault(with: [
+                "UILaunchScreen": [:],
+                "UIAppFonts": ["NotoSansKR-Variable.ttf"]
+            ]),
+            resources: ["Projects/App/Resources/**"],
             buildableFolders: ["Projects/App/Sources"],
             settings: .settings(base: ["CODE_SIGNING_ALLOWED": "NO"])
         ),
