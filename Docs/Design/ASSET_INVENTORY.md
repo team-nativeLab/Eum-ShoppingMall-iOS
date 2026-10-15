@@ -31,6 +31,7 @@ Figma source is read-only. Assets below are the only local assets currently conf
 | Login info icon | `LoginInfo.imageset` | Figma A-13 inline notice vector | Present; SVG in Asset Catalog, 16 × 16 pt |
 | Quote inquiry paperclip | `QuotePaperclip.imageset` | Figma A-15 file attachment icon | Present; SVG in Asset Catalog, rendered at 20 × 20 pt |
 | Quote history document | `QuoteHistoryFile.imageset` | Figma A-25 file-text icon | Present; SVG in Asset Catalog, rendered at 16 × 16 pt |
+| Withdrawal benefit icons | `CouponTicket.imageset`, `CouponCoins.imageset` | Figma A-26 coupon and points benefit summary | Existing A-22 assets reused; no duplicate exports added |
 
 ## Outstanding asset audit
 

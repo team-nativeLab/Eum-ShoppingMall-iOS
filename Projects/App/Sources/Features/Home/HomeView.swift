@@ -11,6 +11,7 @@ enum HomeModalRoute {
     case returnHistory(backToOrderHistory: Bool)
     case accountVerification
     case addressEditor(ShippingAddress?)
+    case accountWithdrawalNotice
 }
 
 enum AccountCollectionDestination {
@@ -271,7 +272,8 @@ struct HomeView: View {
                 onAction: { presentedMessage = $0 },
                 onProductTap: openProductDetail,
                 onNewQuoteInquiry: { presentedRoute = .quoteInquiry(nil) },
-                onQuoteDocument: { presentedMessage = "견적서는 서비스 연동 후 확인할 수 있어요." }
+                onQuoteDocument: { presentedMessage = "견적서는 서비스 연동 후 확인할 수 있어요." },
+                onWithdrawTap: { presentedRoute = .accountWithdrawalNotice }
             )
         case .orderHistory, .orderDetail, .deliveryTracking, .returnRequest, .returnHistory:
             HomeOrderRouteView(
@@ -285,6 +287,11 @@ struct HomeView: View {
                 onBack: { presentedRoute = nil },
                 onVerified: { presentedRoute = .accountCollection(.editProfile) },
                 onMessage: { presentedMessage = $0 }
+            )
+        case .accountWithdrawalNotice:
+            AccountWithdrawalNoticeView(
+                onBack: { presentedRoute = .accountCollection(.editProfile) },
+                onContinue: { presentedMessage = "탈퇴 사유 선택은 다음 화면에서 이어집니다." }
             )
         case let .addressEditor(address):
             AddressEditorRouteView(

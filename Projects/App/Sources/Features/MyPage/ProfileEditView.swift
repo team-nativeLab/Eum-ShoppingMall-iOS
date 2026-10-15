@@ -6,6 +6,7 @@ struct ProfileEditView: View {
 
     let onBack: () -> Void
     let onAction: (String) -> Void
+    var onWithdrawTap: () -> Void = {}
 
     var body: some View {
         VStack(spacing: 0) {
@@ -140,7 +141,7 @@ struct ProfileEditView: View {
 
     private var withdrawLink: some View {
         Button {
-            onAction("회원 탈퇴는 회원 서비스 연동 후 이용할 수 있어요.")
+            onWithdrawTap()
         } label: {
             Text("회원 탈퇴")
                 .font(EUMTypography.captionRegular)
