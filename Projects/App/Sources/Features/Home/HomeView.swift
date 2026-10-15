@@ -4,6 +4,7 @@ struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @State private var searchText = ""
     @State private var selectedTab = EUMTabBar.Tab.home
+    @State private var selectedProductCategory: HomeCategory?
 
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -17,13 +18,28 @@ struct HomeView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case let .content(content):
                 if selectedTab == .category {
-                    CategoryView(
-                        onSearchTap: { selectedTab = .search },
-                        onAllProductsTap: {},
-                        onCategoryTap: { _ in },
-                        onSelectTab: selectTab,
-                        cartCount: content.cartCount
-                    )
+                    if let selectedProductCategory {
+                        ProductListView(
+                            title: selectedProductCategory.title,
+                            products: content.recommendedProducts + content.bestSellerProducts,
+                            cartCount: content.cartCount,
+                            onBack: { self.selectedProductCategory = nil },
+                            onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
+                            onSelectTab: selectTab
+                        )
+                    } else {
+                        CategoryView(
+                            onSearchTap: { selectedTab = .search },
+                            onAllProductsTap: {
+                                selectedProductCategory = HomeCategory(id: "all", title: "전체 제품", iconName: "CategoryAll")
+                            },
+                            onCategoryTap: { categoryID in
+                                selectedProductCategory = content.categories.first { $0.id == categoryID }
+                            },
+                            onSelectTab: selectTab,
+                            cartCount: content.cartCount
+                        )
+                    }
                 } else {
                     EUMTopBar(
                         title: "이음산업건설",
@@ -48,6 +64,7 @@ struct HomeView: View {
     private func selectTab(_ tab: EUMTabBar.Tab) {
         if tab == .home || tab == .category {
             selectedTab = tab
+            selectedProductCategory = nil
         }
     }
 
