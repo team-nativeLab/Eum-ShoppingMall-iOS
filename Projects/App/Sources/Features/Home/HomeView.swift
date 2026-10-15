@@ -4,6 +4,7 @@ private enum HomeModalRoute {
     case authentication
     case quoteInquiry(HomeProduct?)
     case favorites
+    case recentlyViewed
     case orderHistory
     case orderDetail(OrderHistoryItem)
     case deliveryTracking(OrderHistoryItem)
@@ -165,6 +166,7 @@ struct HomeView: View {
                 onSelectTab: selectTab,
                 onOrderHistoryTap: { presentedRoute = .orderHistory },
                 onFavoritesTap: { presentedRoute = .favorites },
+                onRecentlyViewedTap: { presentedRoute = .recentlyViewed },
                 onReturnsHistoryTap: { presentedRoute = .returnHistory(backToOrderHistory: false) },
                 onAccountVerificationTap: { presentedRoute = .accountVerification }
             )
@@ -243,13 +245,9 @@ struct HomeView: View {
         case let .quoteInquiry(product):
             QuoteInquiryView(product: product, onBack: { presentedRoute = nil })
         case .favorites:
-            FavoritesView(
-                onBack: { presentedRoute = nil },
-                onProductTap: {
-                    presentedRoute = nil
-                    selectedProduct = $0
-                }
-            )
+            favoritesView
+        case .recentlyViewed:
+            recentlyViewedView
         case .orderHistory:
             OrderHistoryView(
                 onBack: { presentedRoute = nil },
@@ -291,6 +289,25 @@ struct HomeView: View {
                 onConfirm: { presentedMessage = $0 }
             )
         }
+    }
+
+    private var favoritesView: some View {
+        FavoritesView(
+            onBack: { presentedRoute = nil },
+            onProductTap: openProductDetail
+        )
+    }
+
+    private var recentlyViewedView: some View {
+        RecentlyViewedView(
+            onBack: { presentedRoute = nil },
+            onProductTap: openProductDetail
+        )
+    }
+
+    private func openProductDetail(_ product: HomeProduct) {
+        presentedRoute = nil
+        selectedProduct = product
     }
 
     private var loadError: some View {
