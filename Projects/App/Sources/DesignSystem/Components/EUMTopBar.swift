@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct EUMTopBar: View {
-    var title: String? = nil
+    var title: String?
     var onMenuTap: () -> Void
     var onNotificationTap: () -> Void
 

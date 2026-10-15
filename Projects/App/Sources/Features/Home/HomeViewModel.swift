@@ -59,10 +59,26 @@ struct MockHomeRepository: HomeRepository {
                 actionTitle: "자세히 보기"
             ),
             recommendedProducts: (0..<4).map { index in
-                HomeProduct(id: "recommended-\(index)", title: "제품명", price: "₩00,000", imageName: nil, isFavorite: false, isSoldOut: false, isPriceHidden: false)
+                HomeProduct(
+                    id: "recommended-\(index)",
+                    title: "제품명",
+                    price: "₩00,000",
+                    imageName: nil,
+                    isFavorite: false,
+                    isSoldOut: false,
+                    isPriceHidden: false
+                )
             },
             bestSellerProducts: (0..<4).map { index in
-                HomeProduct(id: "best-\(index)", title: "제품명", price: "₩00,000", imageName: nil, isFavorite: false, isSoldOut: index == 3, isPriceHidden: false)
+                HomeProduct(
+                    id: "best-\(index)",
+                    title: "제품명",
+                    price: "₩00,000",
+                    imageName: nil,
+                    isFavorite: false,
+                    isSoldOut: index == 3,
+                    isPriceHidden: false
+                )
             },
             cartCount: 3
         )
