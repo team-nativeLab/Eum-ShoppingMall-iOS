@@ -3,6 +3,7 @@ import SwiftUI
 private enum HomeModalRoute {
     case authentication
     case quoteInquiry(HomeProduct?)
+    case orderHistory
 }
 
 struct HomeView: View {
@@ -153,7 +154,11 @@ struct HomeView: View {
                 onSelectTab: selectTab
             )
         } else {
-            MyPageView(cartCount: cartCount, onSelectTab: selectTab)
+            MyPageView(
+                cartCount: cartCount,
+                onSelectTab: selectTab,
+                onOrderHistoryTap: { presentedRoute = .orderHistory }
+            )
         }
     }
 
@@ -228,6 +233,15 @@ struct HomeView: View {
             AuthenticationFlowView(onClose: { presentedRoute = nil })
         case let .quoteInquiry(product):
             QuoteInquiryView(product: product, onBack: { presentedRoute = nil })
+        case .orderHistory:
+            OrderHistoryView(
+                onBack: { presentedRoute = nil },
+                onCancelReturn: { presentedMessage = "취소·반품 내역은 다음 화면 작업에서 연결할 예정이에요." },
+                onOrderDetail: { _ in presentedMessage = "주문 상세 화면은 별도 화면 작업에서 연결할 예정이에요." },
+                onCancelOrder: { _ in presentedMessage = "주문 취소는 서버 연동 후 이용할 수 있어요." },
+                onTrackDelivery: { _ in presentedMessage = "배송 조회는 서버 연동 후 이용할 수 있어요." },
+                onReorder: { _ in presentedMessage = "다시 담기는 장바구니 연결 후 이용할 수 있어요." }
+            )
         }
     }
 

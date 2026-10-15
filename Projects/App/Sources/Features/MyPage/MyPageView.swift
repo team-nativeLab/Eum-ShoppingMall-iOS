@@ -62,6 +62,7 @@ struct MyPageView: View {
 
     let cartCount: Int
     let onSelectTab: (EUMTabBar.Tab) -> Void
+    var onOrderHistoryTap: () -> Void = {}
 
     var body: some View {
         VStack(spacing: 0) {
@@ -176,7 +177,11 @@ struct MyPageView: View {
             HStack(spacing: 0) {
                 ForEach(viewModel.shortcuts) { shortcut in
                     Button {
-                        showUnavailable(shortcut.title)
+                        if shortcut.title == "주문내역" {
+                            onOrderHistoryTap()
+                        } else {
+                            showUnavailable(shortcut.title)
+                        }
                     } label: {
                         VStack(spacing: 8) {
                             Image(shortcut.iconName)
