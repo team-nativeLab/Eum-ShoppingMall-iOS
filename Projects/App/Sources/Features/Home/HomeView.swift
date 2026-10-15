@@ -8,6 +8,7 @@ struct HomeView: View {
     @State private var selectedProductCategory: HomeCategory?
     @State private var selectedProduct: HomeProduct?
     @State private var isShowingCheckoutAddress = false
+    @State private var isShowingCheckoutPayment = false
     @State private var presentedMessage: String?
 
     init(viewModel: HomeViewModel) {
@@ -21,10 +22,15 @@ struct HomeView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case let .content(content):
-                if isShowingCheckoutAddress {
+                if isShowingCheckoutPayment {
+                    CheckoutPaymentView(
+                        onBack: { isShowingCheckoutPayment = false },
+                        onPaymentComplete: { presentedMessage = "결제 완료 화면은 다음 단계에서 연결할 예정이에요." }
+                    )
+                } else if isShowingCheckoutAddress {
                     CheckoutAddressView(
                         onBack: { isShowingCheckoutAddress = false },
-                        onNext: { presentedMessage = "결제 화면은 다음 단계에서 연결할 예정이에요." }
+                        onNext: { isShowingCheckoutPayment = true }
                     )
                 } else if let selectedProduct {
                     ProductDetailView(product: selectedProduct, onBack: { self.selectedProduct = nil })
