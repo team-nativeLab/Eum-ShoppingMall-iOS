@@ -4,6 +4,7 @@ struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @State private var searchText = ""
     @State private var selectedTab = EUMTabBar.Tab.home
+    @State private var searchReturnTab = EUMTabBar.Tab.home
     @State private var selectedProductCategory: HomeCategory?
     @State private var selectedProduct: HomeProduct?
 
@@ -20,6 +21,13 @@ struct HomeView: View {
             case let .content(content):
                 if let selectedProduct {
                     ProductDetailView(product: selectedProduct, onBack: { self.selectedProduct = nil })
+                } else if selectedTab == .search {
+                    SearchView(
+                        searchText: $searchText,
+                        cartCount: content.cartCount,
+                        onBack: { selectedTab = searchReturnTab },
+                        onSelectTab: selectTab
+                    )
                 } else if selectedTab == .category {
                     if let selectedProductCategory {
                         ProductListView(
@@ -33,7 +41,7 @@ struct HomeView: View {
                         )
                     } else {
                         CategoryView(
-                            onSearchTap: { selectedTab = .search },
+                            onSearchTap: { selectTab(.search) },
                             onAllProductsTap: {
                                 selectedProductCategory = HomeCategory(id: "all", title: "전체 제품", iconName: "CategoryAll")
                             },
@@ -66,7 +74,12 @@ struct HomeView: View {
     }
 
     private func selectTab(_ tab: EUMTabBar.Tab) {
-        if tab == .home || tab == .category {
+        if tab == .search {
+            if selectedTab != .search {
+                searchReturnTab = selectedTab
+            }
+            selectedTab = .search
+        } else if tab == .home || tab == .category {
             selectedTab = tab
             selectedProductCategory = nil
             selectedProduct = nil
