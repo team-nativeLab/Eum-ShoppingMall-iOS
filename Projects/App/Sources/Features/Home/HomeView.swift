@@ -57,6 +57,11 @@ struct HomeView: View {
                         onBack: { selectedTab = searchReturnTab },
                         onSelectTab: selectTab
                     )
+                } else if selectedTab == .account {
+                    MyPageView(
+                        cartCount: content.cartCount,
+                        onSelectTab: selectTab
+                    )
                 } else if selectedTab == .category {
                     if let selectedProductCategory {
                         ProductListView(
@@ -116,7 +121,7 @@ struct HomeView: View {
                 searchReturnTab = selectedTab
             }
             selectedTab = .search
-        } else if tab == .home || tab == .category {
+        } else {
             selectedTab = tab
             selectedProductCategory = nil
             selectedProduct = nil

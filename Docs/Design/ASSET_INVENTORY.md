@@ -21,6 +21,7 @@ Figma source is read-only. Assets below are the only local assets currently conf
 | Cart quote state | Reuses cart controls above plus `ProductPlaceholder.imageset` | A-07h mixed priced/quote cart | Present; no new image assets required |
 | Zero-order cart state | Reuses cart quote, placeholder, search, and tab vectors | A-07h2 with two inquiry-only products | Present; no new image assets required |
 | Checkout address controls | `ProductListBack.imageset`, `ProductOptionChevron.imageset` | Existing Figma back and disclosure vectors reused by A-08 | Present; progress indicators and section surfaces use native shapes |
+| My Page vectors | `MyPageProfile.imageset`, `MyPageOrder.imageset`, `MyPageFavorites.imageset`, `MyPageRecent.imageset`, `MyPageCoupons.imageset`, `MyPageInformation.imageset`, `MyPageAddress.imageset`, `MyPageReturns.imageset`, `MyPageQuoteInquiries.imageset`, `MyPageContactInquiries.imageset`, `MyPageSupport.imageset`, `MyPageNotices.imageset`, `MyPageChevron.imageset`, `MyPageSettings.imageset` | Figma A-11 vectors; SVG in Asset Catalog | Present; profile and menu/shortcut icons 20–36 pt, details in `A11_MYPAGE_PARITY.md` |
 
 ## Outstanding asset audit
 
