@@ -65,6 +65,7 @@ struct MyPageView: View {
     var onOrderHistoryTap: () -> Void = {}
     var onFavoritesTap: () -> Void = {}
     var onRecentlyViewedTap: () -> Void = {}
+    var onCouponsTap: () -> Void = {}
     var onReturnsHistoryTap: () -> Void = {}
     var onAccountVerificationTap: () -> Void = {}
 
@@ -187,6 +188,8 @@ struct MyPageView: View {
                             onFavoritesTap()
                         } else if shortcut.title == "최근 본 상품" {
                             onRecentlyViewedTap()
+                        } else if shortcut.title == "쿠폰함" {
+                            onCouponsTap()
                         } else {
                             showUnavailable(shortcut.title)
                         }
