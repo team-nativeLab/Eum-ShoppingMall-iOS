@@ -20,7 +20,7 @@ Components/instances observed in the `06 Design — App` page metadata. A name i
 | HF/Checkbox | Design System component | Variant details require dedicated node context unless referenced in audit |
 | HF/Checkout/Stepper | Design System component | Variant details require dedicated node context unless referenced in audit |
 | HF/Chip | Design System component | Variant details require dedicated node context unless referenced in audit |
-| HF/EmptyState | Design System component | Variant details require dedicated node context unless referenced in audit |
+| HF/EmptyState | Design System component | A-06z no-results search state; 64 pt icon tile |
 | HF/HeroBanner | Design System component | Variant details require dedicated node context unless referenced in audit |
 | HF/Icon | Design System component | Variant details require dedicated node context unless referenced in audit |
 | HF/Image | Design System component | Variant details require dedicated node context unless referenced in audit |
@@ -87,7 +87,7 @@ Components/instances observed in the `06 Design — App` page metadata. A name i
 - `HF/App/TopBar` (home instance `178:380`): 390 × 56 pt; horizontal inset 8 pt; 44 pt menu and notification targets with 24 pt icons.
 - `HF/App/TabBar` (`178:679`): 390 × 91 pt; five 78 pt items, 24 pt icons, 11 pt labels, 56 pt item region, and a 34 pt bottom-indicator region.
 - Home section header (`178:536`): 350 × 26 pt; title and optional “더보기” action with a 16 pt chevron.
-- `HF/EmptyState` (`177:455`): inspected search-empty instance uses a 64 pt surface icon tile and 64/32 pt vertical padding; state copy is node-specific.
+- `HF/EmptyState` (`177:455`, A-06z instance `180:1715`): 64 pt surface icon tile with 28 pt search-x icon; 64/32 pt vertical padding; 160 × 48 pt action; state copy is node-specific.
 - Remaining variants and complete per-screen usage mappings need per-node contexts; Figma Code Connect library enumeration is seat-gated.
 
 ## Observed names
