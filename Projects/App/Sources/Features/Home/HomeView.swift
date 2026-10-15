@@ -16,6 +16,7 @@ private enum AccountCollectionDestination {
     case favorites
     case recentlyViewed
     case coupons
+    case points
 }
 
 struct HomeView: View {
@@ -254,6 +255,8 @@ struct HomeView: View {
             AccountCollectionRouteView(
                 destination: destination,
                 onBack: { presentedRoute = nil },
+                onBackToCoupons: { presentedRoute = .accountCollection(.coupons) },
+                onPointsTap: { presentedRoute = .accountCollection(.points) },
                 onProductTap: openProductDetail
             )
         case .orderHistory:
@@ -322,6 +325,8 @@ struct HomeView: View {
 private struct AccountCollectionRouteView: View {
     let destination: AccountCollectionDestination
     let onBack: () -> Void
+    let onBackToCoupons: () -> Void
+    let onPointsTap: () -> Void
     let onProductTap: (HomeProduct) -> Void
 
     @ViewBuilder
@@ -332,7 +337,9 @@ private struct AccountCollectionRouteView: View {
         case .recentlyViewed:
             RecentlyViewedView(onBack: onBack, onProductTap: onProductTap)
         case .coupons:
-            CouponsView(onBack: onBack)
+            CouponsView(onBack: onBack, onPointsTap: onPointsTap)
+        case .points:
+            PointsView(onBack: onBackToCoupons)
         }
     }
 }
