@@ -24,6 +24,7 @@ struct GuestMyPageView: View {
     @State private var presentedMessage: String?
 
     let cartCount: Int
+    let onLoginTap: () -> Void
     let onSelectTab: (EUMTabBar.Tab) -> Void
 
     var body: some View {
@@ -96,7 +97,7 @@ struct GuestMyPageView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             EUMButton(title: "로그인 / 회원가입", kind: .primary, size: .medium) {
-                presentedMessage = "로그인과 회원가입은 아직 연결되지 않았어요."
+                onLoginTap()
             }
         }
         .padding(24)
@@ -178,6 +179,6 @@ struct GuestMyPageView: View {
 
 struct GuestMyPageViewPreview: PreviewProvider {
     static var previews: some View {
-        GuestMyPageView(cartCount: 3, onSelectTab: { _ in })
+        GuestMyPageView(cartCount: 3, onLoginTap: {}, onSelectTab: { _ in })
     }
 }

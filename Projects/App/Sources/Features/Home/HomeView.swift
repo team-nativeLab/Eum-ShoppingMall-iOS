@@ -12,6 +12,7 @@ struct HomeView: View {
     @State private var isShowingCheckoutAddress = false
     @State private var isShowingCheckoutPayment = false
     @State private var isShowingCheckoutComplete = false
+    @State private var isShowingLogin = false
     @State private var presentedMessage: String?
 
     init(viewModel: HomeViewModel) {
@@ -25,7 +26,9 @@ struct HomeView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case let .content(content):
-                if isShowingCheckoutComplete {
+                if isShowingLogin {
+                    LoginView(onClose: { isShowingLogin = false })
+                } else if isShowingCheckoutComplete {
                     CheckoutCompleteView(
                         onClose: returnHome,
                         onContinueShopping: returnHome,
@@ -61,7 +64,11 @@ struct HomeView: View {
                     )
                 } else if selectedTab == .account {
                     if isGuestAccount {
-                        GuestMyPageView(cartCount: content.cartCount, onSelectTab: selectTab)
+                        GuestMyPageView(
+                            cartCount: content.cartCount,
+                            onLoginTap: { isShowingLogin = true },
+                            onSelectTab: selectTab
+                        )
                     } else {
                         MyPageView(cartCount: content.cartCount, onSelectTab: selectTab)
                     }
