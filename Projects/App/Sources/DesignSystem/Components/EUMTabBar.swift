@@ -65,14 +65,6 @@ struct EUMTabBar: View {
                     .accessibilityAddTraits(tab == selectedTab ? .isSelected : [])
                 }
             }
-
-            Capsule()
-                .fill(EUMColor.text1SwiftUI)
-                .frame(width: 134, height: 5)
-                .frame(maxWidth: .infinity)
-                .frame(height: 34, alignment: .bottom)
-                .padding(.bottom, 8)
-                .accessibilityHidden(true)
         }
         .background {
             EUMColor.backgroundSwiftUI
@@ -83,6 +75,6 @@ struct EUMTabBar: View {
                 }
                 .ignoresSafeArea(edges: .bottom)
         }
-        .frame(height: 91)
+        .frame(height: 56)
     }
 }
