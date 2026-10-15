@@ -13,6 +13,7 @@ enum HomeModalRoute {
     case addressEditor(ShippingAddress?)
     case accountWithdrawalNotice
     case accountWithdrawalReason
+    case accountWithdrawalComplete
 }
 
 enum AccountCollectionDestination {
@@ -299,8 +300,10 @@ struct HomeView: View {
         case .accountWithdrawalReason:
             AccountWithdrawalReasonView(
                 onBack: { presentedRoute = .accountWithdrawalNotice },
-                onSubmit: { presentedMessage = "회원 탈퇴 처리는 회원 서비스 연동 후 이용할 수 있어요." }
+                onSubmit: { presentedRoute = .accountWithdrawalComplete }
             )
+        case .accountWithdrawalComplete:
+            AccountWithdrawalCompleteView(onHome: returnHome)
         case let .addressEditor(address):
             AddressEditorRouteView(
                 address: address,
