@@ -62,4 +62,18 @@ final class CartViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.items.last?.isSelected ?? true)
         XCTAssertEqual(viewModel.items.last?.quantity, 2)
     }
+
+    func testZeroOrderCartHasOnlyUnselectableQuoteItems() {
+        let viewModel = CartViewModel(items: CartItem.zeroOrderItems)
+
+        XCTAssertEqual(viewModel.selectionItemCount, 0)
+        XCTAssertEqual(viewModel.selectedCount, 0)
+        XCTAssertEqual(viewModel.quoteItemCount, 2)
+
+        viewModel.toggleSelectAll()
+        viewModel.removeSelected()
+
+        XCTAssertEqual(viewModel.items.count, 2)
+        XCTAssertEqual(viewModel.quoteItemCount, 2)
+    }
 }
