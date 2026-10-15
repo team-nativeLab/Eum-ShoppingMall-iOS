@@ -17,6 +17,7 @@ struct EUMProductCard: View {
     var isPriceHidden = false
     var hiddenPriceBadgeTitle = "금액 미표시"
     var isFavorite = false
+    var showsFavoriteButton = true
     var onFavoriteTap: () -> Void = {}
     var onTap: () -> Void = {}
 
@@ -54,18 +55,20 @@ struct EUMProductCard: View {
                         }
                     }
                     .overlay(alignment: .topTrailing) {
-                        Button(action: onFavoriteTap) {
-                            Image(isFavorite ? "ProductFavoriteSelected" : "ProductFavorite")
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20, height: 20)
-                                .foregroundStyle(EUMColor.text1SwiftUI)
-                                .frame(width: 44, height: 44)
-                                .contentShape(Rectangle())
+                        if showsFavoriteButton {
+                            Button(action: onFavoriteTap) {
+                                Image(isFavorite ? "ProductFavoriteSelected" : "ProductFavorite")
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(EUMColor.text1SwiftUI)
+                                    .frame(width: 44, height: 44)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(isFavorite ? "찜 취소" : "찜하기")
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(isFavorite ? "찜 취소" : "찜하기")
                     }
 
                 VStack(alignment: .leading, spacing: 4) {

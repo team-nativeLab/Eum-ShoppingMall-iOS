@@ -64,6 +64,7 @@ struct MyPageView: View {
     let onSelectTab: (EUMTabBar.Tab) -> Void
     var onOrderHistoryTap: () -> Void = {}
     var onFavoritesTap: () -> Void = {}
+    var onRecentlyViewedTap: () -> Void = {}
     var onReturnsHistoryTap: () -> Void = {}
     var onAccountVerificationTap: () -> Void = {}
 
@@ -184,6 +185,8 @@ struct MyPageView: View {
                             onOrderHistoryTap()
                         } else if shortcut.title == "찜한 상품" {
                             onFavoritesTap()
+                        } else if shortcut.title == "최근 본 상품" {
+                            onRecentlyViewedTap()
                         } else {
                             showUnavailable(shortcut.title)
                         }
