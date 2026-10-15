@@ -14,6 +14,7 @@ Figma source is read-only. Assets below are the only local assets currently conf
 | Favorite selected heart | `ProductFavoriteSelected.imageset/favorite-selected.svg` | A-20 `HF/ProductCard` selected heart; Figma SVG | Present; filled 20 × 20 pt vector |
 | Recently viewed remove | `RecentlyViewedRemove.imageset/remove.svg` | A-21 card remove action; Figma SVG | Present; black stroke X, 20 × 20 pt vector |
 | Coupon coins / ticket | `CouponCoins.imageset/coins.svg`, `CouponTicket.imageset/ticket.svg` | A-22 points balance and coupon scope icons; Figma SVGs | Present; 20 × 20 pt vectors |
+| Profile edit controls | `ProfileEditCheck.imageset/check.svg`, `ProfileEditPassword.imageset/password.svg`, `ProfileEditChevron.imageset/chevron.svg` | A-23e checkbox, password row, and disclosure; Figma SVGs | Present; 14/20 pt vectors |
 | Top bar / tab icons | `TopBarMenu.imageset`, `TopBarBell.imageset`, `TabHome.imageset`, `TabCategory.imageset`, `TabSearch.imageset`, `TabCart.imageset`, `TabUser.imageset` | HF/App vectors | Present; 24 × 24 pt |
 | Section chevron | `SectionChevron.imageset` | Home section action vector | Present; 16 × 16 pt |
 | Search clear | `SearchClear.imageset` | A-06b `HF/Icon/circle-x`; Figma SVG | Present; 20 × 20 pt |

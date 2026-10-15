@@ -17,6 +17,7 @@ private enum AccountCollectionDestination {
     case recentlyViewed
     case coupons
     case points
+    case editProfile
 }
 
 struct HomeView: View {
@@ -256,7 +257,9 @@ struct HomeView: View {
                 destination: destination,
                 onBack: { presentedRoute = nil },
                 onBackToCoupons: { presentedRoute = .accountCollection(.coupons) },
+                onBackToVerification: { presentedRoute = .accountVerification },
                 onPointsTap: { presentedRoute = .accountCollection(.points) },
+                onAction: { presentedMessage = $0 },
                 onProductTap: openProductDetail
             )
         case .orderHistory:
@@ -295,9 +298,10 @@ struct HomeView: View {
                 onRejectionReason: { item in presentedMessage = item.rejectionReason ?? "반려 사유가 없습니다." }
             )
         case .accountVerification:
-            AccountVerificationView(
+            AccountVerificationRouteView(
                 onBack: { presentedRoute = nil },
-                onConfirm: { presentedMessage = $0 }
+                onVerified: { presentedRoute = .accountCollection(.editProfile) },
+                onMessage: { presentedMessage = $0 }
             )
         }
     }
@@ -326,7 +330,9 @@ private struct AccountCollectionRouteView: View {
     let destination: AccountCollectionDestination
     let onBack: () -> Void
     let onBackToCoupons: () -> Void
+    let onBackToVerification: () -> Void
     let onPointsTap: () -> Void
+    let onAction: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
 
     @ViewBuilder
@@ -340,6 +346,24 @@ private struct AccountCollectionRouteView: View {
             CouponsView(onBack: onBack, onPointsTap: onPointsTap)
         case .points:
             PointsView(onBack: onBackToCoupons)
+        case .editProfile:
+            ProfileEditView(onBack: onBackToVerification, onAction: onAction)
+        }
+    }
+}
+
+private struct AccountVerificationRouteView: View {
+    let onBack: () -> Void
+    let onVerified: () -> Void
+    let onMessage: (String) -> Void
+
+    var body: some View {
+        AccountVerificationView(onBack: onBack) { message in
+            if let message {
+                onMessage(message)
+            } else {
+                onVerified()
+            }
         }
     }
 }
