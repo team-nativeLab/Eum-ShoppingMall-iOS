@@ -31,6 +31,7 @@ final class AddressesViewModel: ObservableObject {
     let addressLimitNotice = "배송지는 최대 0개까지 등록할 수 있습니다."
 
     func setDefault(addressID: String) {
+        guard addresses.contains(where: { $0.id == addressID }) else { return }
         addresses = addresses.map { address in
             var updated = address
             updated.isDefault = address.id == addressID
@@ -40,5 +41,16 @@ final class AddressesViewModel: ObservableObject {
 
     func delete(addressID: String) {
         addresses.removeAll { $0.id == addressID }
+    }
+
+    func save(_ address: ShippingAddress) {
+        if let index = addresses.firstIndex(where: { $0.id == address.id }) {
+            addresses[index] = address
+        } else {
+            addresses.append(address)
+        }
+        if address.isDefault {
+            setDefault(addressID: address.id)
+        }
     }
 }

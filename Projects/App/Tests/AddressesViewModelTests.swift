@@ -25,4 +25,17 @@ final class AddressesViewModelTests: XCTestCase {
 
         XCTAssertEqual(viewModel.addresses.map(\.id), ["address-1", "address-2"])
     }
+
+    func testSaveAppendsNewAddressAndMovesDefaultWhenSelected() {
+        let viewModel = AddressesViewModel()
+        let newAddress = ShippingAddress(
+            id: "address-4", name: "본사", recipient: "홍길동", phoneNumber: "010-1234-5678",
+            postalAddress: "(12345)", detailAddress: "서울시", isDefault: true
+        )
+
+        viewModel.save(newAddress)
+
+        XCTAssertEqual(viewModel.addresses.count, 4)
+        XCTAssertEqual(viewModel.addresses.filter(\.isDefault).map(\.id), ["address-4"])
+    }
 }

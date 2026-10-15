@@ -8,7 +8,7 @@
 ## Implemented
 
 - Three address cards; the first is the default address and shows the dark `기본 배송지` badge.
-- Non-default cards include 기본 설정, 수정, and 삭제 actions; the default card shows 수정 only.
+- Non-default cards include 기본 설정, 수정, and 삭제 actions; the default card shows 수정 only. Add/edit opens the A-24e form and a successful local save returns to this list.
 - Setting a default address updates the local state; deleting an address removes it from the local list.
 - The literal address-limit notice and fixed bottom 배송지 추가 button match the frame.
 
@@ -20,4 +20,4 @@ The Figma frame says `배송지는 최대 0개까지 등록할 수 있습니다.
 
 ## Scope and limitations
 
-Default selection and deletion are local only. Add/edit buttons are visible but their A-24e destination screen is handled separately; service persistence is not connected.
+Default selection, deletion, and add/edit are local only; service persistence is not connected.
