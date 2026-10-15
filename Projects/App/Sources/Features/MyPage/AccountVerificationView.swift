@@ -6,10 +6,8 @@ final class AccountVerificationViewModel: ObservableObject {
 
     let email = "example@email.com"
 
-    func requestVerification() -> String {
-        password.isEmpty
-            ? "비밀번호를 입력해 주세요."
-            : "비밀번호 확인은 계정 서비스 연동 후 이용할 수 있어요."
+    func requestVerification() -> String? {
+        password.isEmpty ? "비밀번호를 입력해 주세요." : nil
     }
 }
 
@@ -17,7 +15,7 @@ struct AccountVerificationView: View {
     @StateObject private var viewModel = AccountVerificationViewModel()
 
     let onBack: () -> Void
-    let onConfirm: (String) -> Void
+    let onConfirm: (String?) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
