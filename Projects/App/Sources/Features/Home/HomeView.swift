@@ -9,6 +9,7 @@ struct HomeView: View {
     @State private var selectedProduct: HomeProduct?
     @State private var isShowingCheckoutAddress = false
     @State private var isShowingCheckoutPayment = false
+    @State private var isShowingCheckoutComplete = false
     @State private var presentedMessage: String?
 
     init(viewModel: HomeViewModel) {
@@ -22,10 +23,16 @@ struct HomeView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case let .content(content):
-                if isShowingCheckoutPayment {
+                if isShowingCheckoutComplete {
+                    CheckoutCompleteView(
+                        onClose: returnHome,
+                        onContinueShopping: returnHome,
+                        onOrderDetails: { presentedMessage = "주문 상세 화면은 아직 연결되지 않았어요." }
+                    )
+                } else if isShowingCheckoutPayment {
                     CheckoutPaymentView(
                         onBack: { isShowingCheckoutPayment = false },
-                        onPaymentComplete: { presentedMessage = "결제 완료 화면은 다음 단계에서 연결할 예정이에요." }
+                        onPaymentComplete: { isShowingCheckoutComplete = true }
                     )
                 } else if isShowingCheckoutAddress {
                     CheckoutAddressView(
@@ -114,6 +121,13 @@ struct HomeView: View {
             selectedProductCategory = nil
             selectedProduct = nil
         }
+    }
+
+    private func returnHome() {
+        isShowingCheckoutAddress = false
+        isShowingCheckoutPayment = false
+        isShowingCheckoutComplete = false
+        selectedTab = .home
     }
 
     private func homeContent(_ content: HomeContent) -> some View {
