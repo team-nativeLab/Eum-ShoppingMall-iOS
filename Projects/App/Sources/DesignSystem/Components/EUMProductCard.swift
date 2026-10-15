@@ -15,6 +15,7 @@ struct EUMProductCard: View {
     var imageName: String?
     var isSoldOut = false
     var isPriceHidden = false
+    var hiddenPriceBadgeTitle = "금액 미표시"
     var isFavorite = false
     var onFavoriteTap: () -> Void = {}
     var onTap: () -> Void = {}
@@ -53,7 +54,7 @@ struct EUMProductCard: View {
                     }
                     .overlay(alignment: .topLeading) {
                         if isPriceHidden {
-                            Text("금액 미표시")
+                            Text(hiddenPriceBadgeTitle)
                                 .font(EUMTypography.labelExtraSmall)
                                 .foregroundStyle(EUMColor.text2SwiftUI)
                                 .padding(.horizontal, 6)
@@ -106,19 +107,22 @@ struct EUMProductCard: View {
                 .resizable()
                 .scaledToFill()
         } else {
-            Image("ProductPlaceholder")
-                .resizable()
-                .scaledToFill()
-                .background {
-                    LinearGradient(
-                        colors: [
-                            Color(red: 0.949, green: 0.949, blue: 0.949),
-                            Color(red: 0.91, green: 0.91, blue: 0.91)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                }
+            ZStack {
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.949, green: 0.949, blue: 0.949),
+                        Color(red: 0.91, green: 0.91, blue: 0.91)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+
+                Image("ProductPlaceholder")
+                    .renderingMode(.original)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 32, height: 32)
+            }
         }
     }
 }

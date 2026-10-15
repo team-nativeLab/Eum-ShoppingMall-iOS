@@ -13,6 +13,9 @@ Figma source is read-only. Assets below are the only local assets currently conf
 | Product placeholder / favorite | `ProductPlaceholder.imageset`, `ProductFavorite.imageset` | HF/Image and HF/ProductCard vectors | Present; placeholder 32 × 32 pt, favorite 20 × 20 pt |
 | Top bar / tab icons | `TopBarMenu.imageset`, `TopBarBell.imageset`, `TabHome.imageset`, `TabCategory.imageset`, `TabSearch.imageset`, `TabCart.imageset`, `TabUser.imageset` | HF/App vectors | Present; 24 × 24 pt |
 | Section chevron | `SectionChevron.imageset` | Home section action vector | Present; 16 × 16 pt |
+| Search clear | `SearchClear.imageset` | A-06b `HF/Icon/circle-x`; Figma SVG | Present; 20 × 20 pt |
+| Search sort | `SearchSort.imageset` | A-06b `HF/Icon/arrow-up-down`; Figma SVG | Present; 16 × 16 pt |
+| Search filter | `SearchFilter.imageset` | A-06b `HF/Icon/sliders-horizontal`; Figma SVG | Present; 16 × 16 pt |
 
 ## Outstanding asset audit
 
