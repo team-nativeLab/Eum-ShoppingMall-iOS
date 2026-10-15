@@ -88,6 +88,10 @@ Components/instances observed in the `06 Design — App` page metadata. A name i
 - `HF/App/TabBar` (`178:679`): 390 × 91 pt; five 78 pt items, 24 pt icons, 11 pt labels, 56 pt item region, and a 34 pt bottom-indicator region.
 - Home section header (`178:536`): 350 × 26 pt; title and optional “더보기” action with a 16 pt chevron.
 - `HF/EmptyState` (`177:455`, A-06z instance `180:1715`): 64 pt surface icon tile with 28 pt search-x icon; 64/32 pt vertical padding; 160 × 48 pt action; state copy is node-specific.
+- `HF/CartItem` (A-07 instance `177:258`): 138 pt row; 20 pt selection control, 80 pt placeholder image, product title/option, price, and 112 × 36 pt quantity stepper; sold-out row disables selection and quantity.
+- `HF/Checkbox` (A-07 instances `175:182` and `175:187`): 20 pt square, 4 pt radius; selected uses text-1 fill and inverse check, disabled uses surface-2 fill.
+- `HF/QuantityStepper` (A-07 instances `175:258` and `175:269`): S size is 112 × 36 pt with 36/40/36 pt minus/value/plus segments and 8 pt radius; min and disabled controls use disabled text color.
+- A-07 also uses a 44 pt inline login notice, 12 pt radius price summary, fixed 56 pt primary order button, and the five-item tab bar with selected cart state.
 - Remaining variants and complete per-screen usage mappings need per-node contexts; Figma Code Connect library enumeration is seat-gated.
 
 ## Observed names
