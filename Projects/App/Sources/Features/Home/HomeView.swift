@@ -11,20 +11,27 @@ struct HomeView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            EUMTopBar(
-                title: "이음산업건설",
-                onMenuTap: {},
-                onNotificationTap: {}
-            )
-
             switch viewModel.state {
             case .loading:
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case let .content(content):
-                homeContent(content)
-                EUMTabBar(selectedTab: selectedTab, cartCount: content.cartCount) { tab in
-                    selectedTab = tab
+                if selectedTab == .category {
+                    CategoryView(
+                        onSearchTap: { selectedTab = .search },
+                        onAllProductsTap: {},
+                        onCategoryTap: { _ in },
+                        onSelectTab: selectTab,
+                        cartCount: content.cartCount
+                    )
+                } else {
+                    EUMTopBar(
+                        title: "이음산업건설",
+                        onMenuTap: {},
+                        onNotificationTap: {}
+                    )
+                    homeContent(content)
+                    EUMTabBar(selectedTab: selectedTab, cartCount: content.cartCount, onSelect: selectTab)
                 }
             case .failed:
                 loadError
@@ -35,6 +42,12 @@ struct HomeView: View {
             if case .loading = viewModel.state {
                 await viewModel.load()
             }
+        }
+    }
+
+    private func selectTab(_ tab: EUMTabBar.Tab) {
+        if tab == .home || tab == .category {
+            selectedTab = tab
         }
     }
 
