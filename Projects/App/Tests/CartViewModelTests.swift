@@ -39,4 +39,27 @@ final class CartViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.items.map(\.id), ["cart-3"])
         XCTAssertEqual(viewModel.selectedCount, 0)
     }
+
+    func testMixedPricingCartExcludesQuoteItemFromSelection() {
+        let viewModel = CartViewModel(items: CartItem.mixedPricingItems)
+
+        XCTAssertEqual(viewModel.selectionItemCount, 2)
+        XCTAssertEqual(viewModel.selectedCount, 2)
+        XCTAssertTrue(viewModel.items.last?.isQuoteProduct == true)
+
+        viewModel.toggleSelectAll()
+
+        XCTAssertEqual(viewModel.selectedCount, 0)
+        XCTAssertFalse(viewModel.items.last?.isSelected ?? true)
+    }
+
+    func testQuoteItemCannotBeSelectedButCanChangeInquiryQuantity() {
+        let viewModel = CartViewModel(items: CartItem.mixedPricingItems)
+
+        viewModel.toggleSelection(itemID: "cart-quote-1")
+        viewModel.changeQuantity(itemID: "cart-quote-1", by: 1)
+
+        XCTAssertFalse(viewModel.items.last?.isSelected ?? true)
+        XCTAssertEqual(viewModel.items.last?.quantity, 2)
+    }
 }
