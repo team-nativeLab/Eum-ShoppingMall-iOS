@@ -3,14 +3,19 @@ import SwiftUI
 private enum HomeModalRoute {
     case authentication
     case quoteInquiry(HomeProduct?)
-    case favorites
-    case recentlyViewed
+    case accountCollection(AccountCollectionDestination)
     case orderHistory
     case orderDetail(OrderHistoryItem)
     case deliveryTracking(OrderHistoryItem)
     case returnRequest(OrderHistoryItem)
     case returnHistory(backToOrderHistory: Bool)
     case accountVerification
+}
+
+private enum AccountCollectionDestination {
+    case favorites
+    case recentlyViewed
+    case coupons
 }
 
 struct HomeView: View {
@@ -165,8 +170,9 @@ struct HomeView: View {
                 cartCount: cartCount,
                 onSelectTab: selectTab,
                 onOrderHistoryTap: { presentedRoute = .orderHistory },
-                onFavoritesTap: { presentedRoute = .favorites },
-                onRecentlyViewedTap: { presentedRoute = .recentlyViewed },
+                onFavoritesTap: { presentedRoute = .accountCollection(.favorites) },
+                onRecentlyViewedTap: { presentedRoute = .accountCollection(.recentlyViewed) },
+                onCouponsTap: { presentedRoute = .accountCollection(.coupons) },
                 onReturnsHistoryTap: { presentedRoute = .returnHistory(backToOrderHistory: false) },
                 onAccountVerificationTap: { presentedRoute = .accountVerification }
             )
@@ -244,10 +250,12 @@ struct HomeView: View {
             AuthenticationFlowView(onClose: { presentedRoute = nil })
         case let .quoteInquiry(product):
             QuoteInquiryView(product: product, onBack: { presentedRoute = nil })
-        case .favorites:
-            favoritesView
-        case .recentlyViewed:
-            recentlyViewedView
+        case let .accountCollection(destination):
+            AccountCollectionRouteView(
+                destination: destination,
+                onBack: { presentedRoute = nil },
+                onProductTap: openProductDetail
+            )
         case .orderHistory:
             OrderHistoryView(
                 onBack: { presentedRoute = nil },
@@ -291,20 +299,6 @@ struct HomeView: View {
         }
     }
 
-    private var favoritesView: some View {
-        FavoritesView(
-            onBack: { presentedRoute = nil },
-            onProductTap: openProductDetail
-        )
-    }
-
-    private var recentlyViewedView: some View {
-        RecentlyViewedView(
-            onBack: { presentedRoute = nil },
-            onProductTap: openProductDetail
-        )
-    }
-
     private func openProductDetail(_ product: HomeProduct) {
         presentedRoute = nil
         selectedProduct = product
@@ -323,6 +317,24 @@ struct HomeView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
+}
+
+private struct AccountCollectionRouteView: View {
+    let destination: AccountCollectionDestination
+    let onBack: () -> Void
+    let onProductTap: (HomeProduct) -> Void
+
+    @ViewBuilder
+    var body: some View {
+        switch destination {
+        case .favorites:
+            FavoritesView(onBack: onBack, onProductTap: onProductTap)
+        case .recentlyViewed:
+            RecentlyViewedView(onBack: onBack, onProductTap: onProductTap)
+        case .coupons:
+            CouponsView(onBack: onBack)
+        }
+    }
 }
 
 struct HomeViewPreview: PreviewProvider {
