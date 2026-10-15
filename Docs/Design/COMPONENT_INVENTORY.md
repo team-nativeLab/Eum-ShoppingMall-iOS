@@ -102,6 +102,7 @@ Components/instances observed in the `06 Design — App` page metadata. A name i
 - A-16 (`350:3346`) uses six horizontally scrolling order-status chips, a period menu, and order cards with status badges, product placeholder, order-detail link, and status-dependent actions. The implementation reuses `ProductPlaceholder`, shared typography/colors, and `EUMButton`.
 - A-23 (`350:3490`) uses a lock confirmation panel, disabled email field, secure password field, and fixed bottom confirmation action. It reuses `HF/TextField`, `HF/Button`, the shared back icon, and a local SVG export of the Figma lock icon.
 - A-17 (`351:3440`) uses product, shipping, payment, points, and document cards with a fixed delivery/return action row. It reuses the product placeholder, shared buttons/tokens, and local Figma SVG exports for document and receipt actions.
+- A-18 (`351:3570`) uses a delivery summary, five-step progress row, five-event timeline, product summary, and inline delay notice. It reuses the Figma timeline/check/info SVGs and shared placeholder color tokens.
 - Remaining variants and complete per-screen usage mappings need per-node contexts; Figma Code Connect library enumeration is seat-gated.
 
 ## Observed names

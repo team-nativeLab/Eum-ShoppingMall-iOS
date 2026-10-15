@@ -53,7 +53,11 @@ struct OrderDetailProductSection: View {
                 .frame(width: 32, height: 32)
                 .frame(width: 64, height: 64)
                 .background {
-                    LinearGradient(colors: [Color(hex: "#F2F2F2"), Color(hex: "#E8E8E8")], startPoint: .top, endPoint: .bottom)
+                    LinearGradient(
+                        colors: [EUMColor.imagePlaceholderTopSwiftUI, EUMColor.imagePlaceholderBottomSwiftUI],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
                 }
                 .clipShape(RoundedRectangle(cornerRadius: EUMRadius.medium))
                 .accessibilityHidden(true)
@@ -64,7 +68,7 @@ struct OrderDetailProductSection: View {
                     .foregroundStyle(EUMColor.text2SwiftUI)
                     .padding(.horizontal, 6)
                     .frame(height: 20)
-                    .background(Color(hex: "#EBEBEB"), in: RoundedRectangle(cornerRadius: EUMRadius.small))
+                    .background(EUMColor.surfaceSecondarySwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.small))
                     .fixedSize()
                 Text(product.name)
                     .font(EUMTypography.bodyMedium)
@@ -158,16 +162,5 @@ struct OrderDetailMenuRow: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(title)
-    }
-}
-
-private extension Color {
-    init(hex: String) {
-        let value = UInt(hex.dropFirst(), radix: 16) ?? 0
-        self.init(
-            red: Double((value >> 16) & 0xFF) / 255,
-            green: Double((value >> 8) & 0xFF) / 255,
-            blue: Double(value & 0xFF) / 255
-        )
     }
 }

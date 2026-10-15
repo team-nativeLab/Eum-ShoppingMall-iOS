@@ -1,6 +1,6 @@
 # Design Tokens
 
-Source: high-fidelity Figma contexts for A-01 (`178:350`) and A-02 (`178:369`). These are observed values, not a complete published-variable export. The Figma variable-definition endpoint returned “nothing selected”; Code Connect/library enumeration is seat-gated.
+Source: high-fidelity Figma contexts for A-01 (`178:350`), A-02 (`178:369`), A-17 (`351:3440`), and A-18 (`351:3570`). These are observed values, not a complete published-variable export. The Figma variable-definition endpoint returned “nothing selected”; Code Connect/library enumeration is seat-gated.
 
 ## Color
 
@@ -12,17 +12,18 @@ Source: high-fidelity Figma contexts for A-01 (`178:350`) and A-02 (`178:369`). 
 | bg | `#FFFFFF` | Home component styles |
 | bg-subtle | `#FAFAFA` | Home component styles |
 | surface | `#F5F5F5` | Home component styles |
+| surface-2 | `#EBEBEB` | Button disabled state / status badge |
 | line | `#EBEBEB` | Home component styles |
 | line-strong | `#D4D4D4` | Home component styles |
 | line-control | `#949494` | TextField instance border |
 | pressed-dark | `#333333` | Button pressed state |
-| surface-2 | `#EBEBEB` | Button disabled state |
 | text-disabled | `#B3B3B3` | Button disabled label |
 | danger | `#C5221F` | Danger button default |
 | inverse | `#FFFFFF` | Splash/Home component styles |
 | inverse-2 | `rgba(255,255,255,0.72)` | Home component styles |
 | splash overlay | `rgba(13,13,15,0.15 / 0.25 / 0.5)` | Splash gradient stops |
-| image placeholder | `#F2F2F2 → #E8E8E8` | Home image placeholder |
+| image placeholder top | `#F2F2F2` | `HF/Image` gradient (`351:3440`, `351:3570`) |
+| image placeholder bottom | `#E8E8E8` | `HF/Image` gradient (`351:3440`, `351:3570`) |
 
 No primary/secondary brand color or semantic success/warning/error palette was confirmed in the inspected contexts.
 
