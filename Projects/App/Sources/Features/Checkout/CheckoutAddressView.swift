@@ -262,7 +262,7 @@ struct CheckoutAddressView: View {
     }
 }
 
-private struct CheckoutProgress: View {
+struct CheckoutProgress: View {
     let currentStep: Int
 
     private let titles = ["배송지", "결제", "완료"]
@@ -272,21 +272,29 @@ private struct CheckoutProgress: View {
             ForEach(titles.indices, id: \.self) { index in
                 if index > 0 {
                     Rectangle()
-                        .fill(EUMColor.lineSwiftUI)
+                        .fill(index + 1 <= currentStep ? EUMColor.text1SwiftUI : EUMColor.lineSwiftUI)
                         .frame(height: 1)
                         .frame(maxWidth: .infinity)
                         .padding(.horizontal, 8)
                 }
                 VStack(spacing: 6) {
-                    Text("\(index + 1)")
-                        .font(EUMTypography.captionMedium)
-                        .foregroundStyle(index + 1 == currentStep ? EUMColor.inverseSwiftUI : EUMColor.text3SwiftUI)
-                        .frame(width: 24, height: 24)
-                        .background(index + 1 == currentStep ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI, in: Circle())
-                        .overlay(Circle().stroke(index + 1 == currentStep ? Color.clear : EUMColor.lineStrongSwiftUI, lineWidth: 1))
+                    Group {
+                        if index + 1 < currentStep {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(EUMColor.inverseSwiftUI)
+                        } else {
+                            Text("\(index + 1)")
+                                .font(EUMTypography.captionMedium)
+                                .foregroundStyle(index + 1 == currentStep ? EUMColor.inverseSwiftUI : EUMColor.text3SwiftUI)
+                        }
+                    }
+                    .frame(width: 24, height: 24)
+                    .background(index + 1 <= currentStep ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI, in: Circle())
+                    .overlay(Circle().stroke(index + 1 <= currentStep ? Color.clear : EUMColor.lineStrongSwiftUI, lineWidth: 1))
                     Text(titles[index])
                         .font(EUMTypography.labelExtraSmall)
-                        .foregroundStyle(index + 1 == currentStep ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI)
+                        .foregroundStyle(index + 1 <= currentStep ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI)
                 }
                 .frame(width: 52)
             }
