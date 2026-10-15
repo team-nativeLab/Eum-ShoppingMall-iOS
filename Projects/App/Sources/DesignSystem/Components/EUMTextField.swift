@@ -4,7 +4,7 @@ struct EUMTextField: View {
     let title: String
     let placeholder: String
     @Binding var text: String
-    var trailingSymbol: String? = nil
+    var trailingSymbol: String?
     var isSecure = false
     var isDisabled = false
 
