@@ -107,6 +107,7 @@ Components/instances observed in the `06 Design — App` page metadata. A name i
 - A-19l (`353:3725`) uses four request cards under all/cancel/return/exchange chips, with request-detail links, refund rows, withdrawal and rejection-reason actions. It reuses the shared product placeholder, button, typography, and color APIs.
 - A-20 (`354:3685`) uses a two-column six-card favorite grid with favorite hearts, quote badges, sold-out overlays, a sort menu, and an edit action. It reuses `HF/ProductCard` and the Figma heart asset.
 - A-21 (`354:3814`) uses two dated groups of product cards, per-card remove X controls, a retention notice, quote and sold-out variants. It reuses `HF/ProductCard`; the favorite control is hidden on this screen.
+- A-22 (`355:3895`) uses a coupon-code registration row, points-balance link, two coupon tabs, and perforated ticket cards with discount, expiry, and scope fields. Ticket internals are screen-specific; the code field and action reuse `HF/TextField`/`HF/Button` styles.
 - Remaining variants and complete per-screen usage mappings need per-node contexts; Figma Code Connect library enumeration is seat-gated.
 
 ## Observed names

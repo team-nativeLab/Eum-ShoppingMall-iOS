@@ -13,6 +13,7 @@ Figma source is read-only. Assets below are the only local assets currently conf
 | Product placeholder / favorite | `ProductPlaceholder.imageset`, `ProductFavorite.imageset` | HF/Image and HF/ProductCard vectors | Present; placeholder 32 × 32 pt, favorite 20 × 20 pt |
 | Favorite selected heart | `ProductFavoriteSelected.imageset/favorite-selected.svg` | A-20 `HF/ProductCard` selected heart; Figma SVG | Present; filled 20 × 20 pt vector |
 | Recently viewed remove | `RecentlyViewedRemove.imageset/remove.svg` | A-21 card remove action; Figma SVG | Present; black stroke X, 20 × 20 pt vector |
+| Coupon coins / ticket | `CouponCoins.imageset/coins.svg`, `CouponTicket.imageset/ticket.svg` | A-22 points balance and coupon scope icons; Figma SVGs | Present; 20 × 20 pt vectors |
 | Top bar / tab icons | `TopBarMenu.imageset`, `TopBarBell.imageset`, `TabHome.imageset`, `TabCategory.imageset`, `TabSearch.imageset`, `TabCart.imageset`, `TabUser.imageset` | HF/App vectors | Present; 24 × 24 pt |
 | Section chevron | `SectionChevron.imageset` | Home section action vector | Present; 16 × 16 pt |
 | Search clear | `SearchClear.imageset` | A-06b `HF/Icon/circle-x`; Figma SVG | Present; 20 × 20 pt |
