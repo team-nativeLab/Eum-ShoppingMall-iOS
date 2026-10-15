@@ -7,6 +7,7 @@ private enum HomeModalRoute {
     case orderDetail(OrderHistoryItem)
     case deliveryTracking(OrderHistoryItem)
     case returnRequest(OrderHistoryItem)
+    case returnHistory(backToOrderHistory: Bool)
     case accountVerification
 }
 
@@ -162,6 +163,7 @@ struct HomeView: View {
                 cartCount: cartCount,
                 onSelectTab: selectTab,
                 onOrderHistoryTap: { presentedRoute = .orderHistory },
+                onReturnsHistoryTap: { presentedRoute = .returnHistory(backToOrderHistory: false) },
                 onAccountVerificationTap: { presentedRoute = .accountVerification }
             )
         }
@@ -241,7 +243,7 @@ struct HomeView: View {
         case .orderHistory:
             OrderHistoryView(
                 onBack: { presentedRoute = nil },
-                onCancelReturn: { presentedMessage = "취소·반품 내역은 다음 화면 작업에서 연결할 예정이에요." },
+                onCancelReturn: { presentedRoute = .returnHistory(backToOrderHistory: true) },
                 onOrderDetail: { presentedRoute = .orderDetail($0) },
                 onCancelOrder: { _ in presentedMessage = "주문 취소는 서버 연동 후 이용할 수 있어요." },
                 onTrackDelivery: { _ in presentedMessage = "배송 조회는 서버 연동 후 이용할 수 있어요." },
@@ -265,6 +267,13 @@ struct HomeView: View {
                 onUnavailableKind: { presentedMessage = "\($0.rawValue) 화면은 별도 작업에서 연결할 예정이에요." },
                 onAddressChange: { presentedMessage = "배송지 변경은 배송지 관리 화면 연결 후 이용할 수 있어요." },
                 onSubmit: { presentedMessage = $0 }
+            )
+        case let .returnHistory(backToOrderHistory):
+            ReturnHistoryView(
+                onBack: { presentedRoute = backToOrderHistory ? .orderHistory : nil },
+                onDetail: { _ in presentedMessage = "신청 상세는 서버 연동 후 확인할 수 있어요." },
+                onWithdraw: { _ in presentedMessage = "신청 철회는 서버 연동 후 이용할 수 있어요." },
+                onRejectionReason: { item in presentedMessage = item.rejectionReason ?? "반려 사유가 없습니다." }
             )
         case .accountVerification:
             AccountVerificationView(
