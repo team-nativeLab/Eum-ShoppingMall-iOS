@@ -7,6 +7,8 @@ struct HomeView: View {
     @State private var searchReturnTab = EUMTabBar.Tab.home
     @State private var selectedProductCategory: HomeCategory?
     @State private var selectedProduct: HomeProduct?
+    @State private var isShowingDrawer = false
+    @State private var isGuestAccount = false
     @State private var isShowingCheckoutAddress = false
     @State private var isShowingCheckoutPayment = false
     @State private var isShowingCheckoutComplete = false
@@ -58,10 +60,11 @@ struct HomeView: View {
                         onSelectTab: selectTab
                     )
                 } else if selectedTab == .account {
-                    MyPageView(
-                        cartCount: content.cartCount,
-                        onSelectTab: selectTab
-                    )
+                    if isGuestAccount {
+                        GuestMyPageView(cartCount: content.cartCount, onSelectTab: selectTab)
+                    } else {
+                        MyPageView(cartCount: content.cartCount, onSelectTab: selectTab)
+                    }
                 } else if selectedTab == .category {
                     if let selectedProductCategory {
                         ProductListView(
@@ -89,8 +92,8 @@ struct HomeView: View {
                 } else {
                     EUMTopBar(
                         title: "이음산업건설",
-                        onMenuTap: {},
-                        onNotificationTap: {}
+                        onMenuTap: { withAnimation(.easeOut(duration: 0.2)) { isShowingDrawer = true } },
+                        onNotificationTap: { presentedMessage = "알림 화면은 아직 연결되지 않았어요." }
                     )
                     homeContent(content)
                     EUMTabBar(selectedTab: selectedTab, cartCount: content.cartCount, onSelect: selectTab)
@@ -100,6 +103,32 @@ struct HomeView: View {
             }
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .overlay {
+            if isShowingDrawer {
+                AppDrawerView(
+                    onDismiss: { withAnimation(.easeOut(duration: 0.2)) { isShowingDrawer = false } },
+                    onMyInfo: {
+                        isShowingDrawer = false
+                        isGuestAccount = false
+                        selectedTab = .account
+                    },
+                    onDestination: { destination in
+                        isShowingDrawer = false
+                        presentedMessage = "\(destination) 화면은 아직 연결되지 않았어요."
+                    },
+                    onSettings: {
+                        isShowingDrawer = false
+                        presentedMessage = "설정 화면은 아직 연결되지 않았어요."
+                    },
+                    onLogout: {
+                        isShowingDrawer = false
+                        isGuestAccount = true
+                        selectedTab = .account
+                    }
+                )
+                .zIndex(1)
+            }
+        }
         .alert("안내", isPresented: Binding(
             get: { presentedMessage != nil },
             set: { if !$0 { presentedMessage = nil } }
