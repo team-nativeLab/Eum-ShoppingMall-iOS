@@ -41,7 +41,8 @@ struct ProductOptionsSheet: View {
     @StateObject private var viewModel = ProductOptionsSheetViewModel()
 
     let onAddToCart: () -> Void
-    let onBuyNow: () -> Void
+    let onPrimaryAction: () -> Void
+    let isPriceHidden: Bool
 
     var body: some View {
         VStack(spacing: 0) {
@@ -172,10 +173,12 @@ struct ProductOptionsSheet: View {
             HStack {
                 quantityStepper(size: size)
                 Spacer()
-                Text("₩00,000")
-                    .font(Font.custom("NotoSansKR-Bold", size: 16, relativeTo: .body))
-                    .tracking(-0.08)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
+                if !isPriceHidden {
+                    Text("₩00,000")
+                        .font(Font.custom("NotoSansKR-Bold", size: 16, relativeTo: .body))
+                        .tracking(-0.08)
+                        .foregroundStyle(EUMColor.text1SwiftUI)
+                }
             }
         }
         .padding(16)
@@ -228,24 +231,39 @@ struct ProductOptionsSheet: View {
 
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("총 금액")
+                    Text(isPriceHidden ? "선택 수량" : "총 금액")
                         .font(EUMTypography.bodySmall)
                         .foregroundStyle(EUMColor.text2SwiftUI)
-                    Text("총 \(viewModel.totalCount)개")
-                        .font(EUMTypography.captionMedium)
-                        .foregroundStyle(EUMColor.text3SwiftUI)
+                    if !isPriceHidden {
+                        Text("총 \(viewModel.totalCount)개")
+                            .font(EUMTypography.captionMedium)
+                            .foregroundStyle(EUMColor.text3SwiftUI)
+                    }
                 }
 
                 Spacer()
 
-                Text("₩00,000")
-                    .font(Font.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
-                    .tracking(-0.36)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
+                if isPriceHidden {
+                    Text("\(viewModel.totalCount)개")
+                        .font(Font.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
+                        .tracking(-0.36)
+                        .foregroundStyle(EUMColor.text1SwiftUI)
+                } else {
+                    Text("₩00,000")
+                        .font(Font.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
+                        .tracking(-0.36)
+                        .foregroundStyle(EUMColor.text1SwiftUI)
+                }
+            }
+
+            if isPriceHidden {
+                Text("가격 문의 상품은 견적 문의로 구매할 수 있습니다.")
+                    .font(EUMTypography.captionMedium)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
-        .padding(.top, 16)
-        .frame(height: 59, alignment: .top)
+        .frame(height: isPriceHidden ? 81 : 59, alignment: .top)
     }
 
     private var bottomActions: some View {
@@ -255,8 +273,12 @@ struct ProductOptionsSheet: View {
                 dismiss()
             }
 
-            EUMButton(title: "바로 구매", kind: .secondary, size: .large) {
-                onBuyNow()
+            EUMButton(
+                title: isPriceHidden ? "견적 문의" : "바로 구매",
+                kind: isPriceHidden ? .primary : .secondary,
+                size: .large
+            ) {
+                onPrimaryAction()
                 dismiss()
             }
         }
