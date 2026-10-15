@@ -28,6 +28,20 @@ final class SearchResultsViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.visibleProducts[0].isFavorite)
     }
 
+    @MainActor
+    func testMockEmptyQuerySwitchesBetweenEmptyAndResultsStates() {
+        let viewModel = SearchResultsViewModel(
+            products: makeProducts(count: 4),
+            searchQuery: SearchResultsViewModel.mockEmptyResultQuery
+        )
+
+        XCTAssertTrue(viewModel.hasNoResults)
+
+        viewModel.updateSearchQuery("안전모")
+
+        XCTAssertFalse(viewModel.hasNoResults)
+    }
+
     private func makeProducts(count: Int) -> [HomeProduct] {
         (0..<count).map { index in
             HomeProduct(

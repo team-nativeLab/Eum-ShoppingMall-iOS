@@ -2,6 +2,8 @@ import SwiftUI
 
 @MainActor
 final class SearchResultsViewModel: ObservableObject {
+    static let mockEmptyResultQuery = "방폭 헬멧"
+
     enum SortOption: String, CaseIterable, Identifiable {
         case recommended = "추천순"
         case priceAscending = "낮은 가격순"
@@ -22,8 +24,10 @@ final class SearchResultsViewModel: ObservableObject {
     @Published var sortOption: SortOption = .recommended
     @Published var priceFilter: PriceFilter = .all
     @Published private(set) var products: [HomeProduct]
+    @Published private(set) var hasNoResults: Bool
 
-    init(products: [HomeProduct]) {
+    init(products: [HomeProduct], searchQuery: String = "안전모") {
+        hasNoResults = Self.isEmptyResultQuery(searchQuery)
         self.products = Array(products.prefix(4).enumerated()).map { index, product in
             HomeProduct(
                 id: product.id,
@@ -35,6 +39,10 @@ final class SearchResultsViewModel: ObservableObject {
                 isPriceHidden: index == 3
             )
         }
+    }
+
+    func updateSearchQuery(_ query: String) {
+        hasNoResults = Self.isEmptyResultQuery(query)
     }
 
     var visibleProducts: [HomeProduct] {
@@ -63,6 +71,10 @@ final class SearchResultsViewModel: ObservableObject {
             return updated
         }
     }
+
+    private static func isEmptyResultQuery(_ query: String) -> Bool {
+        query.trimmingCharacters(in: .whitespacesAndNewlines) == mockEmptyResultQuery
+    }
 }
 
 struct SearchResultsView: View {
@@ -90,7 +102,7 @@ struct SearchResultsView: View {
         onSelectTab: @escaping (EUMTabBar.Tab) -> Void
     ) {
         _searchText = searchText
-        _viewModel = StateObject(wrappedValue: SearchResultsViewModel(products: products))
+        _viewModel = StateObject(wrappedValue: SearchResultsViewModel(products: products, searchQuery: searchText.wrappedValue))
         self.cartCount = cartCount
         self.onBackToSearch = onBackToSearch
         self.onCancel = onCancel
@@ -133,10 +145,12 @@ struct SearchResultsView: View {
                     .tracking(-0.075)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                     .submitLabel(.search)
+                    .onSubmit { viewModel.updateSearchQuery(searchText) }
                     .accessibilityLabel("검색어")
 
                 Button {
                     searchText = ""
+                    onBackToSearch()
                 } label: {
                     Image("SearchClear")
                         .resizable()
@@ -167,17 +181,22 @@ struct SearchResultsView: View {
         .background(EUMColor.backgroundSwiftUI)
     }
 
+    @ViewBuilder
     private var resultsBody: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                categorySelector
-                resultsToolbar
-                productGrid
+        if viewModel.hasNoResults {
+            SearchNoResultsView(searchQuery: searchText, onPopularSearches: onBackToSearch)
+        } else {
+            ScrollView {
+                VStack(spacing: 0) {
+                    categorySelector
+                    resultsToolbar
+                    productGrid
+                }
+                .padding(.bottom, 32)
             }
-            .padding(.bottom, 32)
+            .scrollIndicators(.hidden)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .scrollIndicators(.hidden)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var categorySelector: some View {
