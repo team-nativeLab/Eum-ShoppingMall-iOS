@@ -98,6 +98,7 @@ Components/instances observed in the `06 Design — App` page metadata. A name i
 - A-12 (`182:2416`) shows a 320 pt left drawer over a 48% dimmed home screen. It includes a 44 pt close row, brand/member summary, five 52 pt navigation rows, and a bottom settings/logout footer above the 34 pt home-indicator area.
 - A-13 (`182:2524`) uses a modal login top bar, 26 pt brand heading, inline login notice, two 48 pt fields, keep-signed-in checkbox, disabled 56 pt login action, account links, and two 48 pt social login actions.
 - A-14 (`182:2601`) uses the personal-member segmented control, email check row, password and confirmation fields, name field, phone verification group, four agreement controls, fixed helper copy, and bottom signup action. The business member design is documented separately at A-14b (`558:5787`).
+- A-15 (`182:2696`) uses a four-step process strip, quote-product summary, four inquiry-type radio choices, member information form, date picker, 1,000-character textarea, attachment area, required privacy agreement, and fixed bottom submit action.
 - Remaining variants and complete per-screen usage mappings need per-node contexts; Figma Code Connect library enumeration is seat-gated.
 
 ## Observed names
