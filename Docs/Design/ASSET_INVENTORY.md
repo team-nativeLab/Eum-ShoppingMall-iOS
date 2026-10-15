@@ -19,6 +19,7 @@ Figma source is read-only. Assets below are the only local assets currently conf
 | Search empty-state icon | `SearchEmpty.imageset` | A-06z `HF/Icon/search-x`; Figma SVG | Present; 28 × 28 pt |
 | Cart controls | `ProductPlaceholder.imageset`, `ProductOptionMinus.imageset`, `ProductOptionPlus.imageset`, `ProductOptionClose.imageset`, `DesignSearch.imageset`, and `Tab*.imageset` | Existing Figma vectors reused by A-07 | Present; placeholder displayed at 32 pt inside an 80 pt tile; no new asset required |
 | Cart quote state | Reuses cart controls above plus `ProductPlaceholder.imageset` | A-07h mixed priced/quote cart | Present; no new image assets required |
+| Zero-order cart state | Reuses cart quote, placeholder, search, and tab vectors | A-07h2 with two inquiry-only products | Present; no new image assets required |
 
 ## Outstanding asset audit
 
