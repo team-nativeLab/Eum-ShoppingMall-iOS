@@ -114,6 +114,7 @@ Components/instances observed in the `06 Design — App` page metadata. A name i
 - A-24e (`357:4147`) uses address/recipient/phone fields, an inline phone-format error, postal-code search row, detail address, delivery-request selector, default checkbox, and fixed save action. It reuses shared field/button styles and Figma alert/chevron vectors.
 - A-25 (`358:4125`) uses six horizontally scrolling status chips, five inquiry cards with status badges, a quote-arrived notice/action, and a fixed new-inquiry action. Cards and chips reuse shared typography and color tokens; the file-text SVG is screen-specific.
 - A-26 (`458:4210`) uses a withdrawal warning, coupon/point loss summary, five bullet notices, an agreement checkbox, and a fixed disabled/enabled next action. It reuses the coupon ticket/coin assets and shared button, typography, and color APIs.
+- A-26r (`458:4379`) uses six two-column reason options, a 200-character other-reason field, current-password confirmation with visibility toggle, and fixed withdrawal action. The generic reason labels and sample input values are literal Figma content; field and button styling reuse the shared APIs.
 - Remaining variants and complete per-screen usage mappings need per-node contexts; Figma Code Connect library enumeration is seat-gated.
 
 ## Observed names
