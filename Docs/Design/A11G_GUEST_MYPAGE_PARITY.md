@@ -19,5 +19,5 @@
 
 ## Scope limits
 
-- No authentication service or login screen exists in the current project. This view is implemented as a separate guest-state screen and its login action shows an informational notice; it is not selected as the app's default account state.
+- No authentication service or login screen exists in the current project. The drawer's mock logout action now makes this separate guest-state screen reachable; the login action still shows an informational notice and does not authenticate.
 - Recent products use mock names and amounts. No order or account data is fetched.
