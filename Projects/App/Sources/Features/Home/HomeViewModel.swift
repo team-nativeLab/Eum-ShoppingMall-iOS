@@ -66,7 +66,7 @@ struct MockHomeRepository: HomeRepository {
                     imageName: nil,
                     isFavorite: false,
                     isSoldOut: false,
-                    isPriceHidden: false
+                    isPriceHidden: index == 0
                 )
             },
             bestSellerProducts: (0..<4).map { index in
