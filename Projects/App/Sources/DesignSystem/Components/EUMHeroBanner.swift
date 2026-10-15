@@ -27,6 +27,16 @@ struct EUMHeroBanner: View {
                     .clipped()
                     .accessibilityHidden(true)
 
+                LinearGradient(
+                    stops: [
+                        .init(color: Color(red: 18 / 255, green: 18 / 255, blue: 18 / 255).opacity(0.6), location: 0),
+                        .init(color: Color(red: 18 / 255, green: 18 / 255, blue: 18 / 255).opacity(0.05), location: 0.85)
+                    ],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+                .accessibilityHidden(true)
+
                 VStack(alignment: .leading, spacing: 0) {
                     Text(page.eyebrow.uppercased())
                         .font(EUMTypography.overline)

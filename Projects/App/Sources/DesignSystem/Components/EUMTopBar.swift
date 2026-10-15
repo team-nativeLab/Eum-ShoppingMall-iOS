@@ -1,11 +1,12 @@
 import SwiftUI
 
 struct EUMTopBar: View {
+    var title: String? = nil
     var onMenuTap: () -> Void
     var onNotificationTap: () -> Void
 
     var body: some View {
-        HStack {
+        HStack(spacing: 4) {
             Button(action: onMenuTap) {
                 Image("TopBarMenu")
                     .renderingMode(.template)
@@ -17,6 +18,15 @@ struct EUMTopBar: View {
                     .contentShape(Rectangle())
             }
             .accessibilityLabel("전체 메뉴")
+
+            if let title {
+                Text(title)
+                    .font(EUMTypography.heading2)
+                    .tracking(-0.44)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+                    .lineLimit(1)
+                    .accessibilityAddTraits(.isHeader)
+            }
 
             Spacer()
 
