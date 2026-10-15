@@ -150,9 +150,20 @@ struct ProductDetailView: View {
             VStack(alignment: .leading, spacing: 16) {
                 VStack(alignment: .leading, spacing: 8) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("브랜드명")
-                            .font(EUMTypography.captionMedium)
-                            .foregroundStyle(EUMColor.text3SwiftUI)
+                        HStack(spacing: 6) {
+                            Text("브랜드명")
+                                .font(EUMTypography.captionMedium)
+                                .foregroundStyle(EUMColor.text3SwiftUI)
+
+                            if product.isPriceHidden {
+                                Text("견적 상품")
+                                    .font(EUMTypography.labelExtraSmall)
+                                    .foregroundStyle(EUMColor.text2SwiftUI)
+                                    .padding(.horizontal, 6)
+                                    .frame(height: 20)
+                                    .overlay(RoundedRectangle(cornerRadius: 4).stroke(EUMColor.lineStrongSwiftUI, lineWidth: 1))
+                            }
+                        }
 
                         Text(product.title)
                             .font(EUMTypography.heading2)
@@ -163,7 +174,7 @@ struct ProductDetailView: View {
                     if product.isPriceHidden {
                         Text("가격 문의")
                             .font(EUMTypography.heading2)
-                            .foregroundStyle(EUMColor.text1SwiftUI)
+                            .foregroundStyle(EUMColor.text2SwiftUI)
                     } else if let price = product.price {
                         Text(price)
                             .font(Font.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
@@ -409,6 +420,23 @@ struct ProductDetailView: View {
 
     private var buyBar: some View {
         VStack(spacing: 0) {
+            if product.isPriceHidden {
+                HStack(spacing: 8) {
+                    Image("ProductDetailInfo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+                    Text("가격 문의 상품은 견적 문의로 구매할 수 있습니다.")
+                        .font(EUMTypography.bodySmall)
+                        .tracking(-0.07)
+                        .foregroundStyle(EUMColor.text2SwiftUI)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(EUMColor.surfaceSwiftUI)
+            }
+
             HStack(spacing: 8) {
                 Button {
                     viewModel.isFavorite.toggle()
@@ -423,11 +451,15 @@ struct ProductDetailView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(viewModel.isFavorite ? "찜 취소" : "찜하기")
 
-                EUMButton(title: "장바구니 담기", size: .large) {
-                    viewModel.showCartConfirmation = true
-                }
+                if product.isPriceHidden {
+                    EUMButton(title: "견적 문의", size: .large) {}
+                } else {
+                    EUMButton(title: "장바구니 담기", size: .large) {
+                        viewModel.showCartConfirmation = true
+                    }
 
-                EUMButton(title: "바로 구매", kind: .secondary, size: .large) {}
+                    EUMButton(title: "바로 구매", kind: .secondary, size: .large) {}
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
