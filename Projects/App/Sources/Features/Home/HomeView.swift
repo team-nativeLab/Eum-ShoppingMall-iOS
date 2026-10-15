@@ -5,6 +5,7 @@ struct HomeView: View {
     @State private var searchText = ""
     @State private var selectedTab = EUMTabBar.Tab.home
     @State private var selectedProductCategory: HomeCategory?
+    @State private var selectedProduct: HomeProduct?
 
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -17,7 +18,9 @@ struct HomeView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case let .content(content):
-                if selectedTab == .category {
+                if let selectedProduct {
+                    ProductDetailView(product: selectedProduct, onBack: { self.selectedProduct = nil })
+                } else if selectedTab == .category {
                     if let selectedProductCategory {
                         ProductListView(
                             title: selectedProductCategory.title,
@@ -25,7 +28,8 @@ struct HomeView: View {
                             cartCount: content.cartCount,
                             onBack: { self.selectedProductCategory = nil },
                             onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
-                            onSelectTab: selectTab
+                            onSelectTab: selectTab,
+                            onProductTap: { self.selectedProduct = $0 }
                         )
                     } else {
                         CategoryView(
@@ -65,6 +69,7 @@ struct HomeView: View {
         if tab == .home || tab == .category {
             selectedTab = tab
             selectedProductCategory = nil
+            selectedProduct = nil
         }
     }
 
