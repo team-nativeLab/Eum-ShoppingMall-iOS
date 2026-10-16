@@ -1,29 +1,44 @@
 import SwiftUI
 
 struct AnnouncementsView: View {
-    @StateObject private var viewModel = AnnouncementsViewModel()
-
+    let viewModel: AnnouncementsViewModel
     let onBack: () -> Void
     let onOpenAnnouncement: (AnnouncementItem) -> Void
 
+    init(
+        viewModel: AnnouncementsViewModel = AnnouncementsViewModel(),
+        onBack: @escaping () -> Void,
+        onOpenAnnouncement: @escaping (AnnouncementItem) -> Void
+    ) {
+        self.viewModel = viewModel
+        self.onBack = onBack
+        self.onOpenAnnouncement = onOpenAnnouncement
+    }
+
     var body: some View {
-        VStack(spacing: 0) {
-            topBar
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(viewModel.announcements) { announcement in
-                        announcementRow(announcement)
+        Group {
+            if viewModel.isEmpty {
+                AnnouncementsEmptyView(onBack: onBack)
+            } else {
+                VStack(spacing: 0) {
+                    topBar
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(viewModel.announcements) { announcement in
+                                announcementRow(announcement)
+                            }
+                            ProgressView()
+                                .tint(EUMColor.text3SwiftUI)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 64)
+                                .accessibilityLabel("공지사항을 불러오는 중")
+                        }
                     }
-                    ProgressView()
-                        .tint(EUMColor.text3SwiftUI)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 64)
-                        .accessibilityLabel("공지사항을 불러오는 중")
+                    .scrollIndicators(.hidden)
                 }
+                .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
             }
-            .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
     }
 
     private var topBar: some View {
