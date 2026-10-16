@@ -124,7 +124,7 @@ struct HomeAccountCollectionRouteView: View {
             onAction: onMessage,
             onProductTap: onProductTap,
             onNewQuoteInquiry: { onRoute(.quoteInquiry(nil)) },
-            onQuoteDocument: { onMessage("견적서는 서비스 연동 후 확인할 수 있어요.") },
+            onQuoteDocument: { onRoute(.quoteDetail($0)) },
             onOpenQuoteDetail: { onRoute(.quoteDetail($0)) },
             onOpenContactInquiryDetail: { onRoute(.accountCollection(.contactDetail($0))) },
             onWithdrawTap: onWithdrawTap
@@ -184,7 +184,7 @@ struct HomeOrderRouteView: View {
                 onBack: onBack,
                 onDownload: { fileName in onMessage("\(fileName)은 서비스 연동 후 다운로드할 수 있어요.") },
                 onContact: { onMessage("담당자 연락은 서비스 연동 후 이용할 수 있어요.") },
-                onRequote: { onMessage("재견적 요청은 서비스 연동 후 이용할 수 있어요.") }
+                onRequote: { onRoute(.quoteInquiry(nil)) }
             )
         default:
             EmptyView()
@@ -203,7 +203,7 @@ struct AccountCollectionRouteView: View {
     let onAction: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
     let onNewQuoteInquiry: () -> Void
-    let onQuoteDocument: () -> Void
+    let onQuoteDocument: (QuoteInquiryRecord) -> Void
     let onOpenQuoteDetail: (QuoteInquiryRecord) -> Void
     let onOpenContactInquiryDetail: (ContactInquiryRecord) -> Void
     let onWithdrawTap: () -> Void

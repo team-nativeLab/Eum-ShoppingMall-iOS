@@ -5,7 +5,7 @@ struct QuoteHistoryView: View {
 
     let onBack: () -> Void
     let onNewInquiry: () -> Void
-    let onDocument: () -> Void
+    let onDocument: (QuoteInquiryRecord) -> Void
     let onOpenDetail: (QuoteInquiryRecord) -> Void
 
     var body: some View {
@@ -29,7 +29,7 @@ struct QuoteHistoryView: View {
     private var topBar: some View {
         EUMBackTopBar(
             title: "견적 문의 내역",
-            backAccessibilityLabel: "마이페이지로 돌아가기",
+            backAccessibilityLabel: "이전 화면으로 돌아가기",
             onBack: onBack
         ) {
             EmptyView()
@@ -103,7 +103,7 @@ struct QuoteHistoryView: View {
 
 private struct QuoteInquiryCard: View {
     let inquiry: QuoteInquiryRecord
-    let onDocument: () -> Void
+    let onDocument: (QuoteInquiryRecord) -> Void
     let onOpenDetail: (QuoteInquiryRecord) -> Void
 
     var body: some View {
@@ -187,7 +187,7 @@ private struct QuoteInquiryCard: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Button(action: onDocument) {
+            Button { onDocument(inquiry) } label: {
                 Text("견적서 보기")
                     .font(EUMTypography.labelMedium)
                     .tracking(-0.07)
