@@ -42,6 +42,16 @@ final class SignUpViewModelTests: XCTestCase {
     }
 
     @MainActor
+    func testAgreeToPrivacySetsRequiredAgreementWithoutTogglingItOff() {
+        let viewModel = SignUpViewModel()
+
+        viewModel.agreeToPrivacy()
+        XCTAssertTrue(viewModel.agreedToPrivacy)
+        viewModel.agreeToPrivacy()
+        XCTAssertTrue(viewModel.agreedToPrivacy)
+    }
+
+    @MainActor
     func testChangingEmailOrPhoneClearsMockVerification() {
         let viewModel = SignUpViewModel()
         viewModel.email = "member@example.com"
