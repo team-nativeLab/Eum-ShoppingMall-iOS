@@ -216,6 +216,7 @@ struct CompanyIntroductionView: View {
                         endPoint: .bottom
                     )
                     Image("ProductPlaceholder")
+                        .renderingMode(.original)
                         .resizable()
                         .frame(width: 32, height: 32)
                         .accessibilityHidden(true)
