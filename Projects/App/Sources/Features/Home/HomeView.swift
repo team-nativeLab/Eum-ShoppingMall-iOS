@@ -14,6 +14,7 @@ enum HomeModalRoute {
     case accountVerification
     case settings
     case terms
+    case termsPrevious
     case addressEditor(ShippingAddress?)
     case accountWithdrawalNotice
     case accountWithdrawalBlocked
@@ -303,7 +304,7 @@ struct HomeView: View {
                 onVerified: { presentedRoute = .accountCollection(.editProfile) },
                 onMessage: { presentedMessage = $0 }
             )
-        case .settings, .terms:
+        case .settings, .terms, .termsPrevious:
             HomeLegalRouteView(
                 route: route,
                 isGuestAccount: isGuestAccount,

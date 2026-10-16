@@ -1,8 +1,14 @@
 import SwiftUI
 
 struct TermsView: View {
+    enum Version: Equatable {
+        case current
+        case previous
+    }
+
+    let version: Version
     let onBack: () -> Void
-    let onPreviousTerms: () -> Void
+    let onVersionTap: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -10,6 +16,7 @@ struct TermsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     documentHeader
+                    previousVersionNotice
                     contentsCard
                     articleGroups
                 }
@@ -57,9 +64,9 @@ struct TermsView: View {
 
                 Spacer(minLength: 0)
 
-                Button(action: onPreviousTerms) {
+                Button(action: onVersionTap) {
                     HStack(spacing: 6) {
-                        Text("이전 약관 보기")
+                        Text(versionButtonTitle)
                             .font(EUMTypography.labelMedium)
                             .tracking(-0.07)
                             .foregroundStyle(EUMColor.text1SwiftUI)
@@ -82,6 +89,45 @@ struct TermsView: View {
                 .frame(height: 1)
         }
         .padding(.bottom, 20)
+    }
+
+    @ViewBuilder
+    private var previousVersionNotice: some View {
+        if version == .previous {
+            HStack(alignment: .top, spacing: 8) {
+                Image("LoginInfo")
+                    .frame(width: 16, height: 16)
+                    .padding(.top, 2)
+                    .accessibilityHidden(true)
+
+                (
+                    Text(TermsDocument.previousVersionNoticePrefix)
+                    + Text(TermsDocument.currentTermsLabel)
+                        .font(.custom("NotoSansKR-Medium", size: 14, relativeTo: .callout))
+                        .underline()
+                )
+                .font(EUMTypography.bodySmall)
+                .tracking(-0.07)
+                .foregroundStyle(EUMColor.text2SwiftUI)
+                .lineSpacing(3)
+                .padding(.bottom, 3)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+            .accessibilityElement(children: .combine)
+        }
+    }
+
+    private var versionButtonTitle: String {
+        switch version {
+        case .current:
+            "이전 약관 보기"
+        case .previous:
+            "\(TermsDocument.effectiveDate) 시행"
+        }
     }
 
     private var contentsCard: some View {
@@ -119,6 +165,9 @@ struct TermsView: View {
                         .font(EUMTypography.heading3)
                         .tracking(-0.27)
                         .foregroundStyle(EUMColor.text1SwiftUI)
+                        .lineSpacing(4)
+                        .padding(.bottom, 4)
+                        .fixedSize(horizontal: false, vertical: true)
                         .padding(.top, 8)
 
                     ForEach(chapter.articles) { article in
@@ -132,13 +181,17 @@ struct TermsView: View {
                     .font(EUMTypography.heading3)
                     .tracking(-0.27)
                     .foregroundStyle(EUMColor.text1SwiftUI)
+                    .lineSpacing(4)
+                    .padding(.bottom, 4)
+                    .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, 8)
 
                 Text(TermsDocument.addendum)
                     .font(EUMTypography.bodyMedium)
                     .tracking(-0.075)
                     .foregroundStyle(EUMColor.text2SwiftUI)
-                    .lineSpacing(5)
+                    .lineSpacing(6)
+                    .padding(.bottom, 6)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -150,26 +203,35 @@ struct TermsView: View {
                 .font(EUMTypography.labelLarge)
                 .tracking(-0.16)
                 .foregroundStyle(EUMColor.text1SwiftUI)
+                .lineSpacing(4)
+                .padding(.bottom, 4)
                 .fixedSize(horizontal: false, vertical: true)
 
             Text(TermsDocument.articleBody)
                 .font(EUMTypography.bodyMedium)
                 .tracking(-0.075)
                 .foregroundStyle(EUMColor.text2SwiftUI)
-                .lineSpacing(5)
+                .lineSpacing(6)
+                .padding(.bottom, 6)
                 .fixedSize(horizontal: false, vertical: true)
 
             if article.includesSampleItems {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("① \(TermsDocument.itemBody)")
-                    Text("② \(TermsDocument.itemBody)")
+                    sampleItemText("① \(TermsDocument.itemBody)")
+                    sampleItemText("② \(TermsDocument.itemBody)")
                 }
                 .font(EUMTypography.bodyMedium)
                 .tracking(-0.075)
                 .foregroundStyle(EUMColor.text2SwiftUI)
-                .lineSpacing(5)
                 .fixedSize(horizontal: false, vertical: true)
             }
         }
+    }
+
+    private func sampleItemText(_ copy: String) -> some View {
+        Text(copy)
+            .lineSpacing(6)
+            .padding(.bottom, 6)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }

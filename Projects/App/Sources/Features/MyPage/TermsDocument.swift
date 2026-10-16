@@ -17,6 +17,8 @@ struct TermsChapter: Identifiable {
 
 enum TermsDocument {
     static let effectiveDate = "0000.00.00"
+    static let previousVersionNoticePrefix = "이전 약관입니다. 현재 약관은 0000.00.00부터 시행 중입니다.  "
+    static let currentTermsLabel = "현재 약관 보기"
     static let articleBody = "조항 내용이 들어갑니다."
     static let itemBody = "항 내용이 들어갑니다."
     static let addendum = "이 약관은 0000년 00월 00일부터 시행합니다."
