@@ -2,6 +2,7 @@ import SwiftUI
 
 enum HomeModalRoute {
     case authentication
+    case settingsLogin
     case quoteInquiry(HomeProduct?)
     case quoteDetail(QuoteInquiryRecord)
     case accountCollection(AccountCollectionDestination)
@@ -181,6 +182,7 @@ struct HomeView: View {
             GuestMyPageView(
                 cartCount: cartCount,
                 onLoginTap: { presentedRoute = .authentication },
+                onSettingsTap: { presentedRoute = .settings },
                 onSelectTab: selectTab
             )
         } else {
@@ -270,6 +272,7 @@ struct HomeView: View {
     private func routeView(_ route: HomeModalRoute) -> some View {
         switch route {
         case .authentication: AuthenticationFlowView(onClose: { presentedRoute = nil })
+        case .settingsLogin: AuthenticationFlowView(onClose: { presentedRoute = .settings })
         case let .quoteInquiry(product):
             QuoteInquiryView(
                 product: product,
@@ -301,7 +304,9 @@ struct HomeView: View {
             )
         case .settings:
             SettingsView(
+                isGuestAccount: isGuestAccount,
                 onBack: { presentedRoute = nil },
+                onLoginTap: { presentedRoute = .settingsLogin },
                 onPolicyTap: { presentedMessage = "\($0) 화면은 후속 퍼블리싱 이슈에서 연결됩니다." },
                 onLogoutTap: { presentedMessage = "로그아웃 확인 화면은 준비 중입니다." },
                 onWithdrawalTap: showWithdrawalEntry

@@ -25,6 +25,7 @@ struct GuestMyPageView: View {
 
     let cartCount: Int
     let onLoginTap: () -> Void
+    let onSettingsTap: () -> Void
     let onSelectTab: (EUMTabBar.Tab) -> Void
 
     var body: some View {
@@ -62,9 +63,7 @@ struct GuestMyPageView: View {
 
             HStack {
                 Spacer()
-                Button {
-                    presentedMessage = "설정 화면은 아직 연결되지 않았어요."
-                } label: {
+                Button(action: onSettingsTap) {
                     Image("MyPageSettings")
                         .resizable()
                         .scaledToFit()
@@ -179,6 +178,6 @@ struct GuestMyPageView: View {
 
 struct GuestMyPageViewPreview: PreviewProvider {
     static var previews: some View {
-        GuestMyPageView(cartCount: 3, onLoginTap: {}, onSelectTab: { _ in })
+        GuestMyPageView(cartCount: 3, onLoginTap: {}, onSettingsTap: {}, onSelectTab: { _ in })
     }
 }
