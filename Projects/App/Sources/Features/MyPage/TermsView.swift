@@ -9,7 +9,9 @@ struct TermsView: View {
 
     let version: Version
     let onBack: () -> Void
-    let onVersionTap: () -> Void
+    let onPreviousVersionSelected: () -> Void
+
+    @State private var isShowingVersionPicker = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -28,6 +30,35 @@ struct TermsView: View {
             .scrollIndicators(.hidden)
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .overlay {
+            if isShowingVersionPicker {
+                ZStack(alignment: .bottom) {
+                    Button {
+                        isShowingVersionPicker = false
+                    } label: {
+                        EUMColor.text1SwiftUI.opacity(0.48)
+                            .ignoresSafeArea()
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("약관 버전 선택 닫기")
+
+                    TermsVersionPickerView(
+                        selectedVersion: version,
+                        onDismiss: { isShowingVersionPicker = false },
+                        onPreviousVersionSelected: {
+                            isShowingVersionPicker = false
+                            onPreviousVersionSelected()
+                        }
+                    )
+                    .transition(.move(edge: .bottom))
+                }
+                .ignoresSafeArea()
+                .transition(.opacity)
+                .zIndex(2)
+            }
+        }
+        .animation(.easeOut(duration: 0.2), value: isShowingVersionPicker)
     }
 
     private var topBar: some View {
@@ -65,7 +96,9 @@ struct TermsView: View {
 
                 Spacer(minLength: 0)
 
-                Button(action: onVersionTap) {
+                Button {
+                    isShowingVersionPicker = true
+                } label: {
                     HStack(spacing: 6) {
                         Text(versionButtonTitle)
                             .font(EUMTypography.labelMedium)

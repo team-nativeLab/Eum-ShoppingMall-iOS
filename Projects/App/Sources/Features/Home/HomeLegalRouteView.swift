@@ -5,9 +5,7 @@ struct HomeLegalRouteView: View {
         let back: () -> Void
         let backToSettings: () -> Void
         let login: () -> Void
-        let openTerms: () -> Void
-        let openPrivacyPolicy: () -> Void
-        let openUsageGuide: () -> Void
+        let onRoute: (HomeModalRoute) -> Void
         let message: (String) -> Void
         let logout: () -> Void
         let withdrawal: () -> Void
@@ -27,11 +25,11 @@ struct HomeLegalRouteView: View {
                 onLoginTap: actions.login,
                 onPolicyTap: { destination in
                     if destination == "이용약관" {
-                        actions.openTerms()
+                        actions.onRoute(.terms)
                     } else if destination == "개인정보처리방침" {
-                        actions.openPrivacyPolicy()
+                        actions.onRoute(.privacyPolicy)
                     } else if destination == "이용안내" {
-                        actions.openUsageGuide()
+                        actions.onRoute(.usageGuide)
                     } else {
                         actions.message("\(destination) 화면은 후속 퍼블리싱 이슈에서 연결됩니다.")
                     }
@@ -43,13 +41,13 @@ struct HomeLegalRouteView: View {
             TermsView(
                 version: .revisionScheduled,
                 onBack: actions.backToSettings,
-                onVersionTap: { actions.message("약관 버전 선택 화면은 후속 퍼블리싱 이슈에서 연결됩니다.") }
+                onPreviousVersionSelected: { actions.onRoute(.termsPrevious) }
             )
         case .termsPrevious:
             TermsView(
                 version: .previous,
                 onBack: actions.backToSettings,
-                onVersionTap: { actions.message("약관 버전 선택 화면은 후속 퍼블리싱 이슈에서 연결됩니다.") }
+                onPreviousVersionSelected: { actions.onRoute(.termsPrevious) }
             )
         case .privacyPolicy:
             PrivacyPolicyView(onBack: actions.backToSettings)
@@ -70,9 +68,7 @@ struct HomeLegalRouteContainer: View {
     let back: () -> Void
     let backToSettings: () -> Void
     let login: () -> Void
-    let openTerms: () -> Void
-    let openPrivacyPolicy: () -> Void
-    let openUsageGuide: () -> Void
+    let onRoute: (HomeModalRoute) -> Void
     let message: (String) -> Void
     let logout: () -> Void
     let withdrawal: () -> Void
@@ -85,9 +81,7 @@ struct HomeLegalRouteContainer: View {
                 back: back,
                 backToSettings: backToSettings,
                 login: login,
-                openTerms: openTerms,
-                openPrivacyPolicy: openPrivacyPolicy,
-                openUsageGuide: openUsageGuide,
+                onRoute: onRoute,
                 message: message,
                 logout: logout,
                 withdrawal: withdrawal

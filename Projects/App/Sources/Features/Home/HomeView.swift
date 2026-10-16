@@ -313,9 +313,7 @@ struct HomeView: View {
                 back: { presentedRoute = nil },
                 backToSettings: { presentedRoute = .settings },
                 login: { presentedRoute = .settingsLogin },
-                openTerms: { presentedRoute = .terms },
-                openPrivacyPolicy: { presentedRoute = .privacyPolicy },
-                openUsageGuide: { presentedRoute = .usageGuide },
+                onRoute: { presentedRoute = $0 },
                 message: { presentedMessage = $0 },
                 logout: {
                     presentedRoute = nil
