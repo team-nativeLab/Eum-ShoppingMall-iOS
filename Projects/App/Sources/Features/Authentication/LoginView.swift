@@ -2,9 +2,16 @@ import SwiftUI
 
 @MainActor
 final class LoginViewModel: ObservableObject {
-    @Published var email = ""
-    @Published var password = ""
+    @Published var email: String
+    @Published var password: String
     @Published private(set) var shouldKeepSignedIn = false
+    @Published private(set) var showsLoginError: Bool
+
+    init(initialErrorState: Bool = false) {
+        email = initialErrorState ? "example@email.com" : ""
+        password = initialErrorState ? "password" : ""
+        showsLoginError = initialErrorState
+    }
 
     var canSubmit: Bool {
         !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -14,15 +21,33 @@ final class LoginViewModel: ObservableObject {
     func toggleKeepSignedIn() {
         shouldKeepSignedIn.toggle()
     }
+
+    func submit() {
+        guard canSubmit else { return }
+        showsLoginError = true
+    }
 }
 
 struct LoginView: View {
-    @StateObject private var viewModel = LoginViewModel()
+    @StateObject private var viewModel: LoginViewModel
+    @State private var isPasswordVisible = false
     @State private var presentedMessage: String?
 
     let onClose: () -> Void
     var onSignUpTap: () -> Void = {}
     var onEmailLookupTap: () -> Void = {}
+
+    init(
+        onClose: @escaping () -> Void,
+        onSignUpTap: @escaping () -> Void = {},
+        onEmailLookupTap: @escaping () -> Void = {},
+        initialErrorState: Bool = false
+    ) {
+        self.onClose = onClose
+        self.onSignUpTap = onSignUpTap
+        self.onEmailLookupTap = onEmailLookupTap
+        _viewModel = StateObject(wrappedValue: LoginViewModel(initialErrorState: initialErrorState))
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -116,25 +141,76 @@ struct LoginView: View {
                     .autocorrectionDisabled()
 
                 VStack(alignment: .leading, spacing: 16) {
-                    EUMTextField(
-                        title: "비밀번호",
-                        placeholder: "비밀번호를 입력해 주세요",
-                        text: $viewModel.password,
-                        isSecure: true
-                    )
-                    .textContentType(.password)
-
+                    passwordField
                     keepSignedInToggle
                 }
             }
 
             VStack(spacing: 16) {
                 EUMButton(title: "로그인", size: .large) {
-                    presentedMessage = "로그인 서버 연동은 아직 연결되지 않았어요."
+                    viewModel.submit()
                 }
                 .disabled(!viewModel.canSubmit)
 
                 accountLinks
+            }
+        }
+    }
+
+    private var passwordField: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("비밀번호")
+                .font(EUMTypography.labelMedium)
+                .tracking(-0.5)
+                .foregroundStyle(EUMColor.text1SwiftUI)
+
+            HStack(spacing: 8) {
+                Group {
+                    if isPasswordVisible {
+                        TextField("비밀번호를 입력해 주세요", text: $viewModel.password)
+                    } else {
+                        SecureField("비밀번호를 입력해 주세요", text: $viewModel.password)
+                    }
+                }
+                .font(EUMTypography.bodyMedium)
+                .tracking(2)
+                .foregroundStyle(EUMColor.text1SwiftUI)
+                .textContentType(.password)
+                .accessibilityLabel("비밀번호")
+
+                Button {
+                    isPasswordVisible.toggle()
+                } label: {
+                    Image(systemName: isPasswordVisible ? "eye" : "eye.slash")
+                        .font(.system(size: 18, weight: .regular))
+                        .foregroundStyle(EUMColor.text3SwiftUI)
+                        .frame(width: 24, height: 24)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(isPasswordVisible ? "비밀번호 숨기기" : "비밀번호 표시")
+            }
+            .padding(.horizontal, 14)
+            .frame(height: 48)
+            .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 8))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .strokeBorder(
+                        viewModel.showsLoginError ? EUMColor.dangerSwiftUI : EUMColor.lineControlSwiftUI,
+                        lineWidth: viewModel.showsLoginError ? 1.5 : 1
+                    )
+            }
+
+            if viewModel.showsLoginError {
+                HStack(spacing: 4) {
+                    Image(systemName: "exclamationmark.circle")
+                        .font(.system(size: 14, weight: .medium))
+                        .accessibilityHidden(true)
+                    Text("이메일 또는 비밀번호가 일치하지 않습니다. (0/5회)")
+                        .font(EUMTypography.captionMedium)
+                        .fixedSize(horizontal: true, vertical: false)
+                }
+                .foregroundStyle(EUMColor.dangerSwiftUI)
+                .accessibilityElement(children: .combine)
             }
         }
     }
@@ -231,6 +307,6 @@ struct LoginView: View {
 
 struct LoginViewPreview: PreviewProvider {
     static var previews: some View {
-        LoginView(onClose: {})
+        LoginView(onClose: {}, initialErrorState: true)
     }
 }
