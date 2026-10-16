@@ -140,6 +140,10 @@ struct AccountWithdrawalReasonView: View {
         Binding(get: { viewModel.reasonDetail }, set: viewModel.updateReasonDetail)
     }
 
+    private var passwordBinding: Binding<String> {
+        Binding(get: { viewModel.password }, set: viewModel.updatePassword)
+    }
+
     private var passwordGroup: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("비밀번호 확인")
@@ -149,9 +153,9 @@ struct AccountWithdrawalReasonView: View {
             HStack(spacing: 8) {
                 Group {
                     if viewModel.isPasswordVisible {
-                        TextField("현재 비밀번호", text: $viewModel.password)
+                        TextField("현재 비밀번호", text: passwordBinding)
                     } else {
-                        SecureField("현재 비밀번호", text: $viewModel.password)
+                        SecureField("현재 비밀번호", text: passwordBinding)
                     }
                 }
                 .font(EUMTypography.bodyMedium)
@@ -181,10 +185,29 @@ struct AccountWithdrawalReasonView: View {
             .padding(.horizontal, 14)
             .frame(height: 48)
             .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 8))
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(EUMColor.lineControlSwiftUI, lineWidth: 1))
-            Text("본인 확인을 위해 현재 비밀번호를 입력해 주세요.")
-                .font(EUMTypography.captionRegular)
-                .foregroundStyle(EUMColor.text3SwiftUI)
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(viewModel.isPasswordInvalid ? EUMColor.dangerSwiftUI : EUMColor.lineControlSwiftUI,
+                            lineWidth: viewModel.isPasswordInvalid ? 1.5 : 1)
+            }
+            if viewModel.isPasswordInvalid {
+                HStack(alignment: .center, spacing: 4) {
+                    Image("WithdrawalPasswordError")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 14, height: 14)
+                        .accessibilityHidden(true)
+                    Text("비밀번호가 일치하지 않습니다. 다시 입력해 주세요.")
+                        .font(EUMTypography.captionRegular)
+                        .foregroundStyle(EUMColor.dangerSwiftUI)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .accessibilityElement(children: .combine)
+            } else {
+                Text("본인 확인을 위해 현재 비밀번호를 입력해 주세요.")
+                    .font(EUMTypography.captionRegular)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
+            }
         }
     }
 
@@ -194,7 +217,9 @@ struct AccountWithdrawalReasonView: View {
                 .fill(EUMColor.lineSwiftUI)
                 .frame(height: 1)
             EUMButton(title: "탈퇴하기", size: .large) {
-                isShowingConfirmation = true
+                if viewModel.validatePassword() {
+                    isShowingConfirmation = true
+                }
             }
                 .disabled(!viewModel.canSubmit)
                 .padding(.horizontal, 20)
