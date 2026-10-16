@@ -17,7 +17,11 @@ struct RecentlyViewedGroup: Identifiable {
 final class RecentlyViewedViewModel: ObservableObject {
     @Published private(set) var groups: [RecentlyViewedGroup]
 
-    init(groups: [RecentlyViewedGroup] = RecentlyViewedViewModel.samples) {
+    init() {
+        groups = Self.samples
+    }
+
+    init(groups: [RecentlyViewedGroup]) {
         self.groups = groups
     }
 
