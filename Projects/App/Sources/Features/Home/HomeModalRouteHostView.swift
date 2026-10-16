@@ -50,7 +50,7 @@ struct HomeModalRouteHostView: View {
             )
         case .customerCenter, .announcements, .announcementDetail:
             HomeSupportRouteView(route: route, onBack: onBack, onRoute: onRoute, onMessage: onMessage)
-        case .settings, .terms, .termsPrevious, .privacyPolicy, .usageGuide:
+        case .settings, .terms, .privacyPolicy, .usageGuide:
             HomeLegalRouteContainer(
                 route: route,
                 isGuestAccount: isGuestAccount,

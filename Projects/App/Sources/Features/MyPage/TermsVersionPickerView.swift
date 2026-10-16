@@ -21,6 +21,15 @@ enum TermsVersionOption: String, CaseIterable, Identifiable {
 
     var showsPlannedBadge: Bool { self == .upcoming }
 
+    var documentVersion: TermsView.Version? {
+        switch self {
+        case .upcoming: nil
+        case .current: .current
+        case .previous: .previous
+        case .older: nil
+        }
+    }
+
     func isSelected(for version: TermsView.Version) -> Bool {
         switch (self, version) {
         case (.current, .current), (.current, .revisionScheduled), (.previous, .previous):
@@ -34,7 +43,7 @@ enum TermsVersionOption: String, CaseIterable, Identifiable {
 struct TermsVersionPickerView: View {
     let selectedVersion: TermsView.Version
     let onDismiss: () -> Void
-    let onPreviousVersionSelected: () -> Void
+    let onVersionSelected: (TermsVersionOption) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -97,14 +106,10 @@ struct TermsVersionPickerView: View {
     private var versionRows: some View {
         VStack(spacing: 0) {
             ForEach(TermsVersionOption.allCases) { option in
-                if option == .previous {
-                    Button(action: onPreviousVersionSelected) {
-                        versionRow(option)
-                    }
-                    .buttonStyle(.plain)
-                } else {
+                Button { onVersionSelected(option) } label: {
                     versionRow(option)
                 }
+                .buttonStyle(.plain)
             }
         }
     }

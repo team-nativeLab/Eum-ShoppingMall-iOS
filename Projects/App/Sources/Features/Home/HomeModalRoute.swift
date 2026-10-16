@@ -14,7 +14,6 @@ enum HomeModalRoute {
     case accountVerification
     case settings
     case terms
-    case termsPrevious
     case privacyPolicy
     case usageGuide
     case addressEditor(ShippingAddress?)

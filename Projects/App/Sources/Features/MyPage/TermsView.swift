@@ -7,11 +7,16 @@ struct TermsView: View {
         case revisionScheduled
     }
 
-    let version: Version
+    @State private var version: Version
     let onBack: () -> Void
-    let onPreviousVersionSelected: () -> Void
 
     @State private var isShowingVersionPicker = false
+    @State private var showsUnavailableVersion = false
+
+    init(version: Version, onBack: @escaping () -> Void) {
+        _version = State(initialValue: version)
+        self.onBack = onBack
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -46,9 +51,13 @@ struct TermsView: View {
                     TermsVersionPickerView(
                         selectedVersion: version,
                         onDismiss: { isShowingVersionPicker = false },
-                        onPreviousVersionSelected: {
+                        onVersionSelected: { option in
                             isShowingVersionPicker = false
-                            onPreviousVersionSelected()
+                            if let version = option.documentVersion {
+                                self.version = version
+                            } else {
+                                showsUnavailableVersion = true
+                            }
                         }
                     )
                     .transition(.move(edge: .bottom))
@@ -59,6 +68,11 @@ struct TermsView: View {
             }
         }
         .animation(.easeOut(duration: 0.2), value: isShowingVersionPicker)
+        .alert("이전 약관", isPresented: $showsUnavailableVersion) {
+            Button("확인", role: .cancel) {}
+        } message: {
+            Text("선택한 약관의 원문 또는 버전 정보가 제공되지 않았어요.")
+        }
     }
 
     private var topBar: some View {
@@ -134,18 +148,28 @@ struct TermsView: View {
                     .padding(.top, 2)
                     .accessibilityHidden(true)
 
-                (
-                    Text(noticePrefix)
-                    + Text(noticeLinkLabel)
-                        .font(.custom("NotoSansKR-Medium", size: 14, relativeTo: .callout))
-                        .underline()
-                )
-                .font(EUMTypography.bodySmall)
-                .tracking(-0.07)
-                .foregroundStyle(EUMColor.text2SwiftUI)
-                .lineSpacing(3)
-                .padding(.bottom, 3)
-                .fixedSize(horizontal: false, vertical: true)
+                Button {
+                    if version == .previous {
+                        version = .current
+                    } else {
+                        showsUnavailableVersion = true
+                    }
+                } label: {
+                    (
+                        Text(noticePrefix)
+                        + Text(noticeLinkLabel)
+                            .font(.custom("NotoSansKR-Medium", size: 14, relativeTo: .callout))
+                            .underline()
+                    )
+                    .font(EUMTypography.bodySmall)
+                    .tracking(-0.07)
+                    .foregroundStyle(EUMColor.text2SwiftUI)
+                    .lineSpacing(3)
+                    .padding(.bottom, 3)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(noticeLinkLabel)
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 12)
