@@ -3,6 +3,7 @@ import UIKit
 
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @State private var isShowingLogoutConfirmation = false
     @Environment(\.scenePhase) private var scenePhase
 
     let isGuestAccount: Bool
@@ -54,6 +55,24 @@ struct SettingsView: View {
         }
         .animation(.easeOut(duration: 0.2), value: viewModel.marketingChangeToast != nil)
         .onDisappear { viewModel.dismissMarketingToast() }
+        .overlay {
+            if isShowingLogoutConfirmation {
+                ZStack {
+                    EUMColor.text1SwiftUI.opacity(0.48)
+                        .ignoresSafeArea()
+                    LogoutConfirmationDialog(
+                        onCancel: { isShowingLogoutConfirmation = false },
+                        onConfirm: {
+                            isShowingLogoutConfirmation = false
+                            onLogoutTap()
+                        }
+                    )
+                }
+                .transition(.opacity)
+                .zIndex(2)
+            }
+        }
+        .animation(.easeOut(duration: 0.2), value: isShowingLogoutConfirmation)
     }
 
     private var notificationGroup: some View {
@@ -160,7 +179,9 @@ struct SettingsView: View {
 
     private var accountGroup: some View {
         SettingsGroup(title: "계정") {
-            SettingsNavigationRow(title: "로그아웃", action: onLogoutTap)
+            SettingsNavigationRow(title: "로그아웃") {
+                isShowingLogoutConfirmation = true
+            }
         } footer: {
             Button(action: onWithdrawalTap) {
                 Text("회원 탈퇴")
