@@ -19,6 +19,7 @@ enum EUMColor {
     static let inverse = UIColor.white
     static let inverseSecondary = UIColor.white.withAlphaComponent(0.72)
     static let pressedDark = UIColor(red: 51 / 255, green: 51 / 255, blue: 51 / 255, alpha: 1)
+    static let toast = UIColor(red: 34 / 255, green: 34 / 255, blue: 34 / 255, alpha: 1)
     static let surfaceDisabled = UIColor(red: 235 / 255, green: 235 / 255, blue: 235 / 255, alpha: 1)
     static let textDisabled = UIColor(red: 179 / 255, green: 179 / 255, blue: 179 / 255, alpha: 1)
     static let danger = UIColor(red: 197 / 255, green: 34 / 255, blue: 31 / 255, alpha: 1)
@@ -40,6 +41,7 @@ enum EUMColor {
     static let inverseSwiftUI = Color(uiColor: inverse)
     static let inverseSecondarySwiftUI = Color(uiColor: inverseSecondary)
     static let pressedDarkSwiftUI = Color(uiColor: pressedDark)
+    static let toastSwiftUI = Color(uiColor: toast)
     static let surfaceDisabledSwiftUI = Color(uiColor: surfaceDisabled)
     static let textDisabledSwiftUI = Color(uiColor: textDisabled)
     static let dangerSwiftUI = Color(uiColor: danger)
