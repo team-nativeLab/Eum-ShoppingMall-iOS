@@ -35,6 +35,7 @@ struct ProductListView: View {
     @StateObject private var viewModel: ProductListViewModel
 
     let title: String
+    let selectedTab: EUMTabBar.Tab
     let onBack: () -> Void
     let onFavoriteTap: (String) -> Void
     let onSelectTab: (EUMTabBar.Tab) -> Void
@@ -48,6 +49,7 @@ struct ProductListView: View {
     init(
         title: String,
         products: [HomeProduct],
+        selectedTab: EUMTabBar.Tab,
         cartCount: Int,
         onBack: @escaping () -> Void,
         onFavoriteTap: @escaping (String) -> Void,
@@ -56,6 +58,7 @@ struct ProductListView: View {
         onSearchTap: @escaping () -> Void = {}
     ) {
         self.title = title
+        self.selectedTab = selectedTab
         self.cartCount = cartCount
         self.onBack = onBack
         self.onFavoriteTap = onFavoriteTap
@@ -93,7 +96,7 @@ struct ProductListView: View {
             }
             .scrollIndicators(.hidden)
 
-            EUMTabBar(selectedTab: .category, cartCount: cartCount, onSelect: onSelectTab)
+            EUMTabBar(selectedTab: selectedTab, cartCount: cartCount, onSelect: onSelectTab)
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
     }

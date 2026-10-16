@@ -2,6 +2,96 @@ import XCTest
 @testable import EumShoppingMall
 
 final class HomeNavigationPathTests: XCTestCase {
+    func testHomeCategoryProductListBackReturnsToHome() {
+        var state = HomeNavigationState()
+        state.push(.productList(HomeProductListSelection(title: "개인보호장비", products: [product("ppe")])))
+
+        XCTAssertEqual(state.selectedTab, .home)
+        state.back()
+
+        XCTAssertEqual(state.selectedTab, .home)
+        XCTAssertTrue(state.isEmpty)
+    }
+
+    func testCategoryProductListBackReturnsToCategory() {
+        var state = HomeNavigationState()
+        state.selectTab(.category)
+        state.push(.productList(HomeProductListSelection(title: "개인보호장비", products: [product("ppe")])))
+        state.back()
+
+        XCTAssertEqual(state.selectedTab, .category)
+        XCTAssertTrue(state.isEmpty)
+    }
+
+    func testSearchBackReturnsToProductListThenListBackReturnsToOrigin() {
+        var state = HomeNavigationState()
+        state.push(.productList(HomeProductListSelection(title: "추천 제품", products: [product("recommended")])))
+        state.push(.contextualSearch)
+
+        state.back()
+
+        XCTAssertEqual(state.selectedTab, .home)
+        guard case let .productList(selection)? = state.entries.last?.destination else {
+            return XCTFail("Contextual search back must return to the same product list")
+        }
+        XCTAssertEqual(selection.title, "추천 제품")
+        let listID = state.topID
+        state.push(.product(product("from-search")))
+        state.back()
+        XCTAssertEqual(state.topID, listID)
+        guard case let .productList(restoredSelection)? = state.entries.last?.destination else {
+            return XCTFail("Product detail back must return to the existing product list")
+        }
+        XCTAssertEqual(restoredSelection.title, "추천 제품")
+        state.back()
+        XCTAssertEqual(state.selectedTab, .home)
+        XCTAssertTrue(state.isEmpty)
+    }
+
+    func testSelectingAnotherTabClearsProductList() {
+        var state = HomeNavigationState()
+        state.push(.productList(HomeProductListSelection(title: "추천 제품", products: [product("recommended")])))
+        state.selectTab(.cart)
+
+        XCTAssertEqual(state.selectedTab, .cart)
+        XCTAssertTrue(state.isEmpty)
+    }
+
+    func testSearchTabBackReturnsToOriginatingTab() {
+        var state = HomeNavigationState()
+        state.selectTab(.category)
+        state.push(.screen(.accountCollection(.favorites)))
+
+        state.selectTab(.search)
+
+        XCTAssertTrue(state.isEmpty)
+        XCTAssertEqual(state.selectedTab, .search)
+        state.backFromSearch()
+        XCTAssertEqual(state.selectedTab, .category)
+    }
+
+    func testContextualSearchBackReturnsToCategoryScreen() {
+        var state = HomeNavigationState()
+        state.selectTab(.category)
+        state.push(.contextualSearch)
+
+        state.back()
+
+        XCTAssertEqual(state.selectedTab, .category)
+        XCTAssertTrue(state.isEmpty)
+    }
+
+    func testReturningHomeClearsNestedScreens() {
+        var state = HomeNavigationState()
+        state.push(.productList(HomeProductListSelection(title: "개인보호장비", products: [product("ppe")])))
+        state.push(.product(product("ppe-detail")))
+
+        state.returnHome()
+
+        XCTAssertEqual(state.selectedTab, .home)
+        XCTAssertTrue(state.isEmpty)
+    }
+
     func testRelatedProductBackReturnsToProductThenOriginalFavorites() {
         var path = HomeNavigationPath()
         path.push(.screen(.accountCollection(.favorites)))

@@ -3,6 +3,8 @@ import Foundation
 enum HomeDestination {
     case screen(HomeModalRoute)
     case product(HomeProduct)
+    case productList(HomeProductListSelection)
+    case contextualSearch
     case checkoutAddress
     case checkoutPayment
     case checkoutComplete(CheckoutPaymentMethod)
@@ -29,5 +31,40 @@ struct HomeNavigationPath {
 
     mutating func reset() {
         entries.removeAll()
+    }
+}
+
+struct HomeNavigationState {
+    private(set) var selectedTab = EUMTabBar.Tab.home
+    private(set) var searchReturnTab = EUMTabBar.Tab.home
+    private var path = HomeNavigationPath()
+
+    var entries: [HomeNavigationEntry] { path.entries }
+    var isEmpty: Bool { path.isEmpty }
+    var topID: UUID? { path.topID }
+
+    mutating func push(_ destination: HomeDestination) {
+        path.push(destination)
+    }
+
+    mutating func back() {
+        path.back()
+    }
+
+    mutating func selectTab(_ tab: EUMTabBar.Tab) {
+        path.reset()
+        if tab == .search, selectedTab != .search {
+            searchReturnTab = selectedTab
+        }
+        selectedTab = tab
+    }
+
+    mutating func backFromSearch() {
+        selectedTab = searchReturnTab
+    }
+
+    mutating func returnHome() {
+        path.reset()
+        selectedTab = .home
     }
 }
