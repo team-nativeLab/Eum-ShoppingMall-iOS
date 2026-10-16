@@ -60,6 +60,7 @@ struct MyPageView: View {
     @StateObject private var viewModel = MyPageViewModel()
     @State private var presentedMessage: String?
     @State private var isShowingAnnouncements = false
+    @State private var selectedAnnouncement: AnnouncementItem?
 
     let cartCount: Int
     let onSelectTab: (EUMTabBar.Tab) -> Void
@@ -93,10 +94,18 @@ struct MyPageView: View {
         }
         .overlay {
             if isShowingAnnouncements {
-                AnnouncementsView(
-                    onBack: { isShowingAnnouncements = false },
-                    onOpenAnnouncement: { _ in presentedMessage = "공지사항 상세 화면은 이슈 #95에서 연결할 예정이에요." }
-                )
+                if let selectedAnnouncement {
+                    AnnouncementDetailView(
+                        announcement: selectedAnnouncement,
+                        onBack: { self.selectedAnnouncement = nil },
+                        onDownload: { presentedMessage = "\($0)은 파일 서비스 연동 후 다운로드할 수 있어요." }
+                    )
+                } else {
+                    AnnouncementsView(
+                        onBack: { isShowingAnnouncements = false },
+                        onOpenAnnouncement: { selectedAnnouncement = $0 }
+                    )
+                }
             }
         }
     }
