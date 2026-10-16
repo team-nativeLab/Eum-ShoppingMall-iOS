@@ -187,6 +187,7 @@ struct HomeView: View {
                 cartCount: cartCount,
                 onLoginTap: { presentedRoute = .authentication },
                 onSettingsTap: { presentedRoute = .settings },
+                onContactHistoryTap: { presentedRoute = .accountCollection(.contactHistory) },
                 onSelectTab: selectTab
             )
         } else {

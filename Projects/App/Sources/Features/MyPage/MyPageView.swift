@@ -61,6 +61,7 @@ struct MyPageView: View {
     @State private var presentedMessage: String?
     @State private var isShowingAnnouncements = false
     @State private var selectedAnnouncement: AnnouncementItem?
+    @State private var isShowingCustomerCenter = false
 
     let cartCount: Int
     let onSelectTab: (EUMTabBar.Tab) -> Void
@@ -93,7 +94,14 @@ struct MyPageView: View {
             Text(presentedMessage ?? "")
         }
         .overlay {
-            if isShowingAnnouncements {
+            if isShowingCustomerCenter {
+                CustomerCenterView(
+                    onBack: { isShowingCustomerCenter = false },
+                    onCall: { presentedMessage = "고객센터 전화 연결은 번호 연동 후 이용할 수 있어요." },
+                    onContact: onContactHistoryTap,
+                    onSearch: { _ in presentedMessage = "FAQ 검색 결과는 이슈 #97에서 연결할 예정이에요." }
+                )
+            } else if isShowingAnnouncements {
                 if let selectedAnnouncement {
                     AnnouncementDetailView(
                         announcement: selectedAnnouncement,
@@ -283,6 +291,8 @@ struct MyPageView: View {
                         onContactHistoryTap()
                     } else if item.title == "공지사항" {
                         isShowingAnnouncements = true
+                    } else if item.title == "고객센터" {
+                        isShowingCustomerCenter = true
                     } else {
                         showUnavailable(item.title)
                     }
