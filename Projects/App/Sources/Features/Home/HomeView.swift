@@ -73,35 +73,34 @@ struct HomeView: View {
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
         .overlay {
-            if isShowingDrawer {
-                AppDrawerView(
-                    onDismiss: { withAnimation(.easeOut(duration: 0.2)) { isShowingDrawer = false } },
-                    onMyInfo: {
-                        isShowingDrawer = false
-                        isGuestAccount = false
-                        selectedTab = .account
-                    },
-                    onDestination: { destination in
-                        isShowingDrawer = false
-                        if destination == "맞춤 제작·견적 문의" {
-                            presentedRoute = .quoteInquiry(nil)
-                        } else if destination == "회사소개" { presentedRoute = .companyIntroduction
-                        } else {
-                            presentedMessage = "\(destination) 화면은 아직 연결되지 않았어요."
-                        }
-                    },
-                    onSettings: {
-                        isShowingDrawer = false
-                        presentedRoute = .settings
-                    },
-                    onLogout: {
-                        isShowingDrawer = false
-                        isGuestAccount = true
-                        selectedTab = .account
+            AppDrawerView(
+                isPresented: $isShowingDrawer,
+                onDismiss: { withAnimation(.easeOut(duration: 0.2)) { isShowingDrawer = false } },
+                onMyInfo: {
+                    isShowingDrawer = false
+                    isGuestAccount = false
+                    selectedTab = .account
+                },
+                onDestination: { destination in
+                    isShowingDrawer = false
+                    if destination == "맞춤 제작·견적 문의" {
+                        presentedRoute = .quoteInquiry(nil)
+                    } else if destination == "회사소개" { presentedRoute = .companyIntroduction
+                    } else {
+                        presentedMessage = "\(destination) 화면은 아직 연결되지 않았어요."
                     }
-                )
-                .zIndex(1)
-            }
+                },
+                onSettings: {
+                    isShowingDrawer = false
+                    presentedRoute = .settings
+                },
+                onLogout: {
+                    isShowingDrawer = false
+                    isGuestAccount = true
+                    selectedTab = .account
+                }
+            )
+            .zIndex(isShowingDrawer ? 1 : 0)
         }
         .alert("안내", isPresented: Binding(
             get: { presentedMessage != nil },
