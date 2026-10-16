@@ -24,6 +24,12 @@ final class CheckoutPaymentViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.selectedReceiptOption, .taxInvoice)
     }
 
+    func testTaxInvoicePreviewCanStartWithBusinessReceiptSelected() {
+        let viewModel = CheckoutPaymentViewModel(initialReceiptOption: .taxInvoice)
+
+        XCTAssertEqual(viewModel.selectedReceiptOption, .taxInvoice)
+    }
+
     func testAgreementControlsPaymentAvailability() {
         let viewModel = CheckoutPaymentViewModel()
 
