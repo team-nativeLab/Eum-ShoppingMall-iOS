@@ -22,4 +22,13 @@ final class AnnouncementsViewModelTests: XCTestCase {
 
         XCTAssertTrue(viewModel.isEmpty)
     }
+
+    func testAnnouncementDetailUsesFigmaPlaceholderCopyAndAttachment() throws {
+        let announcement = try XCTUnwrap(AnnouncementsViewModel().announcements.first)
+
+        XCTAssertEqual(announcement.viewCount, "000")
+        XCTAssertTrue(announcement.bodyText.contains("공지 본문은 관리자가 작성한 내용으로 서버에서 받아 보여 줍니다."))
+        XCTAssertEqual(announcement.attachmentName, "파일명.pdf")
+        XCTAssertEqual(announcement.attachmentSize, "0.0MB")
+    }
 }
