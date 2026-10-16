@@ -1,5 +1,36 @@
 import SwiftUI
 
+struct HomeAccountCollectionRouteView: View {
+    let destination: AccountCollectionDestination
+    @ObservedObject var addressViewModel: AddressesViewModel
+    let onBack: () -> Void
+    let onRoute: (HomeModalRoute) -> Void
+    let onMessage: (String) -> Void
+    let onProductTap: (HomeProduct) -> Void
+    let onWithdrawTap: () -> Void
+
+    var body: some View {
+        AccountCollectionRouteView(
+            destination: destination,
+            addressViewModel: addressViewModel,
+            onBack: onBack,
+            onBackToCoupons: { onRoute(.accountCollection(.coupons)) },
+            onBackToVerification: { onRoute(.accountVerification) },
+            onPointsTap: { onRoute(.accountCollection(.points)) },
+            onAddAddress: { onRoute(.addressEditor(nil)) },
+            onEditAddress: { onRoute(.addressEditor($0)) },
+            onAction: onMessage,
+            onProductTap: onProductTap,
+            onNewQuoteInquiry: { onRoute(.quoteInquiry(nil)) },
+            onQuoteDocument: { onMessage("견적서는 서비스 연동 후 확인할 수 있어요.") },
+            onOpenQuoteDetail: { onRoute(.quoteDetail($0)) },
+            onOpenContactInquiryDetail: { onRoute(.accountCollection(.contactDetail($0))) },
+            onBackToContactHistory: { onRoute(.accountCollection(.contactHistory)) },
+            onWithdrawTap: onWithdrawTap
+        )
+    }
+}
+
 struct HomeOrderRouteView: View {
     let route: HomeModalRoute
     let onBack: () -> Void
@@ -72,6 +103,8 @@ struct AccountCollectionRouteView: View {
     let onNewQuoteInquiry: () -> Void
     let onQuoteDocument: () -> Void
     let onOpenQuoteDetail: (QuoteInquiryRecord) -> Void
+    let onOpenContactInquiryDetail: (ContactInquiryRecord) -> Void
+    let onBackToContactHistory: () -> Void
     let onWithdrawTap: () -> Void
 
     @ViewBuilder
@@ -100,7 +133,13 @@ struct AccountCollectionRouteView: View {
             ContactInquiryHistoryView(
                 onBack: onBack,
                 onNewInquiry: { onAction("1:1 문의 작성 화면은 별도 작업에서 연결됩니다.") },
-                onOpenDetail: { _ in onAction("문의 상세 화면은 다음 화면 작업에서 연결됩니다.") }
+                onOpenDetail: onOpenContactInquiryDetail
+            )
+        case let .contactDetail(inquiry):
+            ContactInquiryDetailView(
+                inquiry: inquiry,
+                onBack: onBackToContactHistory,
+                onDownload: { fileName in onAction("\(fileName)은 파일 서비스 연동 후 다운로드할 수 있어요.") }
             )
         }
     }

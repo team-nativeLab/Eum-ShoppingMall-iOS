@@ -27,6 +27,7 @@ enum AccountCollectionDestination {
     case addresses
     case quoteHistory
     case contactHistory
+    case contactDetail(ContactInquiryRecord)
 }
 
 struct HomeView: View {
@@ -266,20 +267,13 @@ struct HomeView: View {
         case let .quoteInquiry(product):
             QuoteInquiryView(product: product, onBack: { presentedRoute = nil })
         case let .accountCollection(destination):
-            AccountCollectionRouteView(
+            HomeAccountCollectionRouteView(
                 destination: destination,
                 addressViewModel: addressesViewModel,
                 onBack: { presentedRoute = nil },
-                onBackToCoupons: { presentedRoute = .accountCollection(.coupons) },
-                onBackToVerification: { presentedRoute = .accountVerification },
-                onPointsTap: { presentedRoute = .accountCollection(.points) },
-                onAddAddress: { presentedRoute = .addressEditor(nil) },
-                onEditAddress: { presentedRoute = .addressEditor($0) },
-                onAction: { presentedMessage = $0 },
+                onRoute: { presentedRoute = $0 },
+                onMessage: { presentedMessage = $0 },
                 onProductTap: openProductDetail,
-                onNewQuoteInquiry: { presentedRoute = .quoteInquiry(nil) },
-                onQuoteDocument: { presentedMessage = "견적서는 서비스 연동 후 확인할 수 있어요." },
-                onOpenQuoteDetail: { presentedRoute = .quoteDetail($0) },
                 onWithdrawTap: showWithdrawalEntry
             )
         case .orderHistory, .orderDetail, .deliveryTracking, .returnRequest, .returnHistory, .quoteDetail:
