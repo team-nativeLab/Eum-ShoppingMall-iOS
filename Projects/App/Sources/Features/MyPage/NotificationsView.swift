@@ -1,30 +1,77 @@
 import SwiftUI
 
 struct NotificationsView: View {
-    @StateObject private var viewModel = NotificationsViewModel()
+    @StateObject private var viewModel: NotificationsViewModel
 
     let onBack: () -> Void
+
+    init(onBack: @escaping () -> Void) {
+        self.init(onBack: onBack, viewModel: NotificationsViewModel())
+    }
+
+    init(onBack: @escaping () -> Void, viewModel: NotificationsViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        self.onBack = onBack
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             topBar
-            summaryRow
-            ScrollView {
-                VStack(spacing: 0) {
-                    sectionHeader("오늘")
-                    ForEach(viewModel.todayNotifications) { notification in
-                        notificationRow(notification)
-                    }
-                    sectionHeader("이전 알림")
-                    ForEach(viewModel.previousNotifications) { notification in
-                        notificationRow(notification)
+            if viewModel.notifications.isEmpty {
+                emptyState
+            } else {
+                summaryRow
+                ScrollView {
+                    VStack(spacing: 0) {
+                        sectionHeader("오늘")
+                        ForEach(viewModel.todayNotifications) { notification in
+                            notificationRow(notification)
+                        }
+                        sectionHeader("이전 알림")
+                        ForEach(viewModel.previousNotifications) { notification in
+                            notificationRow(notification)
+                        }
                     }
                 }
+                .scrollIndicators(.hidden)
+                retentionNotice
             }
-            .scrollIndicators(.hidden)
-            retentionNotice
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                Image("TopBarBell")
+                    .resizable()
+                    .frame(width: 28, height: 28)
+                    .frame(width: 64, height: 64)
+                    .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: 32))
+                    .accessibilityHidden(true)
+                Spacer().frame(height: 20)
+                Text("새로운 알림이 없습니다")
+                    .font(EUMTypography.heading3)
+                    .tracking(-0.27)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+                Spacer().frame(height: 8)
+                Text("주문·배송 소식과 견적·문의 답변을\n이곳에서 알려 드립니다.")
+                    .font(EUMTypography.bodySmall)
+                    .tracking(-0.07)
+                    .foregroundStyle(EUMColor.text2SwiftUI)
+                    .multilineTextAlignment(.center)
+                    .frame(width: 280)
+                Spacer().frame(height: 24)
+            }
+            .padding(.top, 64)
+            .padding(.bottom, 32)
+            .frame(maxWidth: .infinity)
+            .background(EUMColor.backgroundSwiftUI)
+            Spacer(minLength: 0)
+        }
+        .padding(.top, 80)
+        .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
     private var topBar: some View {
@@ -163,6 +210,6 @@ struct NotificationsView: View {
 
 struct NotificationsViewPreview: PreviewProvider {
     static var previews: some View {
-        NotificationsView(onBack: {})
+        NotificationsView(onBack: {}, viewModel: NotificationsViewModel(notifications: []))
     }
 }
