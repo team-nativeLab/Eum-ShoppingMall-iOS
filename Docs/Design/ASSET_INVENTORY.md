@@ -39,6 +39,8 @@ Figma source is read-only. Assets below are the only local assets currently conf
 | Email lookup result icons | `ProductOptionClose.imageset`, `WithdrawalComplete.imageset`, `LoginInfo.imageset` | Figma A-27r close, success check, and privacy notice | Existing vectors reused at 24/32/16 pt; no duplicate exports added |
 | Email lookup empty state | `SearchEmpty.imageset`, `ProductOptionClose.imageset` | Figma A-27z search-x and close vectors | Existing vectors reused at 28/24 pt; no duplicate exports added |
 
+| Settings switches / disclosure | `SettingsSwitchOn.imageset`, `SettingsSwitchOff.imageset`, `SettingsMenuChevron.imageset` | Figma A-35 settings vectors; SVG, 36 × 20 and 20 × 20 pt | Present; on/off states and 20 pt disclosure match node 655:7083
+
 ## Outstanding asset audit
 
 - Home banner, placeholder imagery, and the observed navigation/component SVG icons have been imported. Individual product photography and remaining screen-specific art still need mapping/import.
