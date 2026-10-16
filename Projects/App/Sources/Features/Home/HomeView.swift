@@ -12,6 +12,7 @@ enum HomeModalRoute {
     case accountVerification
     case addressEditor(ShippingAddress?)
     case accountWithdrawalNotice
+    case accountWithdrawalBlocked
     case accountWithdrawalReason
     case accountWithdrawalComplete
 }
@@ -276,7 +277,7 @@ struct HomeView: View {
                 onProductTap: openProductDetail,
                 onNewQuoteInquiry: { presentedRoute = .quoteInquiry(nil) },
                 onQuoteDocument: { presentedMessage = "견적서는 서비스 연동 후 확인할 수 있어요." },
-                onWithdrawTap: { presentedRoute = .accountWithdrawalNotice }
+                onWithdrawTap: showWithdrawalEntry
             )
         case .orderHistory, .orderDetail, .deliveryTracking, .returnRequest, .returnHistory:
             HomeOrderRouteView(
@@ -296,6 +297,12 @@ struct HomeView: View {
                 viewModel: withdrawalNoticeViewModel,
                 onBack: { presentedRoute = .accountCollection(.editProfile) },
                 onContinue: { presentedRoute = .accountWithdrawalReason }
+            )
+        case .accountWithdrawalBlocked:
+            AccountWithdrawalBlockedView(
+                viewModel: AccountWithdrawalBlockedViewModel(activeOrderCount: activeWithdrawalOrderCount),
+                onBack: { presentedRoute = .accountCollection(.editProfile) },
+                onOrderHistory: { presentedRoute = .orderHistory }
             )
         case .accountWithdrawalReason:
             AccountWithdrawalReasonView(
@@ -329,5 +336,15 @@ struct HomeView: View {
             .frame(maxWidth: 180)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private extension HomeView {
+    func showWithdrawalEntry() {
+        presentedRoute = activeWithdrawalOrderCount > 0 ? .accountWithdrawalBlocked : .accountWithdrawalNotice
+    }
+
+    var activeWithdrawalOrderCount: Int {
+        OrderHistoryItem.samples.filter { $0.status != .delivered }.count
     }
 }
