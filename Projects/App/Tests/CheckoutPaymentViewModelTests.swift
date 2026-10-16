@@ -64,7 +64,20 @@ final class CheckoutPaymentViewModelTests: XCTestCase {
         viewModel.selectCashReceiptPurpose(.expenseEvidence)
         XCTAssertFalse(viewModel.canPay)
         viewModel.updateCashReceiptIdentifier("1234567890")
+        XCTAssertEqual(viewModel.cashReceiptIdentifier, "123-45-67890")
         XCTAssertTrue(viewModel.canPay)
+    }
+
+    func testExpenseEvidencePreviewMatchesFigmaSelectionAndIdentifier() {
+        let viewModel = CheckoutPaymentViewModel(
+            initialPaymentMethod: .bankTransfer,
+            initialCashReceiptPurpose: .expenseEvidence
+        )
+
+        XCTAssertEqual(viewModel.selectedPaymentMethod, .bankTransfer)
+        XCTAssertEqual(viewModel.cashReceiptPurpose, .expenseEvidence)
+        XCTAssertEqual(viewModel.cashReceiptIdentifier, "000-00-00000")
+        XCTAssertTrue(viewModel.isCashReceiptInfoValid)
     }
 
     func testAgreementControlsPaymentAvailability() {

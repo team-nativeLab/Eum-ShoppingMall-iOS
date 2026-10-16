@@ -317,7 +317,11 @@ struct CheckoutPaymentViewPreview: PreviewProvider {
         CheckoutPaymentView(
             onBack: {},
             onPaymentComplete: { _ in },
-            viewModel: CheckoutPaymentViewModel(initialReceiptOption: .cashReceipt)
+            viewModel: CheckoutPaymentViewModel(
+                initialReceiptOption: .cashReceipt,
+                initialPaymentMethod: .bankTransfer,
+                initialCashReceiptPurpose: .expenseEvidence
+            )
         )
     }
 }
