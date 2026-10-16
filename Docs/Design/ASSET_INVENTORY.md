@@ -36,6 +36,7 @@ Figma source is read-only. Assets below are the only local assets currently conf
 | Withdrawal password visibility | `WithdrawalPasswordVisibility.imageset` | Figma A-26r password field trailing icon | Present; Figma SVG eye-off vector, 20 × 20 pt |
 | Withdrawal confirmation warning | `WithdrawalAlert.imageset` | Figma A-26c red alert-circle icon | Present; Figma SVG, 20 × 20 pt; impact rows reuse `CouponTicket` and `CouponCoins` |
 | Withdrawal completion check | `WithdrawalComplete.imageset` | Figma A-26d white check on dark circle | Present; Figma SVG check vector, 32 × 32 pt; existing close/info assets reused |
+| Email lookup result icons | `ProductOptionClose.imageset`, `WithdrawalComplete.imageset`, `LoginInfo.imageset` | Figma A-27r close, success check, and privacy notice | Existing vectors reused at 24/32/16 pt; no duplicate exports added |
 
 ## Outstanding asset audit
 
