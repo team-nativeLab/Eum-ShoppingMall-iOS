@@ -29,31 +29,18 @@ struct OrderHistoryView: View {
     }
 
     private var topBar: some View {
-        ZStack {
-            Text("주문내역")
-                .font(EUMTypography.labelLarge)
-                .tracking(-0.16)
+        EUMBackTopBar(
+            title: "주문내역",
+            backAccessibilityLabel: "마이페이지로 돌아가기",
+            contentSpacing: 0,
+            onBack: onBack
+        ) {
+            Button("취소·반품", action: onCancelReturn)
+                .font(EUMTypography.labelMedium)
                 .foregroundStyle(EUMColor.text1SwiftUI)
-            HStack(spacing: 0) {
-                Button(action: onBack) {
-                    Image("ProductDetailBack")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("마이페이지로 돌아가기")
-                Spacer()
-                Button("취소·반품", action: onCancelReturn)
-                    .font(EUMTypography.labelMedium)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
-                    .padding(.horizontal, 12)
-                    .frame(height: 44)
-            }
-            .padding(.horizontal, 8)
+                .padding(.horizontal, 12)
+                .frame(height: 44)
         }
-        .frame(height: 56)
     }
 
     private var filters: some View {

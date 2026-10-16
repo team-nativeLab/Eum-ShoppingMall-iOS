@@ -27,26 +27,13 @@ struct QuoteHistoryView: View {
     }
 
     private var topBar: some View {
-        ZStack {
-            Text("견적 문의 내역")
-                .font(EUMTypography.labelLarge)
-                .tracking(-0.16)
-                .foregroundStyle(EUMColor.text1SwiftUI)
-            HStack {
-                Button(action: onBack) {
-                    Image("ProductDetailBack")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("마이페이지로 돌아가기")
-                Spacer()
-            }
-            .padding(.horizontal, 8)
+        EUMBackTopBar(
+            title: "견적 문의 내역",
+            backAccessibilityLabel: "마이페이지로 돌아가기",
+            onBack: onBack
+        ) {
+            EmptyView()
         }
-        .frame(height: 56)
     }
 
     private var statusFilters: some View {

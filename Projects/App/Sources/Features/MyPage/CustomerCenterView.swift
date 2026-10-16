@@ -51,27 +51,15 @@ struct CustomerCenterView: View {
     }
 
     private var topBar: some View {
-        ZStack {
-            Text("고객센터")
-                .font(EUMTypography.labelLarge)
-                .tracking(-0.16)
-                .foregroundStyle(EUMColor.text1SwiftUI)
-            HStack {
-                Button(action: onBack) {
-                    Image("ProductDetailBack")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("마이페이지로 돌아가기")
-                Spacer()
-                Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
-            }
-            .padding(.horizontal, 8)
+        EUMBackTopBar(
+            title: "고객센터",
+            backAccessibilityLabel: "마이페이지로 돌아가기",
+            onBack: onBack
+        ) {
+            Color.clear
+                .frame(width: 44, height: 44)
+                .accessibilityHidden(true)
         }
-        .frame(height: 56)
     }
 
     private var faqSection: some View {
