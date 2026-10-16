@@ -26,6 +26,7 @@ enum AccountCollectionDestination {
     case editProfile
     case addresses
     case quoteHistory
+    case contactHistory
 }
 
 struct HomeView: View {
@@ -187,6 +188,7 @@ struct HomeView: View {
                 onCouponsTap: { presentedRoute = .accountCollection(.coupons) },
                 onAddressesTap: { presentedRoute = .accountCollection(.addresses) },
                 onQuoteHistoryTap: { presentedRoute = .accountCollection(.quoteHistory) },
+                onContactHistoryTap: { presentedRoute = .accountCollection(.contactHistory) },
                 onReturnsHistoryTap: { presentedRoute = .returnHistory(backToOrderHistory: false) },
                 onAccountVerificationTap: { presentedRoute = .accountVerification }
             )

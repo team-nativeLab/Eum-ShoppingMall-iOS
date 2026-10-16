@@ -96,6 +96,12 @@ struct AccountCollectionRouteView: View {
                 onDocument: onQuoteDocument,
                 onOpenDetail: onOpenQuoteDetail
             )
+        case .contactHistory:
+            ContactInquiryHistoryView(
+                onBack: onBack,
+                onNewInquiry: { onAction("1:1 문의 작성 화면은 별도 작업에서 연결됩니다.") },
+                onOpenDetail: { _ in onAction("문의 상세 화면은 다음 화면 작업에서 연결됩니다.") }
+            )
         }
     }
 }
