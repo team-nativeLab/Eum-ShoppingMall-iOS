@@ -21,6 +21,8 @@ struct NotificationsView: View {
     }
 
     var body: some View {
+        let notificationSections = viewModel.notificationSections
+
         VStack(spacing: 0) {
             topBar
             if viewModel.notifications.isEmpty {
@@ -28,13 +30,13 @@ struct NotificationsView: View {
             } else {
                 summaryRow
                 ScrollView {
-                    VStack(spacing: 0) {
+                    LazyVStack(spacing: 0) {
                         sectionHeader("오늘")
-                        ForEach(viewModel.todayNotifications) { notification in
+                        ForEach(notificationSections.today) { notification in
                             notificationRow(notification)
                         }
                         sectionHeader("이전 알림")
-                        ForEach(viewModel.previousNotifications) { notification in
+                        ForEach(notificationSections.previous) { notification in
                             notificationRow(notification)
                         }
                     }

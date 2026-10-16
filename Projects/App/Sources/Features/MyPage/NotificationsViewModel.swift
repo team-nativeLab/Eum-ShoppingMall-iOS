@@ -39,6 +39,11 @@ struct AppNotification: Identifiable, Equatable {
     var isUnread: Bool
 }
 
+struct NotificationSections {
+    var today: [AppNotification]
+    var previous: [AppNotification]
+}
+
 @MainActor
 final class NotificationsViewModel: ObservableObject {
     @Published private(set) var notifications: [AppNotification]
@@ -101,12 +106,14 @@ final class NotificationsViewModel: ObservableObject {
         notifications.filter(\.isUnread).count
     }
 
-    var todayNotifications: [AppNotification] {
-        notifications.filter(\.isToday)
-    }
-
-    var previousNotifications: [AppNotification] {
-        notifications.filter { !$0.isToday }
+    var notificationSections: NotificationSections {
+        notifications.reduce(into: NotificationSections(today: [], previous: [])) { sections, notification in
+            if notification.isToday {
+                sections.today.append(notification)
+            } else {
+                sections.previous.append(notification)
+            }
+        }
     }
 
     func markAllRead() {
