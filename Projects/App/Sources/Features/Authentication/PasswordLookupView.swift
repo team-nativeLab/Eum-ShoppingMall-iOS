@@ -4,7 +4,7 @@ struct PasswordLookupView: View {
     @StateObject private var viewModel = PasswordLookupViewModel()
 
     let onBack: () -> Void
-    let onContinue: (String?) -> Void
+    let onContinue: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -171,7 +171,7 @@ struct PasswordLookupView: View {
         VStack(spacing: 0) {
             Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
             EUMButton(title: "다음", size: .large) {
-                onContinue(viewModel.continueLookup())
+                onContinue()
             }
             .disabled(!viewModel.canContinue)
             .padding(.horizontal, 20)

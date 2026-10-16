@@ -8,6 +8,7 @@ struct AuthenticationFlowView: View {
         case emailLookupResult(String)
         case emailLookupEmpty
         case passwordLookup
+        case passwordReset
     }
 
     @State private var screen = Screen.login
@@ -53,9 +54,12 @@ struct AuthenticationFlowView: View {
             case .passwordLookup:
                 PasswordLookupView(
                     onBack: { screen = .emailLookup },
-                    onContinue: { _ in
-                        presentedMessage = "비밀번호 재설정 화면은 다음 단계에서 연결됩니다."
-                    }
+                    onContinue: { screen = .passwordReset }
+                )
+            case .passwordReset:
+                PasswordResetView(
+                    onBack: { screen = .passwordLookup },
+                    onContinue: { presentedMessage = "비밀번호 변경 완료 화면은 다음 단계에서 연결됩니다." }
                 )
             }
         }
