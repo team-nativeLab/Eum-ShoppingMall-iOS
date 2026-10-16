@@ -74,7 +74,7 @@ struct MockHomeRepository: HomeRepository {
                 eyebrow: "Safe Tomorrow",
                 title: "작은 변화가\n큰 안전을 만듭니다.",
                 subtitle: "현장을 위한 통합 안전 솔루션",
-                imageName: "HomeHero",
+                imageName: "HeroBannerPlaceholder",
                 actionTitle: "자세히 보기"
             ),
             recommendedProducts: (0..<4).map { index in

@@ -8,7 +8,7 @@ Figma source is read-only. Entries below record assets confirmed in the project 
 | Noto Sans KR variable font | `Projects/App/Resources/Fonts/NotoSansKR-Variable.ttf` | TTF variable font | Present; family registration/style names still need runtime verification |
 | Search icon | `Projects/App/Resources/Assets.xcassets/DesignSearch.imageset/search.svg` | HF/SearchBar vector | Present; 20 × 20 pt |
 | Category hard hat | `Projects/App/Resources/Assets.xcassets/CategoryHardHat.imageset/hard-hat.svg` | HF/Icon vector | Present; 24 × 24 pt |
-| Hero banner | `Projects/App/Resources/Assets.xcassets/HeroBannerPlaceholder.imageset/hero-banner.png` | HF/HeroBanner ph-3 image | Present; Figma export |
+| Hero banner | `Projects/App/Resources/Assets.xcassets/HeroBannerPlaceholder.imageset/hero-banner.png` | Shared by Home and HF/HeroBanner; replaces byte-identical HomeHero asset | Present; Figma export |
 | Hero arrow / indicator | `HeroBannerArrow.imageset`, `HeroBannerIndicator.imageset` | HF/HeroBanner vectors | Present; arrow 16 × 16 pt, indicator 30 × 6 pt |
 | Product placeholder / favorite | `ProductPlaceholder.imageset`, `ProductFavorite.imageset` | HF/Image and HF/ProductCard vectors | Present; placeholder 32 × 32 pt, favorite 20 × 20 pt |
 | Favorite selected heart | `ProductFavoriteSelected.imageset/favorite-selected.svg` | A-20 `HF/ProductCard` selected heart; Figma SVG | Present; filled 20 × 20 pt vector |
