@@ -4,6 +4,7 @@ struct ProfileEditView: View {
     @StateObject private var viewModel = ProfileEditViewModel()
     @State private var presentedMessage: String?
     @State private var isPasswordChangePresented = false
+    @State private var isPhoneChangePresented = false
 
     let onBack: () -> Void
     let onAction: (String) -> Void
@@ -13,6 +14,15 @@ struct ProfileEditView: View {
         Group {
             if isPasswordChangePresented {
                 PasswordChangeView(onBack: { isPasswordChangePresented = false })
+            } else if isPhoneChangePresented {
+                PhoneNumberChangeView(
+                    currentPhoneNumber: viewModel.phoneNumber,
+                    onBack: { isPhoneChangePresented = false },
+                    onChange: {
+                        viewModel.phoneNumber = $0
+                        isPhoneChangePresented = false
+                    }
+                )
             } else {
                 profileContent
             }
@@ -80,7 +90,7 @@ struct ProfileEditView: View {
                 HStack(alignment: .bottom, spacing: 8) {
                     ProfileEditField(title: "휴대폰 번호", text: $viewModel.phoneNumber)
                     EUMButton(title: "변경", kind: .secondary, size: .medium) {
-                        onAction("휴대폰 번호 변경 화면은 인증 서비스 연동 후 이용할 수 있어요.")
+                        isPhoneChangePresented = true
                     }
                     .fixedSize(horizontal: true, vertical: false)
                 }
