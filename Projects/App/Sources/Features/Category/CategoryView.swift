@@ -9,11 +9,13 @@ struct CategoryView: View {
     var onSearchTap: () -> Void
     var onAllProductsTap: () -> Void
     var onCategoryTap: (String) -> Void
+    var onProductTap: (HomeProduct) -> Void
+    var onFavoriteTap: (String) -> Void
     var onSelectTab: (EUMTabBar.Tab) -> Void
     var cartCount: Int
 
     @State private var contentMode: ContentMode = .products
-    @State private var presentedMessage: String?
+    @State private var selectedBrandID: String?
 
     private let categories: [HomeCategory] = [
         HomeCategory(id: "ppe", title: "개인보호장비", iconName: "CategoryHardHat"),
@@ -27,6 +29,29 @@ struct CategoryView: View {
     ]
 
     var body: some View {
+        if let selectedBrandID {
+            BrandDetailView(
+                brandID: selectedBrandID,
+                cartCount: cartCount,
+                onBack: { self.selectedBrandID = nil },
+                onBrandSelected: { self.selectedBrandID = $0 },
+                onShowAllBrands: {
+                    self.selectedBrandID = nil
+                    contentMode = .brands
+                },
+                onSelectTab: { tab in
+                    self.selectedBrandID = nil
+                    onSelectTab(tab)
+                },
+                onFavoriteTap: onFavoriteTap,
+                onProductTap: onProductTap
+            )
+        } else {
+            categoryDirectory
+        }
+    }
+
+    private var categoryDirectory: some View {
         VStack(spacing: 0) {
             topBar
 
@@ -40,7 +65,7 @@ struct CategoryView: View {
                         } else {
                             BrandDirectoryView(
                                 onIndexSelected: { index in proxy.scrollTo(index.isEmpty ? "brand-top" : index, anchor: .top) },
-                                onBrandSelected: { _ in presentedMessage = "브랜드 상세 화면은 다음 화면 작업에서 연결됩니다." }
+                                onBrandSelected: { selectedBrandID = $0 }
                             )
                             .id("brand-top")
                         }
@@ -54,14 +79,6 @@ struct CategoryView: View {
             EUMTabBar(selectedTab: .category, cartCount: cartCount, onSelect: onSelectTab)
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
-        .alert("안내", isPresented: Binding(
-            get: { presentedMessage != nil },
-            set: { if !$0 { presentedMessage = nil } }
-        )) {
-            Button("확인", role: .cancel) { presentedMessage = nil }
-        } message: {
-            Text(presentedMessage ?? "")
-        }
     }
 
     private var productCategories: some View {
