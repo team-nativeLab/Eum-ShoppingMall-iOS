@@ -29,4 +29,11 @@ final class TermsDocumentTests: XCTestCase {
             [2, 17]
         )
     }
+
+    func testPreviousTermsNoticeCopyIsPreserved() {
+        XCTAssertEqual(
+            TermsDocument.previousVersionNoticePrefix + TermsDocument.currentTermsLabel,
+            "이전 약관입니다. 현재 약관은 0000.00.00부터 시행 중입니다.  현재 약관 보기"
+        )
+    }
 }
