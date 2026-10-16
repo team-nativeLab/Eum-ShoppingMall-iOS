@@ -61,8 +61,7 @@ struct GuestMyPageView: View {
                 CustomerCenterView(
                     onBack: { isShowingCustomerCenter = false },
                     onCall: { presentedMessage = "고객센터 전화 연결은 번호 연동 후 이용할 수 있어요." },
-                    onContact: onContactHistoryTap,
-                    onSearch: { _ in presentedMessage = "FAQ 검색 결과는 이슈 #97에서 연결할 예정이에요." }
+                    onContact: onContactHistoryTap
                 )
             } else if isShowingAnnouncements {
                 if let selectedAnnouncement {
