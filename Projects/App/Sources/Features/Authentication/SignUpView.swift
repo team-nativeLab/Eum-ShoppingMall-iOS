@@ -3,6 +3,7 @@ import SwiftUI
 struct SignUpView: View {
     @StateObject private var viewModel = SignUpViewModel()
     @State private var presentedMessage: String?
+    @State private var isShowingTermsModal = false
     let onBack: () -> Void
 
     var body: some View {
@@ -22,6 +23,17 @@ struct SignUpView: View {
             Button("확인", role: .cancel) { presentedMessage = nil }
         } message: {
             Text(presentedMessage ?? "")
+        }
+        .overlay {
+            if isShowingTermsModal {
+                TermsAgreementModalView(
+                    onClose: { isShowingTermsModal = false },
+                    onAgree: {
+                        viewModel.agreeToTerms()
+                        isShowingTermsModal = false
+                    }
+                )
+            }
         }
     }
 
@@ -177,7 +189,13 @@ struct SignUpView: View {
         VStack(spacing: 12) {
             agreementRow("전체 동의", isOn: allAgreements, isAll: true, action: viewModel.toggleAllAgreements)
             Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
-            agreementRow("[필수] 이용약관 동의", isOn: viewModel.agreedToTerms, action: viewModel.toggleTerms, details: true)
+            agreementRow(
+                "[필수] 이용약관 동의",
+                isOn: viewModel.agreedToTerms,
+                action: viewModel.toggleTerms,
+                details: true,
+                onDetailsTap: { isShowingTermsModal = true }
+            )
             agreementRow("[필수] 개인정보 수집·이용 동의", isOn: viewModel.agreedToPrivacy, action: viewModel.togglePrivacy, details: true)
             agreementRow("[선택] 마케팅 정보 수신 동의", isOn: viewModel.agreedToMarketing, action: viewModel.toggleMarketing, details: true)
         }
@@ -195,7 +213,8 @@ struct SignUpView: View {
         isOn: Bool,
         isAll: Bool = false,
         action: @escaping () -> Void,
-        details: Bool = false
+        details: Bool = false,
+        onDetailsTap: (() -> Void)? = nil
     ) -> some View {
         HStack(spacing: 10) {
             Button(action: action) {
@@ -211,7 +230,11 @@ struct SignUpView: View {
             Spacer(minLength: 0)
             if details {
                 Button("보기") {
-                    presentedMessage = "약관 내용은 이용약관 화면 연결 후 확인할 수 있어요."
+                    if let onDetailsTap {
+                        onDetailsTap()
+                    } else {
+                        presentedMessage = "약관 내용은 이용약관 화면 연결 후 확인할 수 있어요."
+                    }
                 }
                 .font(EUMTypography.captionRegular)
                 .foregroundStyle(EUMColor.text2SwiftUI)
