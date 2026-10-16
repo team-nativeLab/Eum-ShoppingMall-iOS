@@ -4,6 +4,7 @@ struct TermsView: View {
     enum Version: Equatable {
         case current
         case previous
+        case revisionScheduled
     }
 
     let version: Version
@@ -16,7 +17,7 @@ struct TermsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     documentHeader
-                    previousVersionNotice
+                    inlineNotice
                     contentsCard
                     articleGroups
                 }
@@ -92,8 +93,8 @@ struct TermsView: View {
     }
 
     @ViewBuilder
-    private var previousVersionNotice: some View {
-        if version == .previous {
+    private var inlineNotice: some View {
+        if version != .current {
             HStack(alignment: .top, spacing: 8) {
                 Image("LoginInfo")
                     .frame(width: 16, height: 16)
@@ -101,8 +102,8 @@ struct TermsView: View {
                     .accessibilityHidden(true)
 
                 (
-                    Text(TermsDocument.previousVersionNoticePrefix)
-                    + Text(TermsDocument.currentTermsLabel)
+                    Text(noticePrefix)
+                    + Text(noticeLinkLabel)
                         .font(.custom("NotoSansKR-Medium", size: 14, relativeTo: .callout))
                         .underline()
                 )
@@ -123,10 +124,32 @@ struct TermsView: View {
 
     private var versionButtonTitle: String {
         switch version {
-        case .current:
+        case .current, .revisionScheduled:
             "이전 약관 보기"
         case .previous:
             "\(TermsDocument.effectiveDate) 시행"
+        }
+    }
+
+    private var noticePrefix: String {
+        switch version {
+        case .current:
+            ""
+        case .previous:
+            TermsDocument.previousVersionNoticePrefix
+        case .revisionScheduled:
+            TermsDocument.revisionScheduledNoticePrefix
+        }
+    }
+
+    private var noticeLinkLabel: String {
+        switch version {
+        case .current:
+            ""
+        case .previous:
+            TermsDocument.currentTermsLabel
+        case .revisionScheduled:
+            TermsDocument.revisionScheduledLabel
         }
     }
 
