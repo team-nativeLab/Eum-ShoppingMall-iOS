@@ -34,15 +34,14 @@ final class GuestMyPageViewModel: ObservableObject {
 struct GuestMyPageView: View {
     @StateObject private var viewModel = GuestMyPageViewModel()
     @State private var presentedMessage: String?
-    @State private var isShowingAnnouncements = false
-    @State private var selectedAnnouncement: AnnouncementItem?
-    @State private var isShowingCustomerCenter = false
+
+    var onCustomerCenterTap: () -> Void = {}
+    var onAnnouncementsTap: () -> Void = {}
 
     let cartCount: Int
     let onLoginTap: () -> Void
     let onSettingsTap: () -> Void
     let onProductTap: (HomeProduct) -> Void
-    var onContactHistoryTap: () -> Void = {}
     let onSelectTab: (EUMTabBar.Tab) -> Void
 
     var body: some View {
@@ -68,28 +67,6 @@ struct GuestMyPageView: View {
             Button("확인", role: .cancel) { presentedMessage = nil }
         } message: {
             Text(presentedMessage ?? "")
-        }
-        .overlay {
-            if isShowingCustomerCenter {
-                CustomerCenterView(
-                    onBack: { isShowingCustomerCenter = false },
-                    onCall: { presentedMessage = "고객센터 전화 연결은 번호 연동 후 이용할 수 있어요." },
-                    onContact: onContactHistoryTap
-                )
-            } else if isShowingAnnouncements {
-                if let selectedAnnouncement {
-                    AnnouncementDetailView(
-                        announcement: selectedAnnouncement,
-                        onBack: { self.selectedAnnouncement = nil },
-                        onDownload: { presentedMessage = "\($0)은 파일 서비스 연동 후 다운로드할 수 있어요." }
-                    )
-                } else {
-                    AnnouncementsView(
-                        onBack: { isShowingAnnouncements = false },
-                        onOpenAnnouncement: { selectedAnnouncement = $0 }
-                    )
-                }
-            }
         }
     }
 
@@ -176,9 +153,9 @@ struct GuestMyPageView: View {
             ForEach(Array(viewModel.menuItems.enumerated()), id: \.element.id) { index, item in
                 Button {
                     if item.title == "공지사항" {
-                        isShowingAnnouncements = true
+                        onAnnouncementsTap()
                     } else if item.title == "고객센터" {
-                        isShowingCustomerCenter = true
+                        onCustomerCenterTap()
                     } else {
                         presentedMessage = "\(item.title) 화면은 아직 연결되지 않았어요."
                     }

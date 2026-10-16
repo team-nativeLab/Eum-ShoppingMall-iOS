@@ -11,13 +11,16 @@ struct QuoteInquiryView: View {
     @State private var isShowingPrivacyConsent = false
     let onBack: () -> Void
     let onViewInquiries: () -> Void
+    let onContinueShopping: () -> Void
 
     init(
         product: HomeProduct? = nil,
         onBack: @escaping () -> Void,
+        onContinueShopping: @escaping () -> Void,
         onViewInquiries: @escaping () -> Void = {}
     ) {
         self.onBack = onBack
+        self.onContinueShopping = onContinueShopping
         self.onViewInquiries = onViewInquiries
         _viewModel = StateObject(wrappedValue: QuoteInquiryViewModel(product: product))
     }
@@ -28,7 +31,7 @@ struct QuoteInquiryView: View {
                 QuoteInquiryCompletionView(
                     details: viewModel.completionDetails,
                     onClose: onBack,
-                    onContinueShopping: onBack,
+                    onContinueShopping: onContinueShopping,
                     onViewInquiries: onViewInquiries
                 )
             } else {
@@ -149,6 +152,6 @@ struct QuoteInquiryView: View {
 
 struct QuoteInquiryViewPreview: PreviewProvider {
     static var previews: some View {
-        QuoteInquiryView(onBack: {})
+        QuoteInquiryView(onBack: {}, onContinueShopping: {})
     }
 }

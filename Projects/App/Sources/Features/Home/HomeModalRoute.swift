@@ -10,7 +10,7 @@ enum HomeModalRoute {
     case orderDetail(OrderHistoryItem)
     case deliveryTracking(OrderHistoryItem)
     case returnRequest(OrderHistoryItem)
-    case returnHistory(backToOrderHistory: Bool)
+    case returnHistory
     case accountVerification
     case settings
     case terms

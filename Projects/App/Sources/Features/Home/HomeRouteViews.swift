@@ -11,15 +11,18 @@ struct HomeAccountTabView: View {
     var body: some View {
         if isGuestAccount {
             GuestMyPageView(
+                onCustomerCenterTap: { onRoute(.customerCenter) },
+                onAnnouncementsTap: { onRoute(.announcements) },
                 cartCount: cartCount,
                 onLoginTap: { onRoute(.authentication) },
                 onSettingsTap: { onRoute(.settings) },
                 onProductTap: onProductTap,
-                onContactHistoryTap: { onRoute(.accountCollection(.contactHistory)) },
                 onSelectTab: onSelectTab
             )
         } else {
             MyPageView(
+                onCustomerCenterTap: { onRoute(.customerCenter) },
+                onAnnouncementsTap: { onRoute(.announcements) },
                 cartCount: cartCount,
                 onSelectTab: onSelectTab,
                 onOrderHistoryTap: { onRoute(.orderHistory) },
@@ -29,7 +32,7 @@ struct HomeAccountTabView: View {
                 onAddressesTap: { onRoute(.accountCollection(.addresses)) },
                 onQuoteHistoryTap: { onRoute(.accountCollection(.quoteHistory)) },
                 onContactHistoryTap: { onRoute(.accountCollection(.contactHistory)) },
-                onReturnsHistoryTap: { onRoute(.returnHistory(backToOrderHistory: false)) },
+                onReturnsHistoryTap: { onRoute(.returnHistory) },
                 onAccountVerificationTap: { onRoute(.accountVerification) },
                 onSettingsTap: { onRoute(.settings) }
             )
@@ -41,6 +44,7 @@ struct HomeAccountRouteView: View {
     let route: HomeModalRoute
     @ObservedObject var addressViewModel: AddressesViewModel
     let onBack: () -> Void
+    let onHome: () -> Void
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
@@ -53,6 +57,7 @@ struct HomeAccountRouteView: View {
             QuoteInquiryView(
                 product: product,
                 onBack: onBack,
+                onContinueShopping: onHome,
                 onViewInquiries: { onRoute(.accountCollection(.quoteHistory)) }
             )
         case let .accountCollection(destination):
@@ -74,7 +79,6 @@ struct HomeAccountRouteView: View {
 struct HomeProfileRouteView: View {
     let route: HomeModalRoute
     let onBack: () -> Void
-    let onBackToDrawer: () -> Void
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
 
@@ -89,7 +93,7 @@ struct HomeProfileRouteView: View {
             )
         case .companyIntroduction:
             CompanyIntroductionView(
-                onBack: onBackToDrawer,
+                onBack: onBack,
                 onOpenMap: { onMessage("주소가 임시 정보라 지도 앱과 연결되지 않았어요.") }
             )
         default:
@@ -112,8 +116,6 @@ struct HomeAccountCollectionRouteView: View {
             destination: destination,
             addressViewModel: addressViewModel,
             onBack: onBack,
-            onBackToCoupons: { onRoute(.accountCollection(.coupons)) },
-            onBackToVerification: { onRoute(.accountVerification) },
             onPointsTap: { onRoute(.accountCollection(.points)) },
             onAddAddress: { onRoute(.addressEditor(nil)) },
             onEditAddress: { onRoute(.addressEditor($0)) },
@@ -123,7 +125,6 @@ struct HomeAccountCollectionRouteView: View {
             onQuoteDocument: { onMessage("견적서는 서비스 연동 후 확인할 수 있어요.") },
             onOpenQuoteDetail: { onRoute(.quoteDetail($0)) },
             onOpenContactInquiryDetail: { onRoute(.accountCollection(.contactDetail($0))) },
-            onBackToContactHistory: { onRoute(.accountCollection(.contactHistory)) },
             onWithdrawTap: onWithdrawTap
         )
     }
@@ -142,7 +143,7 @@ struct HomeOrderRouteView: View {
         case .orderHistory:
             OrderHistoryView(
                 onBack: onBack,
-                onCancelReturn: { onRoute(.returnHistory(backToOrderHistory: true)) },
+                onCancelReturn: { onRoute(.returnHistory) },
                 onOrderDetail: { onRoute(.orderDetail($0)) },
                 onCancelOrder: { _ in onMessage("주문 취소는 서버 연동 후 이용할 수 있어요.") },
                 onTrackDelivery: { onRoute(.deliveryTracking($0)) },
@@ -158,18 +159,18 @@ struct HomeOrderRouteView: View {
                 onReceipt: { onMessage("영수증은 주문 서비스 연동 후 확인할 수 있어요.") }
             )
         case let .deliveryTracking(order):
-            DeliveryTrackingView(order: order, onBack: { onRoute(.orderDetail(order)) })
+            DeliveryTrackingView(order: order, onBack: onBack)
         case let .returnRequest(order):
             ReturnRequestView(
                 order: order,
-                onBack: { onRoute(.orderDetail(order)) },
+                onBack: onBack,
                 onUnavailableKind: { onMessage("\($0.rawValue) 화면은 별도 작업에서 연결할 예정이에요.") },
                 onAddressChange: { onAddressChange(order) },
                 onSubmit: onMessage
             )
-        case let .returnHistory(backToOrderHistory):
+        case .returnHistory:
             ReturnHistoryView(
-                onBack: { backToOrderHistory ? onRoute(.orderHistory) : onBack() },
+                onBack: onBack,
                 onDetail: { _ in onMessage("신청 상세는 서버 연동 후 확인할 수 있어요.") },
                 onWithdraw: { _ in onMessage("신청 철회는 서버 연동 후 이용할 수 있어요.") },
                 onRejectionReason: { item in onMessage(item.rejectionReason ?? "반려 사유가 없습니다.") }
@@ -177,7 +178,7 @@ struct HomeOrderRouteView: View {
         case let .quoteDetail(inquiry):
             QuoteDetailView(
                 inquiry: inquiry,
-                onBack: { onRoute(.accountCollection(.quoteHistory)) },
+                onBack: onBack,
                 onDownload: { fileName in onMessage("\(fileName)은 서비스 연동 후 다운로드할 수 있어요.") },
                 onContact: { onMessage("담당자 연락은 서비스 연동 후 이용할 수 있어요.") },
                 onRequote: { onMessage("재견적 요청은 서비스 연동 후 이용할 수 있어요.") }
@@ -192,8 +193,6 @@ struct AccountCollectionRouteView: View {
     let destination: AccountCollectionDestination
     @ObservedObject var addressViewModel: AddressesViewModel
     let onBack: () -> Void
-    let onBackToCoupons: () -> Void
-    let onBackToVerification: () -> Void
     let onPointsTap: () -> Void
     let onAddAddress: () -> Void
     let onEditAddress: (ShippingAddress) -> Void
@@ -203,7 +202,6 @@ struct AccountCollectionRouteView: View {
     let onQuoteDocument: () -> Void
     let onOpenQuoteDetail: (QuoteInquiryRecord) -> Void
     let onOpenContactInquiryDetail: (ContactInquiryRecord) -> Void
-    let onBackToContactHistory: () -> Void
     let onWithdrawTap: () -> Void
 
     @ViewBuilder
@@ -216,9 +214,9 @@ struct AccountCollectionRouteView: View {
         case .coupons:
             CouponsView(onBack: onBack, onPointsTap: onPointsTap)
         case .points:
-            PointsView(onBack: onBackToCoupons)
+            PointsView(onBack: onBack)
         case .editProfile:
-            ProfileEditView(onBack: onBackToVerification, onAction: onAction, onWithdrawTap: onWithdrawTap)
+            ProfileEditView(onBack: onBack, onAction: onAction, onWithdrawTap: onWithdrawTap)
         case .addresses:
             AddressesView(viewModel: addressViewModel, onBack: onBack, onAdd: onAddAddress, onEdit: onEditAddress)
         case .quoteHistory:
@@ -237,7 +235,7 @@ struct AccountCollectionRouteView: View {
         case let .contactDetail(inquiry):
             ContactInquiryDetailView(
                 inquiry: inquiry,
-                onBack: onBackToContactHistory,
+                onBack: onBack,
                 onDownload: { fileName in onAction("\(fileName)은 파일 서비스 연동 후 다운로드할 수 있어요.") }
             )
         case .notifications:
@@ -314,7 +312,7 @@ struct HomeSupportRouteView: View {
         case let .announcementDetail(announcement):
             AnnouncementDetailView(
                 announcement: announcement,
-                onBack: { onRoute(.announcements) },
+                onBack: onBack,
                 onDownload: { onMessage("\($0)은 파일 서비스 연동 후 다운로드할 수 있어요.") }
             )
         default:
@@ -328,6 +326,7 @@ struct HomeWithdrawalRouteView: View {
     @ObservedObject var noticeViewModel: AccountWithdrawalNoticeViewModel
     let activeOrderCount: Int
     let onRoute: (HomeModalRoute) -> Void
+    let onBack: () -> Void
     let onHome: () -> Void
 
     @ViewBuilder
@@ -336,18 +335,18 @@ struct HomeWithdrawalRouteView: View {
         case .accountWithdrawalNotice:
             AccountWithdrawalNoticeView(
                 viewModel: noticeViewModel,
-                onBack: { onRoute(.accountCollection(.editProfile)) },
+                onBack: onBack,
                 onContinue: { onRoute(.accountWithdrawalReason) }
             )
         case .accountWithdrawalBlocked:
             AccountWithdrawalBlockedView(
                 viewModel: AccountWithdrawalBlockedViewModel(activeOrderCount: activeOrderCount),
-                onBack: { onRoute(.accountCollection(.editProfile)) },
+                onBack: onBack,
                 onOrderHistory: { onRoute(.orderHistory) }
             )
         case .accountWithdrawalReason:
             AccountWithdrawalReasonView(
-                onBack: { onRoute(.accountWithdrawalNotice) },
+                onBack: onBack,
                 onSubmit: { onRoute(.accountWithdrawalComplete) }
             )
         case .accountWithdrawalComplete:

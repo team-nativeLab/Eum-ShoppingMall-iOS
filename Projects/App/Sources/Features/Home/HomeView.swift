@@ -8,18 +8,9 @@ struct HomeView: View {
     @State private var selectedTab = EUMTabBar.Tab.home
     @State private var searchReturnTab = EUMTabBar.Tab.home
     @State private var selectedProductList: HomeProductListSelection?
-    @State private var selectedProduct: HomeProduct?
-    @State private var productDetailBackStack: [HomeProduct] = []
-    @State private var presentedRoute: HomeModalRoute?
+    @State private var navigation = HomeNavigationPath()
     @State private var isShowingDrawer = false
     @State private var isGuestAccount = false
-    @State private var isShowingCheckoutAddress = false
-    @State private var isShowingCheckoutPayment = false
-    @State private var isShowingCheckoutComplete = false
-    @State private var orderDetailReturnsToCheckoutComplete = false
-    @State private var completedPaymentMethod: CheckoutPaymentMethod = .creditCard
-    @State private var addressesReturnRoute: HomeModalRoute?
-    @State private var routeBackStack: [HomeModalRoute] = []
     @State private var presentedMessage: String?
     @State private var companyIntroductionReturnsToDrawer = false
 
@@ -52,21 +43,21 @@ struct HomeView: View {
                 onDestination: { destination in
                     isShowingDrawer = false
                     if destination == "맞춤 제작·견적 문의" {
-                        presentedRoute = .quoteInquiry(nil)
+                        openRoute(.quoteInquiry(nil))
                     } else if destination == "회사소개" {
                         companyIntroductionReturnsToDrawer = true
-                        presentedRoute = .companyIntroduction
+                        openRoute(.companyIntroduction)
                     } else if destination == "고객지원" {
-                        presentedRoute = .customerCenter
+                        openRoute(.customerCenter)
                     } else if destination == "공지사항" {
-                        presentedRoute = .announcements
+                        openRoute(.announcements)
                     } else {
                         presentedMessage = "\(destination) 화면은 아직 연결되지 않았어요."
                     }
                 },
                 onSettings: {
                     isShowingDrawer = false
-                    presentedRoute = .settings
+                    openRoute(.settings)
                 },
                 onLogout: {
                     isShowingDrawer = false
@@ -92,31 +83,15 @@ struct HomeView: View {
     }
 
     @ViewBuilder
-    private func primaryContent(_ content: HomeContent) -> some View {
-        if let selectedProduct {
-            ProductDetailView(
-                product: selectedProduct,
-                onBack: closeProductDetail,
-                onQuoteTap: { presentedRoute = .quoteInquiry(selectedProduct) },
-                onOpenCart: { selectTab(.cart) },
-                onPurchase: { isShowingCheckoutAddress = true },
-                onRelatedProductTap: openProductDetail
-            )
-        } else {
-            tabContent(content)
-        }
-    }
-
-    @ViewBuilder
     private func tabContent(_ content: HomeContent) -> some View {
         switch selectedTab {
         case .cart:
             CartView(
                 cartCount: content.cartCount,
                 onSelectTab: selectTab,
-                onCheckout: { isShowingCheckoutAddress = true },
-                onProductTap: { selectedProduct = $0.homeProduct },
-                onQuoteRequest: { presentedRoute = .quoteInquiry($0.homeProduct) }
+                onCheckout: { navigation.push(.checkoutAddress) },
+                onProductTap: { openProductDetail($0.homeProduct) },
+                onQuoteRequest: { openRoute(.quoteInquiry($0.homeProduct)) }
             )
         case .search:
             SearchView(
@@ -125,7 +100,7 @@ struct HomeView: View {
                 products: content.recommendedProducts + content.bestSellerProducts,
                 onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
                 onProductTap: openProductDetail,
-                onQuoteTap: { presentedRoute = .quoteInquiry(nil) },
+                onQuoteTap: { openRoute(.quoteInquiry(nil)) },
                 onBack: { selectedTab = searchReturnTab },
                 onSelectTab: selectTab
             )
@@ -144,7 +119,7 @@ struct HomeView: View {
             cartCount: cartCount,
             isGuestAccount: isGuestAccount,
             onSelectTab: selectTab,
-            onRoute: openAccountRoute,
+            onRoute: openRoute,
             onProductTap: openProductDetail
         )
     }
@@ -170,7 +145,7 @@ struct HomeView: View {
                 },
                 onCategoryTap: { categoryID in
                     if categoryID == "custom" {
-                        presentedRoute = .quoteInquiry(nil)
+                        openRoute(.quoteInquiry(nil))
                     } else if let category = content.categories.first(where: { $0.id == categoryID }) {
                         openProductList(title: category.title, products: content.recommendedProducts + content.bestSellerProducts)
                     }
@@ -188,21 +163,21 @@ struct HomeView: View {
             EUMTopBar(
                 title: "이음산업건설",
                 onMenuTap: { withAnimation(.easeOut(duration: 0.2)) { isShowingDrawer = true } },
-                onNotificationTap: { presentedRoute = .accountCollection(.notifications) }
+                onNotificationTap: { openRoute(.accountCollection(.notifications)) }
             )
             HomeLandingContentView(
                 content: content,
                 searchText: $searchText,
                 onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
-                onQuoteTap: { presentedRoute = .quoteInquiry(nil) },
+                onQuoteTap: { openRoute(.quoteInquiry(nil)) },
                 onSearchSubmit: { selectTab(.search) },
                 onHeroTap: {
                     companyIntroductionReturnsToDrawer = false
-                    presentedRoute = .companyIntroduction
+                    openRoute(.companyIntroduction)
                 },
                 onCategoryTap: { category in
                     if category.id == "custom" {
-                        presentedRoute = .quoteInquiry(nil)
+                        openRoute(.quoteInquiry(nil))
                     } else {
                         selectTab(.category)
                         openProductList(title: category.title, products: content.recommendedProducts + content.bestSellerProducts)
@@ -221,66 +196,107 @@ struct HomeView: View {
     }
 
     private func selectTab(_ tab: EUMTabBar.Tab) {
+        navigation.reset()
+        companyIntroductionReturnsToDrawer = false
         if tab == .search {
-            if selectedTab != .search {
-                searchReturnTab = selectedTab
-            }
-            selectedTab = .search
+            if selectedTab != .search { searchReturnTab = selectedTab }
         } else {
-            selectedTab = tab
             selectedProductList = nil
-            selectedProduct = nil
-            productDetailBackStack.removeAll()
         }
+        selectedTab = tab
     }
 
     private func returnHome() {
-        isShowingCheckoutAddress = false
-        isShowingCheckoutPayment = false
-        isShowingCheckoutComplete = false
-        presentedRoute = nil
-        selectedProduct = nil
+        navigation.reset()
+        companyIntroductionReturnsToDrawer = false
         selectedProductList = nil
-        productDetailBackStack.removeAll()
-        orderDetailReturnsToCheckoutComplete = false
         selectedTab = .home
     }
 
-    private var completedOrder: OrderHistoryItem {
-        let sampleIndex = completedPaymentMethod == .virtualAccount ? 0 : 1
-        return OrderHistoryItem.samples[sampleIndex]
+    private func openRoute(_ route: HomeModalRoute) {
+        navigation.push(.screen(route))
     }
 
+    private func goBack() {
+        navigation.back()
+        if navigation.isEmpty && companyIntroductionReturnsToDrawer {
+            isShowingDrawer = true
+            companyIntroductionReturnsToDrawer = false
+        }
+    }
+
+    private func logout() {
+        navigation.reset()
+        companyIntroductionReturnsToDrawer = false
+        isGuestAccount = true
+        selectedTab = .account
+    }
+
+    private func openProductList(title: String, products: [HomeProduct]) {
+        selectedProductList = HomeProductListSelection(title: title, products: products)
+        selectedTab = .category
+    }
+
+    private func openProductDetail(_ product: HomeProduct) {
+        navigation.push(.product(product))
+    }
+
+    private func showWithdrawalEntry() {
+        openRoute(activeWithdrawalOrderCount > 0 ? .accountWithdrawalBlocked : .accountWithdrawalNotice)
+    }
+
+    private var activeWithdrawalOrderCount: Int {
+        OrderHistoryItem.samples.filter { $0.status != .delivered }.count
+    }
 }
 
 private extension HomeView {
-    @ViewBuilder
     func contentView(_ content: HomeContent) -> some View {
-        if let route = presentedRoute {
+        ZStack {
+            tabContent(content)
+                .navigationLayer(isActive: navigation.isEmpty)
+            ForEach(navigation.entries) { entry in
+                destinationView(entry.destination)
+                    .navigationLayer(isActive: entry.id == navigation.topID)
+            }
+        }
+    }
+
+    @ViewBuilder
+    func destinationView(_ destination: HomeDestination) -> some View {
+        switch destination {
+        case let .screen(route):
             modalRouteHost(route)
-        } else if isShowingCheckoutComplete {
+        case let .product(product):
+            ProductDetailView(
+                product: product,
+                onBack: goBack,
+                onQuoteTap: { openRoute(.quoteInquiry(product)) },
+                onOpenCart: { selectTab(.cart) },
+                onPurchase: { navigation.push(.checkoutAddress) },
+                onRelatedProductTap: openProductDetail
+            )
+        case .checkoutAddress:
+            CheckoutAddressView(
+                onBack: goBack,
+                onNext: { navigation.push(.checkoutPayment) },
+                onAddressChange: { openRoute(.accountCollection(.addresses)) }
+            )
+        case .checkoutPayment:
+            CheckoutPaymentView(
+                onBack: goBack,
+                onPaymentComplete: { navigation.push(.checkoutComplete($0)) }
+            )
+        case let .checkoutComplete(paymentMethod):
             CheckoutCompleteView(
-                paymentMethod: completedPaymentMethod,
+                paymentMethod: paymentMethod,
                 onClose: returnHome,
                 onContinueShopping: returnHome,
                 onOrderDetails: {
-                    orderDetailReturnsToCheckoutComplete = true
-                    presentedRoute = .orderDetail(completedOrder)
+                    let index = paymentMethod == .virtualAccount ? 0 : 1
+                    openRoute(.orderDetail(OrderHistoryItem.samples[index]))
                 }
             )
-        } else if isShowingCheckoutPayment {
-            CheckoutPaymentView(onBack: { isShowingCheckoutPayment = false }, onPaymentComplete: completeCheckout)
-        } else if isShowingCheckoutAddress {
-            CheckoutAddressView(
-                onBack: { isShowingCheckoutAddress = false },
-                onNext: { isShowingCheckoutPayment = true },
-                onAddressChange: {
-                    addressesReturnRoute = nil
-                    presentedRoute = .accountCollection(.addresses)
-                }
-            )
-        } else {
-            primaryContent(content)
         }
     }
 
@@ -291,107 +307,23 @@ private extension HomeView {
             withdrawalNoticeViewModel: withdrawalNoticeViewModel,
             isGuestAccount: isGuestAccount,
             activeWithdrawalOrderCount: activeWithdrawalOrderCount,
-            onBack: handleModalRouteBack,
-            onBackToDrawer: returnFromCompanyIntroduction,
-            onRoute: { handleNestedRoute($0, from: route) },
+            onBack: goBack,
+            onRoute: openRoute,
             onMessage: { presentedMessage = $0 },
             onProductTap: openProductDetail,
-            onAddressChange: changeAddress,
+            onAddressChange: { _ in openRoute(.accountCollection(.addresses)) },
             onHome: returnHome,
             onWithdrawal: showWithdrawalEntry,
             onLogout: logout
         )
     }
+}
 
-    func handleModalRouteBack(_ route: HomeModalRoute) {
-        if case .accountCollection(.addresses) = route, let addressesReturnRoute {
-            presentedRoute = addressesReturnRoute
-            self.addressesReturnRoute = nil
-        } else if case .orderDetail = route {
-            if orderDetailReturnsToCheckoutComplete {
-                presentedRoute = nil
-                isShowingCheckoutComplete = true
-                orderDetailReturnsToCheckoutComplete = false
-            } else {
-                presentedRoute = .orderHistory
-            }
-        } else if case .accountCollection(.quoteHistory) = route,
-                  let returnRoute = routeBackStack.popLast() {
-            presentedRoute = returnRoute
-        } else if case .accountCollection(.contactHistory) = route,
-                  let returnRoute = routeBackStack.popLast() {
-            presentedRoute = returnRoute
-        } else if case .customerCenter = route, let returnRoute = routeBackStack.popLast() {
-            presentedRoute = returnRoute
-        } else {
-            presentedRoute = nil
-        }
-    }
-
-    func handleNestedRoute(_ destination: HomeModalRoute, from route: HomeModalRoute) {
-        if case .quoteInquiry = route, case .accountCollection(.quoteHistory) = destination {
-            routeBackStack.append(route)
-        } else if case .usageGuide = route, case .customerCenter = destination {
-            routeBackStack.append(route)
-        } else if case .customerCenter = route, case .accountCollection(.contactHistory) = destination {
-            routeBackStack.append(route)
-        }
-        presentedRoute = destination
-    }
-
-    func returnFromCompanyIntroduction() {
-        presentedRoute = nil
-        if companyIntroductionReturnsToDrawer { isShowingDrawer = true }
-        companyIntroductionReturnsToDrawer = false
-    }
-
-    func changeAddress(for order: OrderHistoryItem) {
-        addressesReturnRoute = .returnRequest(order)
-        presentedRoute = .accountCollection(.addresses)
-    }
-
-    func logout() {
-        presentedRoute = nil
-        isGuestAccount = true
-        selectedTab = .account
-    }
-
-    func openAccountRoute(_ route: HomeModalRoute) {
-        if case .accountCollection(.addresses) = route {
-            addressesReturnRoute = nil
-        }
-        presentedRoute = route
-    }
-
-    func openProductList(title: String, products: [HomeProduct]) {
-        selectedProduct = nil
-        productDetailBackStack.removeAll()
-        selectedProductList = HomeProductListSelection(title: title, products: products)
-        selectedTab = .category
-    }
-
-    func openProductDetail(_ product: HomeProduct) {
-        presentedRoute = nil
-        if let selectedProduct {
-            productDetailBackStack.append(selectedProduct)
-        }
-        selectedProduct = product
-    }
-
-    func closeProductDetail() {
-        selectedProduct = productDetailBackStack.popLast()
-    }
-
-    func showWithdrawalEntry() {
-        presentedRoute = activeWithdrawalOrderCount > 0 ? .accountWithdrawalBlocked : .accountWithdrawalNotice
-    }
-
-    var activeWithdrawalOrderCount: Int {
-        OrderHistoryItem.samples.filter { $0.status != .delivered }.count
-    }
-
-    func completeCheckout(paymentMethod: CheckoutPaymentMethod) {
-        completedPaymentMethod = paymentMethod
-        isShowingCheckoutComplete = true
+private extension View {
+    func navigationLayer(isActive: Bool) -> some View {
+        frame(maxWidth: .infinity, maxHeight: .infinity)
+            .opacity(isActive ? 1 : 0)
+            .allowsHitTesting(isActive)
+            .accessibilityHidden(!isActive)
     }
 }
