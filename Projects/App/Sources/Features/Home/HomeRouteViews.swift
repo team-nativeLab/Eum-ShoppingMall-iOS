@@ -44,6 +44,14 @@ struct HomeOrderRouteView: View {
                 onWithdraw: { _ in onMessage("신청 철회는 서버 연동 후 이용할 수 있어요.") },
                 onRejectionReason: { item in onMessage(item.rejectionReason ?? "반려 사유가 없습니다.") }
             )
+        case let .quoteDetail(inquiry):
+            QuoteDetailView(
+                inquiry: inquiry,
+                onBack: { onRoute(.accountCollection(.quoteHistory)) },
+                onDownload: { fileName in onMessage("\(fileName)은 서비스 연동 후 다운로드할 수 있어요.") },
+                onContact: { onMessage("담당자 연락은 서비스 연동 후 이용할 수 있어요.") },
+                onRequote: { onMessage("재견적 요청은 서비스 연동 후 이용할 수 있어요.") }
+            )
         default:
             EmptyView()
         }
@@ -63,6 +71,7 @@ struct AccountCollectionRouteView: View {
     let onProductTap: (HomeProduct) -> Void
     let onNewQuoteInquiry: () -> Void
     let onQuoteDocument: () -> Void
+    let onOpenQuoteDetail: (QuoteInquiryRecord) -> Void
     let onWithdrawTap: () -> Void
 
     @ViewBuilder
@@ -81,7 +90,12 @@ struct AccountCollectionRouteView: View {
         case .addresses:
             AddressesView(viewModel: addressViewModel, onBack: onBack, onAdd: onAddAddress, onEdit: onEditAddress)
         case .quoteHistory:
-            QuoteHistoryView(onBack: onBack, onNewInquiry: onNewQuoteInquiry, onDocument: onQuoteDocument)
+            QuoteHistoryView(
+                onBack: onBack,
+                onNewInquiry: onNewQuoteInquiry,
+                onDocument: onQuoteDocument,
+                onOpenDetail: onOpenQuoteDetail
+            )
         }
     }
 }

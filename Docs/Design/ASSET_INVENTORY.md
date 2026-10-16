@@ -31,6 +31,7 @@ Figma source is read-only. Assets below are the only local assets currently conf
 | Login info icon | `LoginInfo.imageset` | Figma A-13 inline notice vector | Present; SVG in Asset Catalog, 16 × 16 pt |
 | Quote inquiry paperclip | `QuotePaperclip.imageset` | Figma A-15 file attachment icon | Present; SVG in Asset Catalog, rendered at 20 × 20 pt |
 | Quote history document | `QuoteHistoryFile.imageset` | Figma A-25 file-text icon | Present; SVG in Asset Catalog, rendered at 16 × 16 pt |
+| Quote detail check / attachment / download | `QuoteDetailStepCheck.imageset`, `QuoteDetailAttachment.imageset`, `QuoteDetailDownload.imageset` | Figma A-25d progress and file actions; SVGs | Present; Figma vectors at 12/16/20 pt; product thumbnails reuse `ProductPlaceholder.imageset` |
 | Withdrawal benefit icons | `CouponTicket.imageset`, `CouponCoins.imageset` | Figma A-26 coupon and points benefit summary | Existing A-22 assets reused; no duplicate exports added |
 | Withdrawal password visibility | `WithdrawalPasswordVisibility.imageset` | Figma A-26r password field trailing icon | Present; Figma SVG eye-off vector, 20 × 20 pt |
 | Withdrawal confirmation warning | `WithdrawalAlert.imageset` | Figma A-26c red alert-circle icon | Present; Figma SVG, 20 × 20 pt; impact rows reuse `CouponTicket` and `CouponCoins` |

@@ -3,6 +3,7 @@ import SwiftUI
 enum HomeModalRoute {
     case authentication
     case quoteInquiry(HomeProduct?)
+    case quoteDetail(QuoteInquiryRecord)
     case accountCollection(AccountCollectionDestination)
     case orderHistory
     case orderDetail(OrderHistoryItem)
@@ -259,8 +260,7 @@ struct HomeView: View {
     @ViewBuilder
     private func routeView(_ route: HomeModalRoute) -> some View {
         switch route {
-        case .authentication:
-            AuthenticationFlowView(onClose: { presentedRoute = nil })
+        case .authentication: AuthenticationFlowView(onClose: { presentedRoute = nil })
         case let .quoteInquiry(product):
             QuoteInquiryView(product: product, onBack: { presentedRoute = nil })
         case let .accountCollection(destination):
@@ -277,9 +277,10 @@ struct HomeView: View {
                 onProductTap: openProductDetail,
                 onNewQuoteInquiry: { presentedRoute = .quoteInquiry(nil) },
                 onQuoteDocument: { presentedMessage = "견적서는 서비스 연동 후 확인할 수 있어요." },
+                onOpenQuoteDetail: { presentedRoute = .quoteDetail($0) },
                 onWithdrawTap: showWithdrawalEntry
             )
-        case .orderHistory, .orderDetail, .deliveryTracking, .returnRequest, .returnHistory:
+        case .orderHistory, .orderDetail, .deliveryTracking, .returnRequest, .returnHistory, .quoteDetail:
             HomeOrderRouteView(
                 route: route,
                 onBack: { presentedRoute = nil },
