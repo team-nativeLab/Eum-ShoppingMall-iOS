@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct ContactInquiryHistoryView: View {
     @StateObject private var viewModel = ContactInquiryHistoryViewModel()
 
@@ -7,10 +8,31 @@ struct ContactInquiryHistoryView: View {
     let onNewInquiry: () -> Void
     let onOpenDetail: (ContactInquiryRecord) -> Void
 
+    init(onBack: @escaping () -> Void, onNewInquiry: @escaping () -> Void, onOpenDetail: @escaping (ContactInquiryRecord) -> Void) {
+        self.onBack = onBack
+        self.onNewInquiry = onNewInquiry
+        self.onOpenDetail = onOpenDetail
+    }
+
+    init(
+        viewModel: ContactInquiryHistoryViewModel,
+        onBack: @escaping () -> Void,
+        onNewInquiry: @escaping () -> Void,
+        onOpenDetail: @escaping (ContactInquiryRecord) -> Void
+    ) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        self.onBack = onBack
+        self.onNewInquiry = onNewInquiry
+        self.onOpenDetail = onOpenDetail
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             topBar
-            ScrollView {
+            if viewModel.visibleInquiries.isEmpty {
+                emptyState
+            } else {
+                ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     statusFilters
                     inquiryList
@@ -20,6 +42,7 @@ struct ContactInquiryHistoryView: View {
                 .padding(.bottom, 32)
             }
             .scrollIndicators(.hidden)
+            }
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -85,6 +108,40 @@ struct ContactInquiryHistoryView: View {
         }
     }
 
+    private var emptyState: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            VStack(spacing: 0) {
+                Image("SearchEmpty")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 28, height: 28)
+                    .frame(width: 64, height: 64)
+                    .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: 32))
+                    .accessibilityHidden(true)
+                Spacer().frame(height: 20)
+                Text("등록한 문의가 없습니다")
+                    .font(EUMTypography.heading3)
+                    .tracking(-0.27)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+                    .multilineTextAlignment(.center)
+                Spacer().frame(height: 8)
+                Text("주문·배송, 제품, 결제 등\n궁금한 점을 남겨 주세요.")
+                    .font(EUMTypography.bodySmall)
+                    .tracking(-0.07)
+                    .foregroundStyle(EUMColor.text2SwiftUI)
+                    .multilineTextAlignment(.center)
+                Spacer().frame(height: 24)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 64)
+            .padding(.bottom, 32)
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 80)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+
     private var newInquiryAction: some View {
         VStack(spacing: 0) {
             Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
@@ -93,6 +150,18 @@ struct ContactInquiryHistoryView: View {
                 .padding(.vertical, 12)
         }
         .background(EUMColor.backgroundSwiftUI)
+    }
+}
+
+@MainActor
+struct ContactInquiryHistoryEmptyPreview: PreviewProvider {
+    static var previews: some View {
+        ContactInquiryHistoryView(
+            viewModel: ContactInquiryHistoryViewModel(inquiries: []),
+            onBack: {},
+            onNewInquiry: {},
+            onOpenDetail: { _ in }
+        )
     }
 }
 

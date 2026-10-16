@@ -22,17 +22,23 @@ struct ContactInquiryRecord: Identifiable, Equatable {
 final class ContactInquiryHistoryViewModel: ObservableObject {
     @Published var selectedStatus: ContactInquiryStatus = .all
 
-    let inquiries = [
-        record("contact-1", status: .pending),
-        record("contact-2", status: .answered),
-        record("contact-3", status: .pending),
-        record("contact-4", status: .answered)
-    ]
+    let inquiries: [ContactInquiryRecord]
+
+    init(inquiries: [ContactInquiryRecord]? = nil) {
+        self.inquiries = inquiries ?? Self.sampleInquiries
+    }
 
     var visibleInquiries: [ContactInquiryRecord] {
         guard selectedStatus != .all else { return inquiries }
         return inquiries.filter { $0.status == selectedStatus }
     }
+
+    private static let sampleInquiries = [
+        record("contact-1", status: .pending),
+        record("contact-2", status: .answered),
+        record("contact-3", status: .pending),
+        record("contact-4", status: .answered)
+    ]
 
     private static func record(_ id: String, status: ContactInquiryStatus) -> ContactInquiryRecord {
         ContactInquiryRecord(
