@@ -220,6 +220,8 @@ struct HomeView: View {
                 onCategoryTap: { categoryID in
                     selectedProductCategory = content.categories.first { $0.id == categoryID }
                 },
+                onProductTap: { selectedProduct = $0 },
+                onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
                 onSelectTab: selectTab,
                 cartCount: content.cartCount
             )
