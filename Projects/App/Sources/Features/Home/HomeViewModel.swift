@@ -116,16 +116,17 @@ final class HomeViewModel: ObservableObject {
 
     func toggleFavorite(productID: String) {
         guard case var .content(content) = state else { return }
-        content.recommendedProducts = content.recommendedProducts.map { product in
-            var updated = product
-            if updated.id == productID { updated.isFavorite.toggle() }
-            return updated
-        }
-        content.bestSellerProducts = content.bestSellerProducts.map { product in
-            var updated = product
-            if updated.id == productID { updated.isFavorite.toggle() }
-            return updated
-        }
+        content.recommendedProducts = toggledFavorites(in: content.recommendedProducts, productID: productID)
+        content.bestSellerProducts = toggledFavorites(in: content.bestSellerProducts, productID: productID)
         state = .content(content)
+    }
+
+    private func toggledFavorites(in products: [HomeProduct], productID: String) -> [HomeProduct] {
+        products.map { product in
+            guard product.id == productID else { return product }
+            var updated = product
+            updated.isFavorite.toggle()
+            return updated
+        }
     }
 }
