@@ -1,7 +1,9 @@
 import SwiftUI
+import UIKit
 
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @Environment(\.scenePhase) private var scenePhase
 
     let isGuestAccount: Bool
     let onBack: () -> Void
@@ -34,6 +36,14 @@ struct SettingsView: View {
             .scrollIndicators(.hidden)
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .task {
+            guard !isGuestAccount else { return }
+            await viewModel.refreshDeviceNotificationAuthorization()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            guard phase == .active, !isGuestAccount else { return }
+            Task { await viewModel.refreshDeviceNotificationAuthorization() }
+        }
     }
 
     private var notificationGroup: some View {
@@ -41,9 +51,21 @@ struct SettingsView: View {
             SettingsToggleRow(
                 title: "앱 푸시 알림",
                 subtitle: "주문·배송, 견적·문의 답변 알림",
-                isOn: $viewModel.appPushEnabled
+                isOn: appPushBinding,
+                isEnabled: isGuestAccount || viewModel.deviceNotificationsAllowed
             )
+        } footer: {
+            if !isGuestAccount && !viewModel.deviceNotificationsAllowed {
+                SettingsDeviceNotificationNotice(onOpenSettings: openDeviceSettings)
+            }
         }
+    }
+
+    private var appPushBinding: Binding<Bool> {
+        Binding(
+            get: { viewModel.appPushEnabled && (isGuestAccount || viewModel.deviceNotificationsAllowed) },
+            set: { viewModel.appPushEnabled = $0 }
+        )
     }
 
     private var marketingGroup: some View {
@@ -159,6 +181,11 @@ struct SettingsView: View {
         }
         .frame(height: 56)
         .background(EUMColor.backgroundSwiftUI)
+    }
+
+    private func openDeviceSettings() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url)
     }
 }
 

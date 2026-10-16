@@ -41,6 +41,8 @@ Figma source is read-only. Assets below are the only local assets currently conf
 
 | Settings switches / disclosure | `SettingsSwitchOn.imageset`, `SettingsSwitchOff.imageset`, `SettingsMenuChevron.imageset` | Figma A-35 settings vectors; SVG, 36 × 20 and 20 × 20 pt | Present; on/off states and 20 pt disclosure match node 655:7083
 
+| Device notification off state | `SettingsSwitchDisabled.imageset`, `SettingsDeviceNoticeInfo.imageset` | Figma A-35p disabled switch and inline info icon; SVGs | Present; 36 × 20 and 16 × 16 pt
+
 ## Outstanding asset audit
 
 - Home banner, placeholder imagery, and the observed navigation/component SVG icons have been imported. Individual product photography and remaining screen-specific art still need mapping/import.
