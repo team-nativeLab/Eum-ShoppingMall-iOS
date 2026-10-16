@@ -13,6 +13,7 @@ enum HomeModalRoute {
     case returnHistory(backToOrderHistory: Bool)
     case accountVerification
     case settings
+    case terms
     case addressEditor(ShippingAddress?)
     case accountWithdrawalNotice
     case accountWithdrawalBlocked
@@ -302,18 +303,23 @@ struct HomeView: View {
                 onVerified: { presentedRoute = .accountCollection(.editProfile) },
                 onMessage: { presentedMessage = $0 }
             )
-        case .settings:
-            SettingsView(
+        case .settings, .terms:
+            HomeLegalRouteView(
+                route: route,
                 isGuestAccount: isGuestAccount,
-                onBack: { presentedRoute = nil },
-                onLoginTap: { presentedRoute = .settingsLogin },
-                onPolicyTap: { presentedMessage = "\($0) 화면은 후속 퍼블리싱 이슈에서 연결됩니다." },
-                onLogoutTap: {
-                    presentedRoute = nil
-                    isGuestAccount = true
-                    selectedTab = .account
-                },
-                onWithdrawalTap: showWithdrawalEntry
+                actions: HomeLegalRouteView.Actions(
+                    back: { presentedRoute = nil },
+                    backToSettings: { presentedRoute = .settings },
+                    login: { presentedRoute = .settingsLogin },
+                    openTerms: { presentedRoute = .terms },
+                    message: { presentedMessage = $0 },
+                    logout: {
+                        presentedRoute = nil
+                        isGuestAccount = true
+                        selectedTab = .account
+                    },
+                    withdrawal: showWithdrawalEntry
+                )
             )
         case .accountWithdrawalNotice, .accountWithdrawalBlocked, .accountWithdrawalReason, .accountWithdrawalComplete:
             accountWithdrawalRouteView(route)
@@ -324,11 +330,6 @@ struct HomeView: View {
                 onSave: { addressesViewModel.save($0); presentedRoute = .accountCollection(.addresses) }
             )
         }
-    }
-
-    private func openProductDetail(_ product: HomeProduct) {
-        presentedRoute = nil
-        selectedProduct = product
     }
 
     private var loadError: some View {
@@ -346,6 +347,11 @@ struct HomeView: View {
 }
 
 private extension HomeView {
+    func openProductDetail(_ product: HomeProduct) {
+        presentedRoute = nil
+        selectedProduct = product
+    }
+
     @ViewBuilder
     func accountWithdrawalRouteView(_ route: HomeModalRoute) -> some View {
         switch route {

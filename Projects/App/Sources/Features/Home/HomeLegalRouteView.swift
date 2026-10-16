@@ -1,0 +1,45 @@
+import SwiftUI
+
+struct HomeLegalRouteView: View {
+    struct Actions {
+        let back: () -> Void
+        let backToSettings: () -> Void
+        let login: () -> Void
+        let openTerms: () -> Void
+        let message: (String) -> Void
+        let logout: () -> Void
+        let withdrawal: () -> Void
+    }
+
+    let route: HomeModalRoute
+    let isGuestAccount: Bool
+    let actions: Actions
+
+    @ViewBuilder
+    var body: some View {
+        switch route {
+        case .settings:
+            SettingsView(
+                isGuestAccount: isGuestAccount,
+                onBack: actions.back,
+                onLoginTap: actions.login,
+                onPolicyTap: { destination in
+                    if destination == "이용약관" {
+                        actions.openTerms()
+                    } else {
+                        actions.message("\(destination) 화면은 후속 퍼블리싱 이슈에서 연결됩니다.")
+                    }
+                },
+                onLogoutTap: actions.logout,
+                onWithdrawalTap: actions.withdrawal
+            )
+        case .terms:
+            TermsView(
+                onBack: actions.backToSettings,
+                onPreviousTerms: { actions.message("이전 약관 화면은 후속 퍼블리싱 이슈에서 연결됩니다.") }
+            )
+        default:
+            EmptyView()
+        }
+    }
+}
