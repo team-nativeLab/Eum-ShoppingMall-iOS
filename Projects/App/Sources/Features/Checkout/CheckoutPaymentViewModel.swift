@@ -29,7 +29,7 @@ enum CashReceiptPurpose: String, CaseIterable, Identifiable {
 
 @MainActor
 final class CheckoutPaymentViewModel: ObservableObject {
-    @Published private(set) var selectedPaymentMethod: CheckoutPaymentMethod = .creditCard
+    @Published private(set) var selectedPaymentMethod: CheckoutPaymentMethod
     @Published private(set) var selectedReceiptOption: CheckoutReceiptOption
     @Published private(set) var isOrderAgreementAccepted = false
     @Published private(set) var isEnteringTaxInvoiceInfo = false
@@ -37,18 +37,23 @@ final class CheckoutPaymentViewModel: ObservableObject {
     @Published var taxInvoiceCompanyName = ""
     @Published var taxInvoiceRepresentativeName = ""
     @Published var taxInvoiceEmail = ""
-    @Published private(set) var cashReceiptPurpose = CashReceiptPurpose.incomeDeduction
-    @Published var cashReceiptIdentifier = "010-0000-0000"
+    @Published private(set) var cashReceiptPurpose: CashReceiptPurpose
+    @Published var cashReceiptIdentifier: String
 
     let availableCouponCount = 0
     let availablePoints = 0
 
     init(
         initialReceiptOption: CheckoutReceiptOption = .cashReceipt,
-        startsWithDirectTaxInvoiceInput: Bool = false
+        startsWithDirectTaxInvoiceInput: Bool = false,
+        initialPaymentMethod: CheckoutPaymentMethod = .creditCard,
+        initialCashReceiptPurpose: CashReceiptPurpose = .incomeDeduction
     ) {
         selectedReceiptOption = initialReceiptOption
         isEnteringTaxInvoiceInfo = startsWithDirectTaxInvoiceInput
+        selectedPaymentMethod = initialPaymentMethod
+        cashReceiptPurpose = initialCashReceiptPurpose
+        cashReceiptIdentifier = initialCashReceiptPurpose == .incomeDeduction ? "010-0000-0000" : "000-00-00000"
     }
 
     var canPay: Bool {
@@ -92,7 +97,9 @@ final class CheckoutPaymentViewModel: ObservableObject {
     func updateCashReceiptIdentifier(_ value: String) {
         let maxDigits = cashReceiptPurpose == .incomeDeduction ? 11 : 10
         let digits = String(value.filter(\.isNumber).prefix(maxDigits))
-        cashReceiptIdentifier = cashReceiptPurpose == .incomeDeduction ? Self.formatPhoneNumber(digits) : digits
+        cashReceiptIdentifier = cashReceiptPurpose == .incomeDeduction
+            ? Self.formatPhoneNumber(digits)
+            : Self.formatBusinessRegistrationNumber(digits)
     }
 
     func startTaxInvoiceInfoEntry() {
@@ -113,5 +120,12 @@ final class CheckoutPaymentViewModel: ObservableObject {
         let middle = String(digits.dropFirst(3).prefix(4))
         let suffix = String(digits.dropFirst(7))
         return [prefix, middle, suffix].filter { !$0.isEmpty }.joined(separator: "-")
+    }
+
+    private static func formatBusinessRegistrationNumber(_ digits: String) -> String {
+        let first = String(digits.prefix(3))
+        let second = String(digits.dropFirst(3).prefix(2))
+        let third = String(digits.dropFirst(5))
+        return [first, second, third].filter { !$0.isEmpty }.joined(separator: "-")
     }
 }
