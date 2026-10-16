@@ -3,19 +3,41 @@ import SwiftUI
 @MainActor
 final class AccountVerificationViewModel: ObservableObject {
     @Published var password = ""
+    @Published private(set) var isPasswordInvalid = false
 
     let email = "example@email.com"
+    private let mockValidPassword = "password"
 
     func requestVerification() -> String? {
-        password.isEmpty ? "비밀번호를 입력해 주세요." : nil
+        guard !password.isEmpty else { return "비밀번호를 입력해 주세요." }
+        isPasswordInvalid = password != mockValidPassword
+        return nil
+    }
+
+    func clearPasswordError() {
+        isPasswordInvalid = false
     }
 }
 
 struct AccountVerificationView: View {
-    @StateObject private var viewModel = AccountVerificationViewModel()
+    @StateObject private var viewModel: AccountVerificationViewModel
 
     let onBack: () -> Void
     let onConfirm: (String?) -> Void
+
+    init(onBack: @escaping () -> Void, onConfirm: @escaping (String?) -> Void) {
+        self.init(onBack: onBack, onConfirm: onConfirm, viewModel: AccountVerificationViewModel())
+    }
+
+    init(
+        onBack: @escaping () -> Void,
+        onConfirm: @escaping (String?) -> Void,
+        viewModel: AccountVerificationViewModel
+    ) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        self.onBack = onBack
+        self.onConfirm = onConfirm
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -36,6 +58,9 @@ struct AccountVerificationView: View {
         .ignoresSafeArea(edges: .top)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             bottomAction
+        }
+        .onChange(of: viewModel.password) { _, _ in
+            viewModel.clearPasswordError()
         }
     }
 
@@ -96,7 +121,8 @@ struct AccountVerificationView: View {
                 title: "비밀번호",
                 placeholder: "비밀번호를 입력해 주세요",
                 text: $viewModel.password,
-                isSecure: true
+                isSecure: true,
+                errorMessage: viewModel.isPasswordInvalid ? "비밀번호가 일치하지 않습니다." : nil
             )
         }
     }
@@ -107,7 +133,10 @@ struct AccountVerificationView: View {
                 .fill(EUMColor.lineSwiftUI)
                 .frame(height: 1)
             EUMButton(title: "확인", size: .large) {
-                onConfirm(viewModel.requestVerification())
+                let message = viewModel.requestVerification()
+                if !viewModel.isPasswordInvalid {
+                    onConfirm(message)
+                }
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
@@ -122,6 +151,7 @@ private struct AccountVerificationField: View {
     @Binding var text: String
     var isSecure = false
     var isDisabled = false
+    var errorMessage: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -140,9 +170,27 @@ private struct AccountVerificationField: View {
                 .clipShape(RoundedRectangle(cornerRadius: EUMRadius.button))
                 .overlay {
                     RoundedRectangle(cornerRadius: EUMRadius.button)
-                        .strokeBorder(isDisabled ? EUMColor.lineSwiftUI : EUMColor.lineStrongSwiftUI, lineWidth: 1)
+                        .strokeBorder(borderColor, lineWidth: errorMessage == nil ? 1 : 1.5)
                 }
+
+            if let errorMessage {
+                HStack(spacing: 4) {
+                    Image("WithdrawalPasswordError")
+                        .resizable()
+                        .frame(width: 14, height: 14)
+                        .accessibilityHidden(true)
+                    Text(errorMessage)
+                        .font(EUMTypography.captionRegular)
+                        .foregroundStyle(EUMColor.dangerSwiftUI)
+                }
+                .accessibilityElement(children: .combine)
+            }
         }
+    }
+
+    private var borderColor: Color {
+        if errorMessage != nil { return EUMColor.dangerSwiftUI }
+        return isDisabled ? EUMColor.lineSwiftUI : EUMColor.lineStrongSwiftUI
     }
 
     @ViewBuilder
@@ -160,6 +208,9 @@ private struct AccountVerificationField: View {
 
 struct AccountVerificationViewPreview: PreviewProvider {
     static var previews: some View {
-        AccountVerificationView(onBack: {}, onConfirm: { _ in })
+        let viewModel = AccountVerificationViewModel()
+        viewModel.password = "wrong-password"
+        _ = viewModel.requestVerification()
+        return AccountVerificationView(onBack: {}, onConfirm: { _ in }, viewModel: viewModel)
     }
 }
