@@ -44,6 +44,16 @@ struct SettingsView: View {
             guard phase == .active, !isGuestAccount else { return }
             Task { await viewModel.refreshDeviceNotificationAuthorization() }
         }
+        .overlay(alignment: .bottom) {
+            if let message = viewModel.marketingChangeToast {
+                SettingsMarketingToast(message: message)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 16)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(.easeOut(duration: 0.2), value: viewModel.marketingChangeToast != nil)
+        .onDisappear { viewModel.dismissMarketingToast() }
     }
 
     private var notificationGroup: some View {
@@ -68,19 +78,26 @@ struct SettingsView: View {
         )
     }
 
+    private func marketingBinding(for channel: SettingsViewModel.MarketingChannel) -> Binding<Bool> {
+        Binding(
+            get: { viewModel.marketingSetting(for: channel) },
+            set: { viewModel.setMarketingSetting($0, for: channel) }
+        )
+    }
+
     private var marketingGroup: some View {
         SettingsGroup(
             title: "마케팅 정보 수신",
             subtitle: "혜택·이벤트 소식을 보내 드립니다. 변경하면 처리 결과를 알려 드립니다."
         ) {
             VStack(spacing: 0) {
-                SettingsToggleRow(title: "앱 푸시", isOn: $viewModel.marketingAppPushEnabled, showsDivider: true)
-                SettingsToggleRow(title: "문자(SMS)", isOn: $viewModel.marketingSMSEnabled, showsDivider: true)
-                SettingsToggleRow(title: "이메일", isOn: $viewModel.marketingEmailEnabled, showsDivider: true)
+                SettingsToggleRow(title: "앱 푸시", isOn: marketingBinding(for: .appPush), showsDivider: true)
+                SettingsToggleRow(title: "문자(SMS)", isOn: marketingBinding(for: .sms), showsDivider: true)
+                SettingsToggleRow(title: "이메일", isOn: marketingBinding(for: .email), showsDivider: true)
                 SettingsToggleRow(
                     title: "야간 혜택 알림 (21시~8시)",
                     subtitle: "마케팅 앱 푸시를 켜야 받을 수 있습니다.",
-                    isOn: $viewModel.nightMarketingEnabled
+                    isOn: marketingBinding(for: .nightBenefits)
                 )
             }
         } footer: {

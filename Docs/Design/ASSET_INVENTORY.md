@@ -43,6 +43,8 @@ Figma source is read-only. Assets below are the only local assets currently conf
 
 | Device notification off state | `SettingsSwitchDisabled.imageset`, `SettingsDeviceNoticeInfo.imageset` | Figma A-35p disabled switch and inline info icon; SVGs | Present; 36 × 20 and 16 × 16 pt
 
+| Marketing preference result toast | `SettingsToastCheck.imageset` and `EUMColor.toast` | Figma A-35t circle-check SVG and `#222222` toast surface | Present; icon 20 × 20 pt
+
 ## Outstanding asset audit
 
 - Home banner, placeholder imagery, and the observed navigation/component SVG icons have been imported. Individual product photography and remaining screen-specific art still need mapping/import.
