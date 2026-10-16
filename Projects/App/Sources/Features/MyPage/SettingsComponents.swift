@@ -1,25 +1,38 @@
 import SwiftUI
 
 struct SettingsGroup<Content: View, Footer: View>: View {
+    enum CardStyle: Equatable {
+        case outlined
+        case subtle
+    }
+
     let title: String
     let subtitle: String?
+    let cardStyle: CardStyle
     let content: Content
     let footer: Footer
 
     init(
         title: String,
         subtitle: String? = nil,
+        cardStyle: CardStyle = .outlined,
         @ViewBuilder content: () -> Content,
         @ViewBuilder footer: () -> Footer
     ) {
         self.title = title
         self.subtitle = subtitle
+        self.cardStyle = cardStyle
         self.content = content()
         self.footer = footer()
     }
 
-    init(title: String, subtitle: String? = nil, @ViewBuilder content: () -> Content) where Footer == EmptyView {
-        self.init(title: title, subtitle: subtitle, content: content, footer: { EmptyView() })
+    init(
+        title: String,
+        subtitle: String? = nil,
+        cardStyle: CardStyle = .outlined,
+        @ViewBuilder content: () -> Content
+    ) where Footer == EmptyView {
+        self.init(title: title, subtitle: subtitle, cardStyle: cardStyle, content: content, footer: { EmptyView() })
     }
 
     var body: some View {
@@ -39,17 +52,23 @@ struct SettingsGroup<Content: View, Footer: View>: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             content
-                .padding(1)
-                .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+                .padding(cardStyle == .outlined ? 1 : 0)
+                .background(cardBackground, in: RoundedRectangle(cornerRadius: EUMRadius.large))
                 .clipShape(RoundedRectangle(cornerRadius: EUMRadius.large))
                 .overlay {
-                    RoundedRectangle(cornerRadius: EUMRadius.large)
-                        .stroke(EUMColor.lineSwiftUI, lineWidth: 1)
+                    if cardStyle == .outlined {
+                        RoundedRectangle(cornerRadius: EUMRadius.large)
+                            .stroke(EUMColor.lineSwiftUI, lineWidth: 1)
+                    }
                 }
 
             footer
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var cardBackground: Color {
+        cardStyle == .outlined ? EUMColor.backgroundSwiftUI : EUMColor.backgroundSubtleSwiftUI
     }
 }
 

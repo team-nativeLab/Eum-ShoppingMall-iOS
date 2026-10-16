@@ -3,7 +3,9 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
 
+    let isGuestAccount: Bool
     let onBack: () -> Void
+    let onLoginTap: () -> Void
     let onPolicyTap: (String) -> Void
     let onLogoutTap: () -> Void
     let onWithdrawalTap: () -> Void
@@ -14,10 +16,16 @@ struct SettingsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 32) {
                     notificationGroup
-                    marketingGroup
+                    if isGuestAccount {
+                        guestMarketingGroup
+                    } else {
+                        marketingGroup
+                    }
                     policyGroup
                     appInfoGroup
-                    accountGroup
+                    if !isGuestAccount {
+                        accountGroup
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 24)
@@ -59,6 +67,22 @@ struct SettingsView: View {
                 .foregroundStyle(EUMColor.text3SwiftUI)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 12)
+        }
+    }
+
+    private var guestMarketingGroup: some View {
+        SettingsGroup(title: "마케팅 정보 수신", cardStyle: .subtle) {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("로그인하면 마케팅 정보 수신 설정을 변경할 수 있습니다.")
+                    .font(EUMTypography.bodySmall)
+                    .tracking(-0.07)
+                    .foregroundStyle(EUMColor.text2SwiftUI)
+                    .fixedSize(horizontal: false, vertical: true)
+                EUMButton(title: "로그인", kind: .secondary, size: .small, action: onLoginTap)
+                    .frame(width: 65)
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
