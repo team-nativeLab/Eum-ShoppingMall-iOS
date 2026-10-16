@@ -59,6 +59,7 @@ final class MyPageViewModel: ObservableObject {
 struct MyPageView: View {
     @StateObject private var viewModel = MyPageViewModel()
     @State private var presentedMessage: String?
+    @State private var isShowingAnnouncements = false
 
     let cartCount: Int
     let onSelectTab: (EUMTabBar.Tab) -> Void
@@ -89,6 +90,14 @@ struct MyPageView: View {
             Button("확인", role: .cancel) { presentedMessage = nil }
         } message: {
             Text(presentedMessage ?? "")
+        }
+        .overlay {
+            if isShowingAnnouncements {
+                AnnouncementsView(
+                    onBack: { isShowingAnnouncements = false },
+                    onOpenAnnouncement: { _ in presentedMessage = "공지사항 상세 화면은 이슈 #95에서 연결할 예정이에요." }
+                )
+            }
         }
     }
 
@@ -263,6 +272,8 @@ struct MyPageView: View {
                         onQuoteHistoryTap()
                     } else if item.title == "1:1 문의 내역" {
                         onContactHistoryTap()
+                    } else if item.title == "공지사항" {
+                        isShowingAnnouncements = true
                     } else {
                         showUnavailable(item.title)
                     }
