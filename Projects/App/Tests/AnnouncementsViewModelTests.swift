@@ -16,4 +16,10 @@ final class AnnouncementsViewModelTests: XCTestCase {
             "공지사항 제목이 들어갑니다. 제목이 길면 두 줄까지 보여 주고 나머지는 말줄임합니다"
         )
     }
+
+    func testEmptyAnnouncementsUseTheDedicatedEmptyState() {
+        let viewModel = AnnouncementsViewModel(announcements: [])
+
+        XCTAssertTrue(viewModel.isEmpty)
+    }
 }

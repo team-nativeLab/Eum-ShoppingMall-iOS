@@ -1,4 +1,3 @@
-import Combine
 import Foundation
 
 struct AnnouncementItem: Identifiable, Equatable {
@@ -9,9 +8,18 @@ struct AnnouncementItem: Identifiable, Equatable {
     let opensDetail: Bool
 }
 
-@MainActor
-final class AnnouncementsViewModel: ObservableObject {
-    let announcements = [
+struct AnnouncementsViewModel {
+    let announcements: [AnnouncementItem]
+
+    init(announcements: [AnnouncementItem] = Self.mockAnnouncements) {
+        self.announcements = announcements
+    }
+
+    var isEmpty: Bool {
+        announcements.isEmpty
+    }
+
+    static let mockAnnouncements = [
         AnnouncementItem(id: "notice-1", title: "[공지] 개인정보 처리방침 개정 안내", date: "0000.00.00", isPinned: true, opensDetail: true),
         AnnouncementItem(id: "notice-2", title: "[공지] 설 연휴 배송 일정 안내", date: "0000.00.00", isPinned: true, opensDetail: false),
         AnnouncementItem(id: "notice-3", title: "공지사항 제목이 들어갑니다", date: "0000.00.00", isPinned: false, opensDetail: false),
