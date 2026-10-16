@@ -28,6 +28,7 @@ enum AccountCollectionDestination {
     case quoteHistory
     case contactHistory
     case contactDetail(ContactInquiryRecord)
+    case notifications
 }
 
 struct HomeView: View {
@@ -228,7 +229,7 @@ struct HomeView: View {
             EUMTopBar(
                 title: "이음산업건설",
                 onMenuTap: { withAnimation(.easeOut(duration: 0.2)) { isShowingDrawer = true } },
-                onNotificationTap: { presentedMessage = "알림 화면은 아직 연결되지 않았어요." }
+                onNotificationTap: { presentedRoute = .accountCollection(.notifications) }
             )
             HomeLandingContentView(
                 content: content,

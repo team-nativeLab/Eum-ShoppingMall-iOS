@@ -141,6 +141,8 @@ struct AccountCollectionRouteView: View {
                 onBack: onBackToContactHistory,
                 onDownload: { fileName in onAction("\(fileName)은 파일 서비스 연동 후 다운로드할 수 있어요.") }
             )
+        case .notifications:
+            NotificationsView(onBack: onBack)
         }
     }
 }
