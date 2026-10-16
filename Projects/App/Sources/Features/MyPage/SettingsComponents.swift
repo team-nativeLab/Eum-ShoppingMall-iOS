@@ -77,12 +77,20 @@ struct SettingsToggleRow: View {
     var subtitle: String?
     @Binding var isOn: Bool
     var showsDivider = false
+    var isEnabled = true
 
-    init(title: String, subtitle: String? = nil, isOn: Binding<Bool>, showsDivider: Bool = false) {
+    init(
+        title: String,
+        subtitle: String? = nil,
+        isOn: Binding<Bool>,
+        showsDivider: Bool = false,
+        isEnabled: Bool = true
+    ) {
         self.title = title
         self.subtitle = subtitle
         _isOn = isOn
         self.showsDivider = showsDivider
+        self.isEnabled = isEnabled
     }
 
     var body: some View {
@@ -102,7 +110,8 @@ struct SettingsToggleRow: View {
             }
             .frame(height: subtitle == nil ? 26 : 44, alignment: .center)
         }
-        .toggleStyle(SettingsSwitchToggleStyle(title: title))
+        .toggleStyle(SettingsSwitchToggleStyle(title: title, isEnabled: isEnabled))
+        .disabled(!isEnabled)
         .frame(height: subtitle == nil ? 60 : 72)
         .overlay(alignment: .bottom) {
             if showsDivider {
@@ -117,6 +126,7 @@ struct SettingsToggleRow: View {
 
 private struct SettingsSwitchToggleStyle: ToggleStyle {
     let title: String
+    let isEnabled: Bool
 
     func makeBody(configuration: Configuration) -> some View {
         Button {
@@ -125,7 +135,7 @@ private struct SettingsSwitchToggleStyle: ToggleStyle {
             HStack(spacing: 12) {
                 configuration.label
                 Spacer(minLength: 0)
-                Image(configuration.isOn ? "SettingsSwitchOn" : "SettingsSwitchOff")
+                Image(switchAssetName(isOn: configuration.isOn))
                     .resizable()
                     .frame(width: 36, height: 20)
                     .accessibilityHidden(true)
@@ -137,6 +147,44 @@ private struct SettingsSwitchToggleStyle: ToggleStyle {
         .accessibilityLabel(title)
         .accessibilityValue(configuration.isOn ? "켜짐" : "꺼짐")
         .accessibilityHint("두 번 탭하여 변경")
+    }
+
+    private func switchAssetName(isOn: Bool) -> String {
+        guard isEnabled else { return "SettingsSwitchDisabled" }
+        return isOn ? "SettingsSwitchOn" : "SettingsSwitchOff"
+    }
+}
+
+struct SettingsDeviceNotificationNotice: View {
+    let onOpenSettings: () -> Void
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image("SettingsDeviceNoticeInfo")
+                .resizable()
+                .frame(width: 16, height: 16)
+                .padding(.top, 2)
+                .accessibilityHidden(true)
+            Button(action: onOpenSettings) {
+                (
+                    Text("기기 알림이 꺼져 있어 알림을 받을 수 없습니다.  ") +
+                    Text("기기 설정 열기")
+                        .font(EUMTypography.labelMedium)
+                        .underline()
+                )
+                .font(EUMTypography.bodySmall)
+                .tracking(-0.07)
+                .foregroundColor(EUMColor.text2SwiftUI)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("기기 알림이 꺼져 있습니다. 기기 설정 열기")
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
     }
 }
 
