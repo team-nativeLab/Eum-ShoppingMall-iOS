@@ -30,6 +30,25 @@ final class CheckoutPaymentViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.selectedReceiptOption, .taxInvoice)
     }
 
+    func testDirectTaxInvoiceInfoRequiresValidFieldsBeforePayment() {
+        let viewModel = CheckoutPaymentViewModel(
+            initialReceiptOption: .taxInvoice,
+            startsWithDirectTaxInvoiceInput: true
+        )
+        viewModel.toggleOrderAgreement()
+
+        XCTAssertFalse(viewModel.canPay)
+
+        viewModel.updateBusinessRegistrationNumber("123-45678901")
+        viewModel.taxInvoiceCompanyName = "회사명"
+        viewModel.taxInvoiceRepresentativeName = "홍길동"
+        viewModel.taxInvoiceEmail = "example@email.com"
+
+        XCTAssertEqual(viewModel.businessRegistrationNumber, "1234567890")
+        XCTAssertTrue(viewModel.isTaxInvoiceInfoValid)
+        XCTAssertTrue(viewModel.canPay)
+    }
+
     func testAgreementControlsPaymentAvailability() {
         let viewModel = CheckoutPaymentViewModel()
 

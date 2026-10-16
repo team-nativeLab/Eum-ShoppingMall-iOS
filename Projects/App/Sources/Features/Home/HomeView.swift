@@ -125,8 +125,7 @@ struct HomeView: View {
         } else if isShowingCheckoutPayment {
             CheckoutPaymentView(
                 onBack: { isShowingCheckoutPayment = false },
-                onPaymentComplete: completeCheckout,
-                onEditBusinessInfo: showTaxInvoiceInfoMessage
+                onPaymentComplete: completeCheckout
             )
         } else if isShowingCheckoutAddress {
             CheckoutAddressView(
@@ -358,7 +357,4 @@ private extension HomeView {
         isShowingCheckoutComplete = true
     }
 
-    func showTaxInvoiceInfoMessage() {
-        presentedMessage = "사업자 정보 직접 입력 화면은 별도 화면에서 연결됩니다."
-    }
 }
