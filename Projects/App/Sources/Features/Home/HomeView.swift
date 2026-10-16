@@ -46,6 +46,7 @@ struct HomeView: View {
     @State private var isShowingCheckoutAddress = false
     @State private var isShowingCheckoutPayment = false
     @State private var isShowingCheckoutComplete = false
+    @State private var completedPaymentMethod: CheckoutPaymentMethod = .creditCard
     @State private var presentedMessage: String?
 
     init(viewModel: HomeViewModel) {
@@ -116,6 +117,7 @@ struct HomeView: View {
             routeView(presentedRoute)
         } else if isShowingCheckoutComplete {
             CheckoutCompleteView(
+                paymentMethod: completedPaymentMethod,
                 onClose: returnHome,
                 onContinueShopping: returnHome,
                 onOrderDetails: { presentedMessage = "주문 상세 화면은 아직 연결되지 않았어요." }
@@ -123,7 +125,10 @@ struct HomeView: View {
         } else if isShowingCheckoutPayment {
             CheckoutPaymentView(
                 onBack: { isShowingCheckoutPayment = false },
-                onPaymentComplete: { isShowingCheckoutComplete = true }
+                onPaymentComplete: { method in
+                    completedPaymentMethod = method
+                    isShowingCheckoutComplete = true
+                }
             )
         } else if isShowingCheckoutAddress {
             CheckoutAddressView(
