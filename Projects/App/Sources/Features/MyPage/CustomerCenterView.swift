@@ -5,35 +5,47 @@ struct CustomerCenterView: View {
     let onBack: () -> Void
     let onCall: () -> Void
     let onContact: () -> Void
-    let onSearch: (String) -> Void
+    @State private var isShowingFAQSearchResults = false
 
     init(
         viewModel: CustomerCenterViewModel = CustomerCenterViewModel(),
         onBack: @escaping () -> Void,
         onCall: @escaping () -> Void,
-        onContact: @escaping () -> Void,
-        onSearch: @escaping (String) -> Void
+        onContact: @escaping () -> Void
     ) {
         self.viewModel = viewModel
         self.onBack = onBack
         self.onCall = onCall
         self.onContact = onContact
-        self.onSearch = onSearch
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            topBar
-            ScrollView {
-                VStack(alignment: .leading, spacing: 32) {
-                    contactCard
-                    faqSection
+        Group {
+            if isShowingFAQSearchResults {
+                CustomerCenterFAQSearchResultsView(
+                    onBack: { isShowingFAQSearchResults = false },
+                    onCall: onCall,
+                    onContact: onContact
+                )
+            } else {
+                VStack(spacing: 0) {
+                    topBar
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 32) {
+                            CustomerCenterContactCard(
+                                viewModel: viewModel,
+                                onCall: onCall,
+                                onContact: onContact
+                            )
+                            faqSection
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 24)
+                        .padding(.bottom, 40)
+                    }
+                    .scrollIndicators(.hidden)
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 24)
-                .padding(.bottom, 40)
             }
-            .scrollIndicators(.hidden)
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
     }
@@ -60,31 +72,6 @@ struct CustomerCenterView: View {
             .padding(.horizontal, 8)
         }
         .frame(height: 56)
-    }
-
-    private var contactCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("고객센터")
-                .font(EUMTypography.captionMedium)
-                .foregroundStyle(EUMColor.text3SwiftUI)
-
-            Text(viewModel.phoneNumber)
-                .font(EUMTypography.heading2)
-                .tracking(-0.44)
-                .foregroundStyle(EUMColor.text1SwiftUI)
-
-            Text(viewModel.operatingHours)
-                .font(EUMTypography.captionRegular)
-                .foregroundStyle(EUMColor.text2SwiftUI)
-
-            HStack(spacing: 8) {
-                EUMButton(title: "전화 걸기", kind: .secondary, size: .medium, action: onCall)
-                EUMButton(title: "1:1 문의하기", kind: .primary, size: .medium, action: onContact)
-            }
-        }
-        .padding(20)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 12))
     }
 
     private var faqSection: some View {
@@ -116,7 +103,7 @@ struct CustomerCenterView: View {
 
     private var faqSearchBar: some View {
         Button {
-            onSearch("배송")
+            isShowingFAQSearchResults = true
         } label: {
             HStack(spacing: 8) {
                 Image("DesignSearch")
