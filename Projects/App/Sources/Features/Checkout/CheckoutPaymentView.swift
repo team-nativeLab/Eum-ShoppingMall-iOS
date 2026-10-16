@@ -22,11 +22,15 @@ enum CheckoutReceiptOption: String, CaseIterable, Identifiable {
 @MainActor
 final class CheckoutPaymentViewModel: ObservableObject {
     @Published private(set) var selectedPaymentMethod: CheckoutPaymentMethod = .creditCard
-    @Published private(set) var selectedReceiptOption: CheckoutReceiptOption = .cashReceipt
+    @Published private(set) var selectedReceiptOption: CheckoutReceiptOption
     @Published private(set) var isOrderAgreementAccepted = false
 
     let availableCouponCount = 0
     let availablePoints = 0
+
+    init(initialReceiptOption: CheckoutReceiptOption = .cashReceipt) {
+        selectedReceiptOption = initialReceiptOption
+    }
 
     var canPay: Bool { isOrderAgreementAccepted }
 
@@ -44,13 +48,39 @@ final class CheckoutPaymentViewModel: ObservableObject {
 }
 
 struct CheckoutPaymentView: View {
-    @StateObject private var viewModel = CheckoutPaymentViewModel()
+    @StateObject private var viewModel: CheckoutPaymentViewModel
     @State private var presentedMessage: String?
 
     let onBack: () -> Void
     let onPaymentComplete: (CheckoutPaymentMethod) -> Void
+    let onEditBusinessInfo: () -> Void
 
     private let horizontalInset: CGFloat = 20
+
+    init(
+        onBack: @escaping () -> Void,
+        onPaymentComplete: @escaping (CheckoutPaymentMethod) -> Void,
+        onEditBusinessInfo: @escaping () -> Void = {}
+    ) {
+        self.init(
+            onBack: onBack,
+            onPaymentComplete: onPaymentComplete,
+            onEditBusinessInfo: onEditBusinessInfo,
+            viewModel: CheckoutPaymentViewModel()
+        )
+    }
+
+    init(
+        onBack: @escaping () -> Void,
+        onPaymentComplete: @escaping (CheckoutPaymentMethod) -> Void,
+        onEditBusinessInfo: @escaping () -> Void,
+        viewModel: CheckoutPaymentViewModel
+    ) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        self.onBack = onBack
+        self.onPaymentComplete = onPaymentComplete
+        self.onEditBusinessInfo = onEditBusinessInfo
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -167,7 +197,9 @@ struct CheckoutPaymentView: View {
             sectionHeading("결제수단")
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                 ForEach(CheckoutPaymentMethod.allCases) { method in
-                    paymentMethodCard(method)
+                    CheckoutPaymentMethodButton(method: method, isSelected: viewModel.selectedPaymentMethod == method) {
+                        viewModel.selectPaymentMethod(method)
+                    }
                 }
             }
         }
@@ -175,27 +207,6 @@ struct CheckoutPaymentView: View {
         .padding(.top, 4)
         .padding(.bottom, 20)
         .overlay(alignment: .top) { divider }
-    }
-
-    private func paymentMethodCard(_ method: CheckoutPaymentMethod) -> some View {
-        let isSelected = viewModel.selectedPaymentMethod == method
-        return Button {
-            viewModel.selectPaymentMethod(method)
-        } label: {
-            Text(method.rawValue)
-                .font(EUMTypography.labelMedium)
-                .tracking(-0.07)
-                .foregroundStyle(isSelected ? EUMColor.text1SwiftUI : EUMColor.text2SwiftUI)
-                .frame(maxWidth: .infinity)
-                .frame(height: 48)
-                .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
-                .overlay {
-                    RoundedRectangle(cornerRadius: EUMRadius.button)
-                        .stroke(isSelected ? EUMColor.text1SwiftUI : EUMColor.lineStrongSwiftUI, lineWidth: isSelected ? 1.5 : 1)
-                }
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     private var receiptSection: some View {
@@ -207,6 +218,10 @@ struct CheckoutPaymentView: View {
                 }
             }
             .padding(.bottom, 20)
+
+            if viewModel.selectedReceiptOption == .taxInvoice {
+                CheckoutTaxInvoiceBusinessInfo(onEdit: onEditBusinessInfo)
+            }
         }
         .padding(.horizontal, horizontalInset)
         .padding(.top, 4)
@@ -354,40 +369,13 @@ struct CheckoutPaymentView: View {
     }
 }
 
-private struct CheckoutReceiptOptionButton: View {
-    let option: CheckoutReceiptOption
-    let isSelected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                ZStack {
-                    Circle()
-                        .stroke(isSelected ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI, lineWidth: isSelected ? 1.5 : 1)
-                        .frame(width: 18, height: 18)
-                    if isSelected {
-                        Circle()
-                            .fill(EUMColor.text1SwiftUI)
-                            .frame(width: 10, height: 10)
-                    }
-                }
-                Text(option.rawValue)
-                    .font(EUMTypography.bodySmall)
-                    .tracking(-0.07)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
-                    .fixedSize()
-            }
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
-    }
-}
-
 struct CheckoutPaymentViewPreview: PreviewProvider {
     static var previews: some View {
-        CheckoutPaymentView(onBack: {}, onPaymentComplete: { _ in })
+        CheckoutPaymentView(
+            onBack: {},
+            onPaymentComplete: { _ in },
+            onEditBusinessInfo: {},
+            viewModel: CheckoutPaymentViewModel(initialReceiptOption: .taxInvoice)
+        )
     }
 }

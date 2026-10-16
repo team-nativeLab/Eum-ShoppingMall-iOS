@@ -125,10 +125,8 @@ struct HomeView: View {
         } else if isShowingCheckoutPayment {
             CheckoutPaymentView(
                 onBack: { isShowingCheckoutPayment = false },
-                onPaymentComplete: { method in
-                    completedPaymentMethod = method
-                    isShowingCheckoutComplete = true
-                }
+                onPaymentComplete: completeCheckout,
+                onEditBusinessInfo: showTaxInvoiceInfoMessage
             )
         } else if isShowingCheckoutAddress {
             CheckoutAddressView(
@@ -353,5 +351,14 @@ private extension HomeView {
 
     var activeWithdrawalOrderCount: Int {
         OrderHistoryItem.samples.filter { $0.status != .delivered }.count
+    }
+
+    func completeCheckout(paymentMethod: CheckoutPaymentMethod) {
+        completedPaymentMethod = paymentMethod
+        isShowingCheckoutComplete = true
+    }
+
+    func showTaxInvoiceInfoMessage() {
+        presentedMessage = "사업자 정보 직접 입력 화면은 별도 화면에서 연결됩니다."
     }
 }
