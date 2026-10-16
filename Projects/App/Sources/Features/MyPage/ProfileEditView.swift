@@ -3,12 +3,23 @@ import SwiftUI
 struct ProfileEditView: View {
     @StateObject private var viewModel = ProfileEditViewModel()
     @State private var presentedMessage: String?
+    @State private var isPasswordChangePresented = false
 
     let onBack: () -> Void
     let onAction: (String) -> Void
     var onWithdrawTap: () -> Void = {}
 
     var body: some View {
+        Group {
+            if isPasswordChangePresented {
+                PasswordChangeView(onBack: { isPasswordChangePresented = false })
+            } else {
+                profileContent
+            }
+        }
+    }
+
+    private var profileContent: some View {
         VStack(spacing: 0) {
             topBar
             ScrollView {
@@ -79,7 +90,7 @@ struct ProfileEditView: View {
 
     private var passwordChange: some View {
         Button {
-            onAction("비밀번호 변경은 별도 화면 연결 후 이용할 수 있어요.")
+            isPasswordChangePresented = true
         } label: {
             HStack(spacing: 12) {
                 Image("ProfileEditPassword")
