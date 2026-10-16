@@ -49,6 +49,24 @@ final class CheckoutPaymentViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.canPay)
     }
 
+    func testCashReceiptRequiresValidIdentifierAndSupportsBothPurposes() {
+        let viewModel = CheckoutPaymentViewModel(initialReceiptOption: .cashReceipt)
+        XCTAssertEqual(viewModel.cashReceiptPurpose, .incomeDeduction)
+        XCTAssertEqual(viewModel.cashReceiptIdentifier, "010-0000-0000")
+
+        viewModel.cashReceiptIdentifier = ""
+        viewModel.toggleOrderAgreement()
+        XCTAssertFalse(viewModel.canPay)
+
+        viewModel.updateCashReceiptIdentifier("01012345678")
+        XCTAssertTrue(viewModel.canPay)
+
+        viewModel.selectCashReceiptPurpose(.expenseEvidence)
+        XCTAssertFalse(viewModel.canPay)
+        viewModel.updateCashReceiptIdentifier("1234567890")
+        XCTAssertTrue(viewModel.canPay)
+    }
+
     func testAgreementControlsPaymentAvailability() {
         let viewModel = CheckoutPaymentViewModel()
 
