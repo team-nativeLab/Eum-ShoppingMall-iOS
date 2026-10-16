@@ -21,7 +21,7 @@ enum HomeModalRoute {
     case accountWithdrawalNotice
     case accountWithdrawalBlocked
     case accountWithdrawalReason
-    case accountWithdrawalComplete
+    case accountWithdrawalComplete, companyIntroduction
 }
 
 enum AccountCollectionDestination {
@@ -85,6 +85,7 @@ struct HomeView: View {
                         isShowingDrawer = false
                         if destination == "맞춤 제작·견적 문의" {
                             presentedRoute = .quoteInquiry(nil)
+                        } else if destination == "회사소개" { presentedRoute = .companyIntroduction
                         } else {
                             presentedMessage = "\(destination) 화면은 아직 연결되지 않았어요."
                         }
@@ -307,6 +308,9 @@ struct HomeView: View {
                 onVerified: { presentedRoute = .accountCollection(.editProfile) },
                 onMessage: { presentedMessage = $0 }
             )
+        case .companyIntroduction:
+            CompanyIntroductionView(onBack: { presentedRoute = nil; isShowingDrawer = true },
+                                    onOpenMap: { presentedMessage = "주소가 임시 정보라 지도 앱과 연결되지 않았어요." })
         case .settings, .terms, .termsPrevious, .privacyPolicy, .usageGuide:
             HomeLegalRouteContainer(
                 route: route,
@@ -393,5 +397,4 @@ private extension HomeView {
         completedPaymentMethod = paymentMethod
         isShowingCheckoutComplete = true
     }
-
 }
