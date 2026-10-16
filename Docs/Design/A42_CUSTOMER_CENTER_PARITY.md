@@ -19,7 +19,7 @@ Figma 프레임은 390 × 1091 pt이고 캡처 기기는 402 × 874 pt (1206 × 
 
 ## 검증
 
-- SwiftLint strict: #97까지 포함해 186개 파일, 위반 0건
+- SwiftLint strict: #98까지 포함해 187개 파일, 위반 0건
 - Tuist: `tuist generate --no-open` 성공 (검증용 clone)
 - iOS Simulator: iPhone 17 Pro, iOS 26.5, 129개 테스트 통과 (0 실패)
 - 빌드 중 기존 `FavoritesViewModel` 및 `RecentlyViewedViewModel`의 Swift 6 actor-isolation 경고가 출력됐습니다. 이번 변경과 무관합니다.
