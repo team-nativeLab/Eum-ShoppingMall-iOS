@@ -11,6 +11,7 @@ enum HomeModalRoute {
     case returnRequest(OrderHistoryItem)
     case returnHistory(backToOrderHistory: Bool)
     case accountVerification
+    case settings
     case addressEditor(ShippingAddress?)
     case accountWithdrawalNotice
     case accountWithdrawalBlocked
@@ -85,7 +86,7 @@ struct HomeView: View {
                     },
                     onSettings: {
                         isShowingDrawer = false
-                        presentedMessage = "설정 화면은 아직 연결되지 않았어요."
+                        presentedRoute = .settings
                     },
                     onLogout: {
                         isShowingDrawer = false
@@ -298,25 +299,15 @@ struct HomeView: View {
                 onVerified: { presentedRoute = .accountCollection(.editProfile) },
                 onMessage: { presentedMessage = $0 }
             )
-        case .accountWithdrawalNotice:
-            AccountWithdrawalNoticeView(
-                viewModel: withdrawalNoticeViewModel,
-                onBack: { presentedRoute = .accountCollection(.editProfile) },
-                onContinue: { presentedRoute = .accountWithdrawalReason }
+        case .settings:
+            SettingsView(
+                onBack: { presentedRoute = nil },
+                onPolicyTap: { presentedMessage = "\($0) 화면은 후속 퍼블리싱 이슈에서 연결됩니다." },
+                onLogoutTap: { presentedMessage = "로그아웃 확인 화면은 준비 중입니다." },
+                onWithdrawalTap: showWithdrawalEntry
             )
-        case .accountWithdrawalBlocked:
-            AccountWithdrawalBlockedView(
-                viewModel: AccountWithdrawalBlockedViewModel(activeOrderCount: activeWithdrawalOrderCount),
-                onBack: { presentedRoute = .accountCollection(.editProfile) },
-                onOrderHistory: { presentedRoute = .orderHistory }
-            )
-        case .accountWithdrawalReason:
-            AccountWithdrawalReasonView(
-                onBack: { presentedRoute = .accountWithdrawalNotice },
-                onSubmit: { presentedRoute = .accountWithdrawalComplete }
-            )
-        case .accountWithdrawalComplete:
-            AccountWithdrawalCompleteView(onHome: returnHome)
+        case .accountWithdrawalNotice, .accountWithdrawalBlocked, .accountWithdrawalReason, .accountWithdrawalComplete:
+            accountWithdrawalRouteView(route)
         case let .addressEditor(address):
             AddressEditorRouteView(
                 address: address,
@@ -346,6 +337,33 @@ struct HomeView: View {
 }
 
 private extension HomeView {
+    @ViewBuilder
+    func accountWithdrawalRouteView(_ route: HomeModalRoute) -> some View {
+        switch route {
+        case .accountWithdrawalNotice:
+            AccountWithdrawalNoticeView(
+                viewModel: withdrawalNoticeViewModel,
+                onBack: { presentedRoute = .accountCollection(.editProfile) },
+                onContinue: { presentedRoute = .accountWithdrawalReason }
+            )
+        case .accountWithdrawalBlocked:
+            AccountWithdrawalBlockedView(
+                viewModel: AccountWithdrawalBlockedViewModel(activeOrderCount: activeWithdrawalOrderCount),
+                onBack: { presentedRoute = .accountCollection(.editProfile) },
+                onOrderHistory: { presentedRoute = .orderHistory }
+            )
+        case .accountWithdrawalReason:
+            AccountWithdrawalReasonView(
+                onBack: { presentedRoute = .accountWithdrawalNotice },
+                onSubmit: { presentedRoute = .accountWithdrawalComplete }
+            )
+        case .accountWithdrawalComplete:
+            AccountWithdrawalCompleteView(onHome: returnHome)
+        default:
+            EmptyView()
+        }
+    }
+
     func showWithdrawalEntry() {
         presentedRoute = activeWithdrawalOrderCount > 0 ? .accountWithdrawalBlocked : .accountWithdrawalNotice
     }
