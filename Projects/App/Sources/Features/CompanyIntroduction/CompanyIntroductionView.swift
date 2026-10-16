@@ -64,14 +64,16 @@ struct CompanyIntroductionView: View {
 
     private var introduction: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Image("CompanyIntroductionHero")
-                .resizable()
-                .scaledToFill()
-                .frame(maxWidth: .infinity)
-                .frame(height: 219)
-                .clipped()
-                .clipShape(RoundedRectangle(cornerRadius: EUMRadius.large))
-                .accessibilityHidden(true)
+            GeometryReader { geometry in
+                Image("CompanyIntroductionHero")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: geometry.size.width, height: 219)
+                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: EUMRadius.large))
+            }
+            .frame(height: 219)
+            .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 10) {
                 overline("ABOUT US")
@@ -325,6 +327,7 @@ private struct CompanyIntroductionBusinessCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Image(area.iconName)
+                .renderingMode(.original)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
