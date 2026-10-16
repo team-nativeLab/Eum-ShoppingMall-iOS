@@ -25,7 +25,8 @@ struct HomeAccountTabView: View {
                 onAnnouncementsTap: { onRoute(.announcements) },
                 cartCount: cartCount,
                 onSelectTab: onSelectTab,
-                onOrderHistoryTap: { onRoute(.orderHistory) },
+                onOrderStatusTap: { onRoute(.orderHistory(status: $0)) },
+                onOrderHistoryTap: { onRoute(.orderHistory()) },
                 onFavoritesTap: { onRoute(.accountCollection(.favorites)) },
                 onRecentlyViewedTap: { onRoute(.accountCollection(.recentlyViewed)) },
                 onCouponsTap: { onRoute(.accountCollection(.coupons)) },
@@ -116,13 +117,14 @@ struct HomeAccountCollectionRouteView: View {
             destination: destination,
             addressViewModel: addressViewModel,
             onBack: onBack,
+            onOpenNotification: { onRoute(.destination(for: $0)) },
             onPointsTap: { onRoute(.accountCollection(.points)) },
             onAddAddress: { onRoute(.addressEditor(nil)) },
             onEditAddress: { onRoute(.addressEditor($0)) },
             onAction: onMessage,
             onProductTap: onProductTap,
             onNewQuoteInquiry: { onRoute(.quoteInquiry(nil)) },
-            onQuoteDocument: { onMessage("견적서는 서비스 연동 후 확인할 수 있어요.") },
+            onQuoteDocument: { onRoute(.quoteDetail($0)) },
             onOpenQuoteDetail: { onRoute(.quoteDetail($0)) },
             onOpenContactInquiryDetail: { onRoute(.accountCollection(.contactDetail($0))) },
             onWithdrawTap: onWithdrawTap
@@ -140,8 +142,9 @@ struct HomeOrderRouteView: View {
     @ViewBuilder
     var body: some View {
         switch route {
-        case .orderHistory:
+        case let .orderHistory(status):
             OrderHistoryView(
+                initialStatus: status,
                 onBack: onBack,
                 onCancelReturn: { onRoute(.returnHistory) },
                 onOrderDetail: { onRoute(.orderDetail($0)) },
@@ -181,7 +184,7 @@ struct HomeOrderRouteView: View {
                 onBack: onBack,
                 onDownload: { fileName in onMessage("\(fileName)은 서비스 연동 후 다운로드할 수 있어요.") },
                 onContact: { onMessage("담당자 연락은 서비스 연동 후 이용할 수 있어요.") },
-                onRequote: { onMessage("재견적 요청은 서비스 연동 후 이용할 수 있어요.") }
+                onRequote: { onRoute(.quoteInquiry(nil)) }
             )
         default:
             EmptyView()
@@ -193,13 +196,14 @@ struct AccountCollectionRouteView: View {
     let destination: AccountCollectionDestination
     @ObservedObject var addressViewModel: AddressesViewModel
     let onBack: () -> Void
+    let onOpenNotification: (NotificationKind) -> Void
     let onPointsTap: () -> Void
     let onAddAddress: () -> Void
     let onEditAddress: (ShippingAddress) -> Void
     let onAction: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
     let onNewQuoteInquiry: () -> Void
-    let onQuoteDocument: () -> Void
+    let onQuoteDocument: (QuoteInquiryRecord) -> Void
     let onOpenQuoteDetail: (QuoteInquiryRecord) -> Void
     let onOpenContactInquiryDetail: (ContactInquiryRecord) -> Void
     let onWithdrawTap: () -> Void
@@ -239,7 +243,7 @@ struct AccountCollectionRouteView: View {
                 onDownload: { fileName in onAction("\(fileName)은 파일 서비스 연동 후 다운로드할 수 있어요.") }
             )
         case .notifications:
-            NotificationsView(onBack: onBack)
+            NotificationsView(onBack: onBack, onOpenNotification: onOpenNotification)
         }
     }
 }
@@ -342,7 +346,7 @@ struct HomeWithdrawalRouteView: View {
             AccountWithdrawalBlockedView(
                 viewModel: AccountWithdrawalBlockedViewModel(activeOrderCount: activeOrderCount),
                 onBack: onBack,
-                onOrderHistory: { onRoute(.orderHistory) }
+                onOrderHistory: { onRoute(.orderHistory()) }
             )
         case .accountWithdrawalReason:
             AccountWithdrawalReasonView(

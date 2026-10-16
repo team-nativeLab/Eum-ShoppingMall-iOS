@@ -70,7 +70,7 @@ struct OrderDetailView: View {
                         .frame(width: 44, height: 44)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("주문내역으로 돌아가기")
+                .accessibilityLabel("이전 화면으로 돌아가기")
                 Spacer()
                 Color.clear.frame(width: 44, height: 44)
             }

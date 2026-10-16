@@ -99,3 +99,8 @@ Page: `06 Design — App` (`178:345`). Frame bounds below come from Figma MCP me
 - Home (`178:369`) has a vertically extending body and horizontal product/category content rails.
 - The screen set includes state variants (e.g. no-price product/cart, sold-out/cart zero orderable, search empty, FAQ empty, notification empty, login errors, confirmation sheets/dialogs). Implement them as distinct designs only after their node contexts and transitions are audited.
 - Loading states and authentication gating could not be confirmed across all 88 frames.
+
+## Related flow documents
+
+- [화면 이동과 검증 범위](ROUTE_AUDIT.md)
+- [추가 화면 디자인 요청과 상태](MISSING_SCREEN_DESIGN_REQUESTS.md)

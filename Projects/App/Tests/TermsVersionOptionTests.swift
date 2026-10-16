@@ -20,4 +20,12 @@ final class TermsVersionOptionTests: XCTestCase {
         XCTAssertTrue(TermsVersionOption.previous.isSelected(for: .previous))
         XCTAssertFalse(TermsVersionOption.older.isSelected(for: .previous))
     }
+
+    func testOnlyDocumentVersionsWithPublishedScreensCanBeSelected() {
+        XCTAssertEqual(TermsVersionOption.current.documentVersion, .current)
+        XCTAssertEqual(TermsVersionOption.previous.documentVersion, .previous)
+        XCTAssertNil(TermsVersionOption.upcoming.documentVersion)
+        XCTAssertNil(TermsVersionOption.older.documentVersion)
+    }
+
 }

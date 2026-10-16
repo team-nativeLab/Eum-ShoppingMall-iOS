@@ -23,4 +23,12 @@ final class OrderHistoryViewModelTests: XCTestCase {
         viewModel.selectPeriod(.oneYear)
         XCTAssertEqual(viewModel.selectedPeriod, .oneYear)
     }
+
+    @MainActor
+    func testOrderStatusEntryStartsWithTheSelectedStatus() {
+        let viewModel = OrderHistoryViewModel(initialStatus: .inTransit)
+        XCTAssertEqual(viewModel.selectedStatus, .inTransit)
+        XCTAssertEqual(viewModel.filteredOrders.map(\.id), ["order-transit-1"])
+    }
+
 }

@@ -39,14 +39,7 @@ struct HomeLegalRouteView: View {
         case .terms:
             TermsView(
                 version: .revisionScheduled,
-                onBack: actions.back,
-                onPreviousVersionSelected: { actions.onRoute(.termsPrevious) }
-            )
-        case .termsPrevious:
-            TermsView(
-                version: .previous,
-                onBack: actions.back,
-                onPreviousVersionSelected: {}
+                onBack: actions.back
             )
         case .privacyPolicy:
             PrivacyPolicyView(onBack: actions.back)

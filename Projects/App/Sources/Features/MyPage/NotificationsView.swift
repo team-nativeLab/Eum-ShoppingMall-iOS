@@ -4,14 +4,20 @@ struct NotificationsView: View {
     @StateObject private var viewModel: NotificationsViewModel
 
     let onBack: () -> Void
+    let onOpenNotification: (NotificationKind) -> Void
 
-    init(onBack: @escaping () -> Void) {
-        self.init(onBack: onBack, viewModel: NotificationsViewModel())
+    init(onBack: @escaping () -> Void, onOpenNotification: @escaping (NotificationKind) -> Void) {
+        self.init(onBack: onBack, onOpenNotification: onOpenNotification, viewModel: NotificationsViewModel())
     }
 
-    init(onBack: @escaping () -> Void, viewModel: NotificationsViewModel) {
+    init(
+        onBack: @escaping () -> Void,
+        onOpenNotification: @escaping (NotificationKind) -> Void,
+        viewModel: NotificationsViewModel
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.onBack = onBack
+        self.onOpenNotification = onOpenNotification
     }
 
     var body: some View {
@@ -141,6 +147,7 @@ struct NotificationsView: View {
             : EUMTypography.bodySmall
         return Button {
             viewModel.markRead(notification.id)
+            onOpenNotification(notification.kind)
         } label: {
             HStack(alignment: .top, spacing: 12) {
                 Image(notification.kind.iconName)
@@ -195,7 +202,7 @@ struct NotificationsView: View {
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
-        .accessibilityHint("탭하여 읽음 처리")
+        .accessibilityHint("읽음 처리하고 관련 내역 보기")
     }
 
     private var retentionNotice: some View {
@@ -210,6 +217,6 @@ struct NotificationsView: View {
 
 struct NotificationsViewPreview: PreviewProvider {
     static var previews: some View {
-        NotificationsView(onBack: {}, viewModel: NotificationsViewModel(notifications: []))
+        NotificationsView(onBack: {}, onOpenNotification: { _ in }, viewModel: NotificationsViewModel(notifications: []))
     }
 }

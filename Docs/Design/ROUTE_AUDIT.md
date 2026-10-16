@@ -1,44 +1,92 @@
-# Published Screen Route Audit
+# 화면 이동 흐름과 연결 상태
 
-Audit date: 2026-10-16
-Figma page: `06 Design — App` (`178:345`)
+확인일: 2026-10-16. Figma 기준 페이지: `06 Design — App` (`178:345`).
+`SCREEN_INVENTORY.md`의 88개 프레임에는 별도 화면 외에 오류·빈 상태·시트·변형이 포함된다. 완전한 프로토타입 전이 그래프는 확보되지 않았다.
 
-## Scope
+## 경로와 복귀 정책
 
-The Figma page contains 88 screen frames, including visual and error/empty-state variants. The page metadata does not provide a complete prototype transition graph, so this audit records links supported by the existing screens and app structure. It does not treat every frame as a separate destination.
+`HomeNavigationPath`가 상품·주문/결제·계정·지원 화면의 이동 이력을 보관한다. 각 항목에 안정적인 ID를 부여해 하위 화면을 표시하는 동안 기존 화면의 폼·필터·스크롤·읽음 상태를 유지한다. 비활성 화면은 터치와 접근성 탐색 대상에서 제외한다.
 
-## Connected paths
+- 뒤로가기: 실제 진입 화면으로 한 단계 복귀한다. 배송 조회에서 무조건 주문 상세로 이동하거나, 찜 상품 상세에서 마이페이지로 빠지는 예외 분기를 제거했다.
+- 탭 이동: 중첩 이력을 정리하고 선택한 탭으로 이동한다.
+- 홈/쇼핑 계속하기: 상품·결제·계정 하위 이력을 정리하고 홈으로 이동한다.
+- 드로어 → 회사소개: 닫으면 드로어로 돌아간다. 홈 배너 → 회사소개는 홈으로 돌아간다.
+- 약관 버전: 같은 화면 안에서 현재/이전 문서를 선택하며, 화면을 중복해서 쌓지 않는다. Figma의 개정 예정 고지는 현재 약관 위에 표시한다.
+- 로그인 내부: 비밀번호 찾기를 연 화면(로그인/이메일 찾기/이메일 결과)으로 복귀한다.
 
-| Entry | Destination / result | Notes |
+```mermaid
+flowchart LR
+  My[마이페이지] --> Fav[찜 / 최근 본 상품]
+  Fav --> Product[상품 상세]
+  Product --> Related[관련 상품 상세]
+  Product --> Address[주문 배송지]
+  Address --> Payment[결제]
+  Payment --> Complete[주문 완료]
+  Complete --> Detail[주문 상세]
+  Address --> Addresses[배송지 관리]
+  Detail --> Tracking[배송 조회]
+  Detail --> Return[반품 폼]
+  Return --> Addresses
+  My --> Settings[설정]
+  Settings --> Guide[이용안내]
+  Guide --> Support[고객센터]
+  Support --> Contacts[문의 내역]
+  Bell[알림] --> Orders[주문 내역]
+  Bell --> Quotes[견적 내역]
+  Bell --> Contacts
+  Bell --> Notices[공지사항]
+  Quotes --> QuoteDetail[견적 상세]
+  QuoteDetail --> QuoteForm[견적 문의 폼]
+```
+
+그림의 전방 이동에는 뒤로가기 이력이 쌓인다. 홈/탭 전환은 위의 이력 초기화 정책을 따른다. 문의 작성 등 디자인이 없는 목적지는 그림에서 구현된 것처럼 표시하지 않았다.
+
+## 연결된 기존 화면
+
+| 진입점 | 연결 결과 | 데이터 및 복귀 범위 |
 |---|---|---|
-| Home search submit | Search results | Carries the entered query into the local mock results UI; the mock catalog does not guarantee query matching. |
-| Home hero action | Company introduction (`A-43`) | Back returns to Home; Drawer entry returns to the Drawer. |
-| Home category | Product list (`A-04`) | Custom-order category opens Quote Inquiry (`A-15`). The current mock product model has no category field, so category-specific filtering is not represented yet. |
-| Home recommended / best-seller “more” | Product list (`A-04`) | Passes the corresponding local mock collection. |
-| Home product card | Product detail (`A-05` / `A-05h`) | Opens the selected mock product. |
-| Product detail related product card | Product detail for the selected related mock product | Back returns to the previous product detail. |
-| Product-list search | Search (`A-06`) | Uses the shared search tab. |
-| Product-detail cart icon | Cart (`A-07`) | Opens the Cart tab. The share icon presents the native share sheet with the product title. |
-| Product-detail “바로 구매” | Checkout address (`A-10`) | Closes the options sheet and continues through the existing checkout flow. |
-| Cart product title / option change | Product detail | Uses the cart item’s local placeholder data. |
-| Cart quote action | Quote Inquiry (`A-15`) | Prefills the cart item where available. |
-| My Page settings / profile / recent products | Settings (`A-35`) / account verification and profile (`A-23`, `A-23e`) / Product detail | Existing destinations are reused. |
-| Drawer customer support / notices | Customer Center (`A-42`) / Notices (`A-40`, `A-41`) | Notice detail returns to the notice list; support contact history opens `A-31`. |
-| Usage Guide customer-support action | Customer Center (`A-42`) | Uses the published support screen. |
-| Order list delivery tracking | Delivery tracking (`A-18`) | Uses the selected sample order. |
-| Checkout completion order details | Order detail (`A-17`) | Uses the matching local payment-method sample. |
-| Checkout order-detail back | Checkout completion (`A-11`) | Returns to the originating completion screen; order-history details return to the order list. |
-| Checkout / return-request address change | Address management (`A-24`) | Return-request flow returns to the originating request after address selection. |
+| Splash | Home | 기존 UIKit 진입 구조 사용 |
+| Home 검색 / 상품목록 검색 | 검색 / 결과 / 결과 없음 | 로컬 상품 데이터. 검색 탭 뒤로가기는 진입 탭 |
+| Home 배너 | 회사소개 A-43 | 홈/드로어 진입 위치 구분 |
+| Home·Category 분류/전체/더보기 | 상품목록 A-04 또는 견적 문의 A-15 | 현재 목업은 상품 분류 속성이 없어 카테고리별 결과 정확성은 미구현 |
+| Category 브랜드 탭 | 브랜드 목록 A-33 → 브랜드 상세 A-34 → 상품 상세 | 상품에서 돌아와 기존 브랜드 선택 유지 |
+| Home·검색·상품목록·찜·최근 본 상품·장바구니·브랜드 상품 | 상품 상세 A-05/A-05h | 실제 진입 화면 복귀. 관련 상품을 연 경우 이전 상품으로 복귀 |
+| 상품 상세 | 옵션 시트 / 장바구니 탭 / 견적 문의 / 주문 배송지 | 바로 구매의 폼 이동 연결. 실제 장바구니 추가/주문 생성 성공을 뜻하지 않음 |
+| 장바구니 | 상품 상세 / 견적 문의 / 주문 배송지 | 목업 상품 사용 |
+| 주문 배송지 → 결제 → 완료 → 주문 상세 | A-08 → A-09(결제/증빙 변형) → A-10/A-10v → A-17 | 완료의 결제수단별 기존 샘플 상세. 상세 뒤로가기 → 원래 완료 |
+| 주문 배송지/반품 폼 → 배송지 관리 → 추가/수정 | A-24/A-24e | 편집 저장/닫기 → 관리; 관리 닫기 → 기존 폼. 폼 상태 보존; 실제 배송지 반영은 별도 데이터 흐름 |
+| 마이페이지·비로그인 마이페이지 | 설정/로그인/내 정보/상품 및 계정 내역/고객센터/공지 | 지원 화면은 공통 경로 사용 |
+| 마이페이지 주문 현황 | 선택 상태의 주문 내역 A-16 | 입금대기/결제완료/배송준비/배송중/배송완료 필터 |
+| 알림 A-32 | 배송 → 배송중 주문; 주문 → 전체 주문; 견적 → 견적 내역; 문의 → 문의 내역; 공지 → 공지 목록 | 알림에 대상 ID가 없어 임의 상세를 선택하지 않음. 복귀 시 읽음 상태 유지 |
+| 주문 내역/상세 | 주문 상세/배송 조회/반품 폼/취소·반품·교환 내역 | 배송 조회는 실제 진입 목록/상세로 복귀. 취소·교환 폼과 신청 상세는 신규 디자인 필요 |
+| 견적 내역의 카드/견적서 보기 | 선택한 견적 상세 A-25d | PDF 다운로드는 별도 파일 연동 |
+| 견적 상세의 재견적 요청 | 기존 견적 문의 폼 A-15 | 새 목업 폼. 기존 상품·수량/원문을 복사한 결과가 아님. 닫기 → 원래 견적 상세 |
+| 견적 문의 완료 | 문의 내역 또는 홈(쇼핑 계속하기) | 목업 접수 결과. 실제 서버 접수 아님 |
+| 고객센터/FAQ/공지 목록 | FAQ 결과·없음 / 문의 내역·상세 / 공지 상세 | 전화번호/파일 다운로드는 실제 정보 필요 |
+| 설정/약관 | 약관 현재·이전·개정 예정 고지/버전 시트, 개인정보처리방침, 이용안내, 로그아웃/탈퇴 진입 | 네 번째 과거 약관·개정 원문은 제공된 데이터가 없어 안내. 본문은 Figma 자리표시자 그대로 |
+| 내 정보 인증/수정 | 비밀번호·휴대폰 변경, 탈퇴 안내/불가/사유/확인/완료 | 조건에 따른 기존 화면. 현재 주문 목업에 미완료 주문이 있어 일반 실행의 탈퇴 진입은 불가 화면 |
+| 로그인/가입 | 개인·사업자 가입, 약관/개인정보 동의서, 이메일 찾기 결과·없음, 비밀번호 재설정·완료 | 필수 동의서 연결됨. 마케팅 동의 상세는 별도 원문/디자인 필요. 인증 성공은 서버 미연동 |
 
-## Not connected to another published screen
+## 디자인 및 데이터가 필요한 목적지
 
-- Drawer Events and Settings Open Source Licenses have no matching destination frame in the 88-frame inventory.
-- Product detail shipping-policy detail, a separate full review list, and product-inquiry composition have no separate destination frame. The Product Detail tabs already scroll to its shipping, review, and inquiry sections.
-- Product-list filter conditions have no audited filter destination. The current mock products also carry no category assignments, so category-specific results cannot be represented yet.
-- Contact-inquiry composition and address search have no matching screen in the inventory.
-- Social sign-in, verification-code delivery, order cancellation/reorder/receipts/downloads, and customer-center calling need provider, backend, file, or verified contact details. These remain service integrations rather than screen-routing gaps.
-- Delivery-request selection values are not defined in the inspected Figma metadata; no options were invented.
+[추가 화면 디자인 요청](MISSING_SCREEN_DESIGN_REQUESTS.md)에 D-01~D-12의 진입 버튼, 관련 Figma Node, 필수 상태, 완료/복귀 위치를 기록했다. 이 목적지의 버튼은 여전히 미연결 또는 미제공 안내 상태이며 완성 경로로 간주하지 않는다.
 
-## Validation boundary
+- 새 디자인: 1:1·상품 문의 작성, 취소·교환 신청/신청 상세, 주소 검색·배송 요청사항, 상품 필터·전체 리뷰·정책 상세, 이벤트, 마케팅 동의 상세, 라이선스 표시.
+- 서비스/데이터: 실제 인증·결제·주문/반품 접수·재주문, 문서 다운로드, 연락처/주소, 승인 약관 원문과 시행일, 알림 대상 ID.
+- 약관 본문: Figma A-36 `656:7470`를 재조회해 본문 `조항 내용이 들어갑니다`/시행일 `0000.00.00`를 확인했다. 사용자 지시에 따라 이 Figma 문구를 그대로 사용한다. 실제 약관 작성·원문 교체는 이번 작업 범위가 아니다.
 
-`tuist generate --no-open` succeeded. `swiftlint lint --strict` reported 0 violations across 194 files. The iPhone 18 Pro / iOS 27.0 Simulator build succeeded, and XCTest passed 136 tests with 0 failures. Runtime interaction confirmed Home → Product Detail → options → Checkout Address and checkout back → Product Detail. Earlier route checks confirmed the Home hero, search results, Product List/Detail/Cart, and Usage Guide → Customer Center → Contact History back path. The Home screenshot confirms the top content begins below the status area and the tab bar stays above the bottom safe area. This is representative route evidence; it is not a full traversal of every route or a pixel-parity claim.
+## 이번 검증
+
+- `tuist generate --no-open`: 성공.
+- `swiftlint lint --strict --quiet`: 위반 없음.
+- `xcodebuild ... -destination 'platform=iOS Simulator,id=2AA5B084-D480-4D16-B95D-3A524ACBEF88' -derivedDataPath /tmp/eum-route-build CODE_SIGNING_ALLOWED=NO build`: 성공.
+- 동일 Simulator에서 전체 `test`: **144 tests, 0 failures**. 초기 #197 경로 테스트 3개 집중 실행도 통과. 최종 약관 선택 규칙 정리 후 `TermsVersionOptionTests` 3개를 다시 실행해 통과했다.
+- 실행 환경: iPhone 18 Pro / iOS 27.0. 실제 탭/뒤로가기와 접근성 트리로 다음을 확인했다.
+  - 마이 → 찜 → 상품 → 뒤로가기 → 원래 찜 → 마이.
+  - 설정 → 이용안내 → 고객센터 → 문의 내역 → 고객센터 → 이용안내.
+  - 알림 → 배송중 주문 → 알림; 읽지 않음 2개에서 1개로 변경된 상태 유지.
+  - 알림 → 견적 내역 → 견적서 보기 → 견적 상세 → 재견적 폼 → 원래 견적 상세.
+  - 마이페이지 배송중 주문 버튼 → 배송중 필터 → 배송 조회 → 같은 필터의 주문 내역.
+  - 약관 버전 시트 → 이전 약관 표현.
+- 캡처: [원래 찜 목록 복귀](../Screenshots/route-favorites-return.png), [배송 알림의 주문 목록](../Screenshots/route-notification-orders.png).
+- 전체 88개 프레임을 전수 실행한 증거가 아니며 Figma 픽셀 일치, 실제 인증/결제/접수, 실기기 검증을 주장하지 않는다. 신규 화면의 로딩/오류/빈 상태는 디자인 요청 범위다.
