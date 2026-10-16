@@ -13,6 +13,7 @@ struct AuthenticationFlowView: View {
     }
 
     @State private var screen = Screen.login
+    @State private var passwordLookupOrigin = Screen.login
     @State private var presentedMessage: String?
     let onClose: () -> Void
 
@@ -24,14 +25,14 @@ struct AuthenticationFlowView: View {
                     onClose: onClose,
                     onSignUpTap: { screen = .signUp },
                     onEmailLookupTap: { screen = .emailLookup },
-                    onPasswordLookupTap: { screen = .passwordLookup }
+                    onPasswordLookupTap: showPasswordLookup
                 )
             case .signUp:
                 SignUpView(onBack: { screen = .login })
             case .emailLookup:
                 EmailLookupView(
                     onBack: { screen = .login },
-                    onPasswordLookup: { screen = .passwordLookup },
+                    onPasswordLookup: showPasswordLookup,
                     onFindEmail: { email in
                         if let email {
                             screen = .emailLookupResult(email)
@@ -45,7 +46,7 @@ struct AuthenticationFlowView: View {
                     email: email,
                     onClose: onClose,
                     onLogin: { screen = .login },
-                    onPasswordLookup: { screen = .passwordLookup }
+                    onPasswordLookup: showPasswordLookup
                 )
             case .emailLookupEmpty:
                 EmailLookupEmptyView(
@@ -55,7 +56,7 @@ struct AuthenticationFlowView: View {
                 )
             case .passwordLookup:
                 PasswordLookupView(
-                    onBack: { screen = .emailLookup },
+                    onBack: { screen = passwordLookupOrigin },
                     onContinue: { screen = .passwordReset }
                 )
             case .passwordReset:
@@ -75,6 +76,11 @@ struct AuthenticationFlowView: View {
         } message: {
             Text(presentedMessage ?? "")
         }
+    }
+
+    private func showPasswordLookup() {
+        passwordLookupOrigin = screen
+        screen = .passwordLookup
     }
 
     private var messagePresented: Binding<Bool> {
