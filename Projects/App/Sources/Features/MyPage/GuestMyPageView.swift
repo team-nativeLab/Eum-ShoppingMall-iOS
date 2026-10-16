@@ -5,6 +5,18 @@ struct GuestRecentProduct: Identifiable {
     let title: String
     let price: String
 
+    var homeProduct: HomeProduct {
+        HomeProduct(
+            id: id,
+            title: title,
+            price: price,
+            imageName: nil,
+            isFavorite: false,
+            isSoldOut: false,
+            isPriceHidden: false
+        )
+    }
+
     static let mock = (0..<3).map { index in
         GuestRecentProduct(id: "recent-\(index)", title: "제품명", price: "₩00,000")
     }
@@ -29,6 +41,7 @@ struct GuestMyPageView: View {
     let cartCount: Int
     let onLoginTap: () -> Void
     let onSettingsTap: () -> Void
+    let onProductTap: (HomeProduct) -> Void
     var onContactHistoryTap: () -> Void = {}
     let onSelectTab: (EUMTabBar.Tab) -> Void
 
@@ -148,7 +161,7 @@ struct GuestMyPageView: View {
                             price: product.price,
                             layout: .carousel,
                             onFavoriteTap: { presentedMessage = "찜 기능은 로그인 후 이용할 수 있어요." },
-                            onTap: { presentedMessage = "상품 상세 화면은 아직 연결되지 않았어요." }
+                            onTap: { onProductTap(product.homeProduct) }
                         )
                     }
                 }
@@ -210,6 +223,12 @@ struct GuestMyPageView: View {
 
 struct GuestMyPageViewPreview: PreviewProvider {
     static var previews: some View {
-        GuestMyPageView(cartCount: 3, onLoginTap: {}, onSettingsTap: {}, onSelectTab: { _ in })
+        GuestMyPageView(
+            cartCount: 3,
+            onLoginTap: {},
+            onSettingsTap: {},
+            onProductTap: { _ in },
+            onSelectTab: { _ in }
+        )
     }
 }

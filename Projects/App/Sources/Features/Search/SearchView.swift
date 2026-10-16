@@ -7,6 +7,7 @@ struct SearchView: View {
     let products: [HomeProduct]
     let onFavoriteTap: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
+    let onQuoteTap: () -> Void
     let onBack: () -> Void
     let onSelectTab: (EUMTabBar.Tab) -> Void
 
@@ -15,19 +16,27 @@ struct SearchView: View {
     @FocusState private var isSearchFocused: Bool
 
     var body: some View {
-        if showsResults {
-            SearchResultsView(
-                searchText: $searchText,
-                products: products,
-                cartCount: cartCount,
-                onBackToSearch: { showsResults = false },
-                onCancel: onBack,
-                onFavoriteTap: onFavoriteTap,
-                onProductTap: onProductTap,
-                onSelectTab: onSelectTab
-            )
-        } else {
-            searchLanding
+        Group {
+            if showsResults {
+                SearchResultsView(
+                    searchText: $searchText,
+                    products: products,
+                    cartCount: cartCount,
+                    onBackToSearch: { showsResults = false },
+                    onCancel: onBack,
+                    onFavoriteTap: onFavoriteTap,
+                    onProductTap: onProductTap,
+                    onQuoteTap: onQuoteTap,
+                    onSelectTab: onSelectTab
+                )
+            } else {
+                searchLanding
+            }
+        }
+        .onAppear {
+            if !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                showsResults = true
+            }
         }
     }
 

@@ -53,7 +53,7 @@ struct CustomerCenterView: View {
     private var topBar: some View {
         EUMBackTopBar(
             title: "고객센터",
-            backAccessibilityLabel: "마이페이지로 돌아가기",
+            backAccessibilityLabel: "뒤로 가기",
             onBack: onBack
         ) {
             Color.clear

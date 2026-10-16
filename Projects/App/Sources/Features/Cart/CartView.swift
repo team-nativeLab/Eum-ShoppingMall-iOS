@@ -112,17 +112,23 @@ struct CartView: View {
     let presentation: Presentation
     let onSelectTab: (EUMTabBar.Tab) -> Void
     let onCheckout: () -> Void
+    let onProductTap: (CartItem) -> Void
+    let onQuoteRequest: (CartItem) -> Void
 
     init(
         cartCount: Int,
         presentation: Presentation = .standard,
         onSelectTab: @escaping (EUMTabBar.Tab) -> Void,
-        onCheckout: @escaping () -> Void = {}
+        onCheckout: @escaping () -> Void = {},
+        onProductTap: @escaping (CartItem) -> Void = { _ in },
+        onQuoteRequest: @escaping (CartItem) -> Void = { _ in }
     ) {
         self.cartCount = cartCount
         self.presentation = presentation
         self.onSelectTab = onSelectTab
         self.onCheckout = onCheckout
+        self.onProductTap = onProductTap
+        self.onQuoteRequest = onQuoteRequest
         let items: [CartItem]
         switch presentation {
         case .standard: items = CartItem.mockItems
@@ -201,8 +207,9 @@ struct CartView: View {
                             onToggleSelection: { viewModel.toggleSelection(itemID: item.id) },
                             onQuantityChange: { viewModel.changeQuantity(itemID: item.id, by: $0) },
                             onRemove: { viewModel.remove(itemID: item.id) },
-                            onOptionChange: { presentedMessage = "옵션 변경은 상품 상세 화면에서 이용할 수 있어요." },
-                            onQuoteRequest: { presentedMessage = "견적 문의는 로그인 후 이용할 수 있어요." }
+                            onOptionChange: { onProductTap(item) },
+                            onQuoteRequest: { onQuoteRequest(item) },
+                            onProductTap: { onProductTap(item) }
                         )
                     }
                 }
@@ -210,7 +217,11 @@ struct CartView: View {
                 if presentation != .standard {
                     CartQuoteGroupHeader(
                         count: viewModel.items.filter { $0.isQuoteProduct || $0.isSoldOut }.count,
-                        onQuoteRequest: { presentedMessage = "견적 문의는 로그인 후 이용할 수 있어요." }
+                        onQuoteRequest: {
+                            if let quoteItem = viewModel.items.first(where: \.isQuoteProduct) {
+                                onQuoteRequest(quoteItem)
+                            }
+                        }
                     )
                     ForEach(viewModel.items.filter(\.isQuoteProduct)) { quoteItem in
                         CartItemRow(
@@ -218,8 +229,9 @@ struct CartView: View {
                             onToggleSelection: { viewModel.toggleSelection(itemID: quoteItem.id) },
                             onQuantityChange: { viewModel.changeQuantity(itemID: quoteItem.id, by: $0) },
                             onRemove: { viewModel.remove(itemID: quoteItem.id) },
-                            onOptionChange: { presentedMessage = "옵션 변경은 상품 상세 화면에서 이용할 수 있어요." },
-                            onQuoteRequest: { presentedMessage = "견적 문의는 로그인 후 이용할 수 있어요." }
+                            onOptionChange: { onProductTap(quoteItem) },
+                            onQuoteRequest: { onQuoteRequest(quoteItem) },
+                            onProductTap: { onProductTap(quoteItem) }
                         )
                     }
                 }

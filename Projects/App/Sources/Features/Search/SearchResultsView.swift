@@ -86,6 +86,7 @@ struct SearchResultsView: View {
     let onCancel: () -> Void
     let onFavoriteTap: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
+    let onQuoteTap: () -> Void
     let onSelectTab: (EUMTabBar.Tab) -> Void
 
     private let categories = ["전체", "개인보호장비", "작업복/유니폼", "산업 현장용품"]
@@ -99,6 +100,7 @@ struct SearchResultsView: View {
         onCancel: @escaping () -> Void,
         onFavoriteTap: @escaping (String) -> Void,
         onProductTap: @escaping (HomeProduct) -> Void,
+        onQuoteTap: @escaping () -> Void = {},
         onSelectTab: @escaping (EUMTabBar.Tab) -> Void
     ) {
         _searchText = searchText
@@ -108,6 +110,7 @@ struct SearchResultsView: View {
         self.onCancel = onCancel
         self.onFavoriteTap = onFavoriteTap
         self.onProductTap = onProductTap
+        self.onQuoteTap = onQuoteTap
         self.onSelectTab = onSelectTab
     }
 
@@ -184,7 +187,11 @@ struct SearchResultsView: View {
     @ViewBuilder
     private var resultsBody: some View {
         if viewModel.hasNoResults {
-            SearchNoResultsView(searchQuery: searchText, onPopularSearches: onBackToSearch)
+            SearchNoResultsView(
+                searchQuery: searchText,
+                onPopularSearches: onBackToSearch,
+                onQuoteTap: onQuoteTap
+            )
         } else {
             ScrollView {
                 VStack(spacing: 0) {

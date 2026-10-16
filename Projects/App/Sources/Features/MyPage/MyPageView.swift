@@ -74,6 +74,7 @@ struct MyPageView: View {
     var onContactHistoryTap: () -> Void = {}
     var onReturnsHistoryTap: () -> Void = {}
     var onAccountVerificationTap: () -> Void = {}
+    var onSettingsTap: () -> Void = {}
 
     var body: some View {
         VStack(spacing: 0) {
@@ -126,9 +127,7 @@ struct MyPageView: View {
 
             HStack {
                 Spacer()
-                Button {
-                    presentedMessage = "설정 화면은 아직 연결되지 않았어요."
-                } label: {
+                Button(action: onSettingsTap) {
                     Image("MyPageSettings")
                         .renderingMode(.template)
                         .resizable()
@@ -280,7 +279,9 @@ struct MyPageView: View {
         VStack(spacing: 0) {
             ForEach(Array(viewModel.menuItems.enumerated()), id: \.element.id) { index, item in
                 Button {
-                    if item.title == "배송지 관리" {
+                    if item.title == "내 정보 관리" {
+                        onAccountVerificationTap()
+                    } else if item.title == "배송지 관리" {
                         onAddressesTap()
                     } else if item.title == "취소·반품·교환 내역" {
                         onReturnsHistoryTap()

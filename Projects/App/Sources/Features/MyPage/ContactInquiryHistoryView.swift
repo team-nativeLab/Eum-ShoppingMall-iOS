@@ -53,7 +53,7 @@ struct ContactInquiryHistoryView: View {
     private var topBar: some View {
         EUMBackTopBar(
             title: "1:1 문의 내역",
-            backAccessibilityLabel: "마이페이지로 돌아가기",
+            backAccessibilityLabel: "뒤로 가기",
             onBack: onBack
         ) {
             Color.clear.frame(width: 44, height: 44)

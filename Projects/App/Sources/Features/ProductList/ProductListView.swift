@@ -39,6 +39,7 @@ struct ProductListView: View {
     let onFavoriteTap: (String) -> Void
     let onSelectTab: (EUMTabBar.Tab) -> Void
     let onProductTap: (HomeProduct) -> Void
+    let onSearchTap: () -> Void
     let cartCount: Int
 
     private let categories = ["전체", "안전모", "보안경", "안전장갑", "방진마스크", "안전화"]
@@ -51,7 +52,8 @@ struct ProductListView: View {
         onBack: @escaping () -> Void,
         onFavoriteTap: @escaping (String) -> Void,
         onSelectTab: @escaping (EUMTabBar.Tab) -> Void,
-        onProductTap: @escaping (HomeProduct) -> Void
+        onProductTap: @escaping (HomeProduct) -> Void,
+        onSearchTap: @escaping () -> Void = {}
     ) {
         self.title = title
         self.cartCount = cartCount
@@ -59,6 +61,7 @@ struct ProductListView: View {
         self.onFavoriteTap = onFavoriteTap
         self.onSelectTab = onSelectTab
         self.onProductTap = onProductTap
+        self.onSearchTap = onSearchTap
         _viewModel = StateObject(wrappedValue: ProductListViewModel(products: products))
     }
 
@@ -116,7 +119,7 @@ struct ProductListView: View {
                 .lineLimit(1)
             Spacer(minLength: 0)
 
-            Button {} label: {
+            Button(action: onSearchTap) {
                 Image("DesignSearch")
                     .renderingMode(.template)
                     .resizable()

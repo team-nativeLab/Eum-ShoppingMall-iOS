@@ -23,7 +23,8 @@ struct AuthenticationFlowView: View {
                 LoginView(
                     onClose: onClose,
                     onSignUpTap: { screen = .signUp },
-                    onEmailLookupTap: { screen = .emailLookup }
+                    onEmailLookupTap: { screen = .emailLookup },
+                    onPasswordLookupTap: { screen = .passwordLookup }
                 )
             case .signUp:
                 SignUpView(onBack: { screen = .login })

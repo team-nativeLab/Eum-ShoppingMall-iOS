@@ -16,7 +16,6 @@ final class ProductDetailViewModel: ObservableObject {
     @Published var isDetailExpanded = false
     @Published var showCartConfirmation = false
     @Published var isOptionsPresented = false
-    @Published var showPurchaseConfirmation = false
 
     init(isFavorite: Bool) {
         self.isFavorite = isFavorite
@@ -29,11 +28,24 @@ struct ProductDetailView: View {
     let product: HomeProduct
     let onBack: () -> Void
     let onQuoteTap: () -> Void
+    let onOpenCart: () -> Void
+    let onPurchase: () -> Void
+    let onRelatedProductTap: (HomeProduct) -> Void
 
-    init(product: HomeProduct, onBack: @escaping () -> Void, onQuoteTap: @escaping () -> Void = {}) {
+    init(
+        product: HomeProduct,
+        onBack: @escaping () -> Void,
+        onQuoteTap: @escaping () -> Void,
+        onOpenCart: @escaping () -> Void,
+        onPurchase: @escaping () -> Void,
+        onRelatedProductTap: @escaping (HomeProduct) -> Void
+    ) {
         self.product = product
         self.onBack = onBack
         self.onQuoteTap = onQuoteTap
+        self.onOpenCart = onOpenCart
+        self.onPurchase = onPurchase
+        self.onRelatedProductTap = onRelatedProductTap
         _viewModel = StateObject(wrappedValue: ProductDetailViewModel(isFavorite: product.isFavorite))
     }
 
@@ -71,17 +83,15 @@ struct ProductDetailView: View {
         .alert("장바구니에 담았습니다.", isPresented: $viewModel.showCartConfirmation) {
             Button("확인", role: .cancel) {}
         }
-        .alert("선택한 옵션으로 바로 구매합니다.", isPresented: $viewModel.showPurchaseConfirmation) {
-            Button("확인", role: .cancel) {}
-        }
         .sheet(isPresented: $viewModel.isOptionsPresented) {
             ProductOptionsSheet(
                 onAddToCart: { viewModel.showCartConfirmation = true },
                 onPrimaryAction: {
+                    viewModel.isOptionsPresented = false
                     if product.isPriceHidden {
                         onQuoteTap()
                     } else {
-                        viewModel.showPurchaseConfirmation = true
+                        onPurchase()
                     }
                 },
                 isPriceHidden: product.isPriceHidden
@@ -107,7 +117,7 @@ struct ProductDetailView: View {
 
             Spacer()
 
-            Button {} label: {
+            ShareLink(item: product.title) {
                 Image("ProductDetailShare")
                     .resizable()
                     .scaledToFit()
@@ -117,7 +127,7 @@ struct ProductDetailView: View {
             .buttonStyle(.plain)
             .accessibilityLabel("공유")
 
-            Button {} label: {
+            Button(action: onOpenCart) {
                 Image("ProductDetailCart")
                     .resizable()
                     .scaledToFit()
@@ -256,7 +266,7 @@ struct ProductDetailView: View {
     }
 
     private var relatedSection: some View {
-        ProductDetailRelatedSection()
+        ProductDetailRelatedSection(onProductTap: onRelatedProductTap)
     }
 
     private var buyBar: some View {
