@@ -5,6 +5,9 @@ struct CustomerCenterFAQSearchResultsView: View {
     let onBack: () -> Void
     let onCall: () -> Void
     let onContact: () -> Void
+    @State private var searchQuery: String
+    @State private var submittedQuery: String
+    @FocusState private var isSearchFocused: Bool
 
     init(
         viewModel: CustomerCenterFAQSearchViewModel = CustomerCenterFAQSearchViewModel(),
@@ -16,6 +19,8 @@ struct CustomerCenterFAQSearchResultsView: View {
         self.onBack = onBack
         self.onCall = onCall
         self.onContact = onContact
+        _searchQuery = State(initialValue: viewModel.query)
+        _submittedQuery = State(initialValue: viewModel.query)
     }
 
     var body: some View {
@@ -73,12 +78,23 @@ struct CustomerCenterFAQSearchResultsView: View {
 
             searchBar
 
-            Text(viewModel.resultCountTitle)
-                .font(EUMTypography.captionRegular)
-                .foregroundStyle(EUMColor.text3SwiftUI)
+            if matchingResults.isEmpty {
+                CustomerCenterFAQNoResultsState(
+                    query: submittedQuery.isEmpty ? "검색어" : submittedQuery,
+                    onContact: onContact
+                )
+            } else {
+                Text(viewModel.resultCountTitle)
+                    .font(EUMTypography.captionRegular)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
 
-            faqList
+                faqList(matchingResults)
+            }
         }
+    }
+
+    private var matchingResults: [CustomerCenterFAQSearchResult] {
+        viewModel.matchingResults(for: submittedQuery)
     }
 
     private var searchBar: some View {
@@ -91,12 +107,22 @@ struct CustomerCenterFAQSearchResultsView: View {
                 .foregroundStyle(EUMColor.text3SwiftUI)
                 .accessibilityHidden(true)
 
-            Text(viewModel.query)
+            TextField("검색어", text: $searchQuery)
                 .font(EUMTypography.bodyMedium)
                 .tracking(-0.075)
                 .foregroundStyle(EUMColor.text1SwiftUI)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityLabel("검색어: \(viewModel.query)")
+                .submitLabel(.search)
+                .focused($isSearchFocused)
+                .onSubmit {
+                    isSearchFocused = false
+                    let normalizedQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+                    guard !normalizedQuery.isEmpty else {
+                        onBack()
+                        return
+                    }
+                    submittedQuery = normalizedQuery
+                }
+                .accessibilityLabel("검색어")
 
             Button(action: onBack) {
                 Image("SearchClear")
@@ -106,7 +132,7 @@ struct CustomerCenterFAQSearchResultsView: View {
                     .frame(width: 36, height: 36)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("검색 초기화")
+            .accessibilityLabel("고객센터 FAQ로 돌아가기")
         }
         .padding(.leading, 16)
         .padding(.trailing, 4)
@@ -114,9 +140,9 @@ struct CustomerCenterFAQSearchResultsView: View {
         .background(EUMColor.surfaceSwiftUI, in: Capsule())
     }
 
-    private var faqList: some View {
+    private func faqList(_ results: [CustomerCenterFAQSearchResult]) -> some View {
         VStack(spacing: 0) {
-            ForEach(viewModel.results) { result in
+            ForEach(results) { result in
                 faqRow(result)
             }
         }
@@ -131,7 +157,7 @@ struct CustomerCenterFAQSearchResultsView: View {
                     .foregroundStyle(EUMColor.text1SwiftUI)
                     .frame(width: 32, alignment: .leading)
 
-                highlightedQuestion(result.question)
+                highlightedQuestion(result.question, matching: submittedQuery)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)
 
@@ -146,12 +172,12 @@ struct CustomerCenterFAQSearchResultsView: View {
         }
     }
 
-    private func highlightedQuestion(_ question: String) -> some View {
+    private func highlightedQuestion(_ question: String, matching query: String) -> some View {
         var attributedQuestion = AttributedString(question)
         attributedQuestion.font = EUMTypography.labelLarge
         attributedQuestion.foregroundColor = EUMColor.text1SwiftUI
 
-        if let match = question.range(of: viewModel.query, options: .caseInsensitive),
+        if let match = question.range(of: query, options: .caseInsensitive),
            let attributedRange = Range(match, in: attributedQuestion) {
             attributedQuestion[attributedRange].font = .custom("NotoSansKR-Bold", size: 16, relativeTo: .headline)
         }
