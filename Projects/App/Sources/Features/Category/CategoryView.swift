@@ -13,6 +13,7 @@ struct CategoryView: View {
     var cartCount: Int
 
     @State private var contentMode: ContentMode = .products
+    @State private var presentedMessage: String?
 
     private let categories: [HomeCategory] = [
         HomeCategory(id: "ppe", title: "개인보호장비", iconName: "CategoryHardHat"),
@@ -29,27 +30,38 @@ struct CategoryView: View {
         VStack(spacing: 0) {
             topBar
 
-            ScrollView {
-                VStack(spacing: 8) {
-                    contentModeSelector
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(spacing: 8) {
+                        contentModeSelector
 
-                    if contentMode == .products {
-                        productCategories
-                    } else {
-                        Text("브랜드 목록은 A-33 화면 작업에서 연결됩니다.")
-                            .font(EUMTypography.bodySmall)
-                            .foregroundStyle(EUMColor.text3SwiftUI)
-                            .frame(maxWidth: .infinity, minHeight: 240)
+                        if contentMode == .products {
+                            productCategories
+                        } else {
+                            BrandDirectoryView(
+                                onIndexSelected: { index in proxy.scrollTo(index.isEmpty ? "brand-top" : index, anchor: .top) },
+                                onBrandSelected: { _ in presentedMessage = "브랜드 상세 화면은 다음 화면 작업에서 연결됩니다." }
+                            )
+                            .id("brand-top")
+                        }
                     }
+                    .padding(.top, 8)
+                    .padding(.bottom, 24)
                 }
-                .padding(.top, 8)
-                .padding(.bottom, 24)
+                .scrollIndicators(.hidden)
             }
-            .scrollIndicators(.hidden)
 
             EUMTabBar(selectedTab: .category, cartCount: cartCount, onSelect: onSelectTab)
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .alert("안내", isPresented: Binding(
+            get: { presentedMessage != nil },
+            set: { if !$0 { presentedMessage = nil } }
+        )) {
+            Button("확인", role: .cancel) { presentedMessage = nil }
+        } message: {
+            Text(presentedMessage ?? "")
+        }
     }
 
     private var productCategories: some View {
