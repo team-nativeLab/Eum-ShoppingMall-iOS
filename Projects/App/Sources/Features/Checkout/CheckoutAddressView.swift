@@ -34,6 +34,7 @@ struct CheckoutAddressView: View {
 
     let onBack: () -> Void
     let onNext: () -> Void
+    var onAddressChange: () -> Void = {}
 
     var body: some View {
         VStack(spacing: 0) {
@@ -107,7 +108,7 @@ struct CheckoutAddressView: View {
                         .foregroundStyle(EUMColor.text2SwiftUI)
                     Spacer(minLength: 0)
                     EUMButton(title: "변경", kind: .secondary, size: .small) {
-                        presentedMessage = "배송지 변경은 배송지 관리 화면에서 이용할 수 있어요."
+                        onAddressChange()
                     }
                     .fixedSize()
                 }

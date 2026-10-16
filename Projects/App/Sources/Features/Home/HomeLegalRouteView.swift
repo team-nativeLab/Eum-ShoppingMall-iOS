@@ -54,7 +54,7 @@ struct HomeLegalRouteView: View {
         case .usageGuide:
             UsageGuideView(
                 onBack: actions.backToSettings,
-                onCustomerCenterTap: { actions.message("고객센터 화면은 후속 퍼블리싱 이슈 #96에서 연결됩니다.") }
+                onCustomerCenterTap: { actions.onRoute(.customerCenter) }
             )
         default:
             EmptyView()

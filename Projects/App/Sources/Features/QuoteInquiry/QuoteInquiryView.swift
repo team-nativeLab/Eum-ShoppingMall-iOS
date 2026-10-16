@@ -8,6 +8,7 @@ struct QuoteInquiryView: View {
     @State private var isDatePickerPresented = false
     @State private var selectedDate = Date()
     @State private var isSubmitted = false
+    @State private var isShowingPrivacyConsent = false
     let onBack: () -> Void
     let onViewInquiries: () -> Void
 
@@ -41,7 +42,8 @@ struct QuoteInquiryView: View {
                                 viewModel: viewModel,
                                 isDatePickerPresented: $isDatePickerPresented,
                                 isFileImporterPresented: $isFileImporterPresented,
-                                onMessage: { presentedMessage = $0 }
+                                onMessage: { presentedMessage = $0 },
+                                onShowPrivacyConsent: { isShowingPrivacyConsent = true }
                             )
                         }
                         .padding(.horizontal, EUMSpacing.homeContentInset)
@@ -55,6 +57,19 @@ struct QuoteInquiryView: View {
             }
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .overlay {
+            if isShowingPrivacyConsent {
+                PrivacyConsentView(
+                    onClose: { isShowingPrivacyConsent = false },
+                    onAgree: {
+                        if !viewModel.agreedToPrivacy {
+                            viewModel.togglePrivacyAgreement()
+                        }
+                        isShowingPrivacyConsent = false
+                    }
+                )
+            }
+        }
         .fileImporter(
             isPresented: $isFileImporterPresented,
             allowedContentTypes: [.item],

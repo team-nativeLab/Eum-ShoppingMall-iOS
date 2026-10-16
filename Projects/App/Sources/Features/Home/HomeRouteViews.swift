@@ -1,5 +1,103 @@
 import SwiftUI
 
+struct HomeAccountTabView: View {
+    let cartCount: Int
+    let isGuestAccount: Bool
+    let onSelectTab: (EUMTabBar.Tab) -> Void
+    let onRoute: (HomeModalRoute) -> Void
+    let onProductTap: (HomeProduct) -> Void
+
+    @ViewBuilder
+    var body: some View {
+        if isGuestAccount {
+            GuestMyPageView(
+                cartCount: cartCount,
+                onLoginTap: { onRoute(.authentication) },
+                onSettingsTap: { onRoute(.settings) },
+                onProductTap: onProductTap,
+                onContactHistoryTap: { onRoute(.accountCollection(.contactHistory)) },
+                onSelectTab: onSelectTab
+            )
+        } else {
+            MyPageView(
+                cartCount: cartCount,
+                onSelectTab: onSelectTab,
+                onOrderHistoryTap: { onRoute(.orderHistory) },
+                onFavoritesTap: { onRoute(.accountCollection(.favorites)) },
+                onRecentlyViewedTap: { onRoute(.accountCollection(.recentlyViewed)) },
+                onCouponsTap: { onRoute(.accountCollection(.coupons)) },
+                onAddressesTap: { onRoute(.accountCollection(.addresses)) },
+                onQuoteHistoryTap: { onRoute(.accountCollection(.quoteHistory)) },
+                onContactHistoryTap: { onRoute(.accountCollection(.contactHistory)) },
+                onReturnsHistoryTap: { onRoute(.returnHistory(backToOrderHistory: false)) },
+                onAccountVerificationTap: { onRoute(.accountVerification) },
+                onSettingsTap: { onRoute(.settings) }
+            )
+        }
+    }
+}
+
+struct HomeAccountRouteView: View {
+    let route: HomeModalRoute
+    @ObservedObject var addressViewModel: AddressesViewModel
+    let onBack: () -> Void
+    let onRoute: (HomeModalRoute) -> Void
+    let onMessage: (String) -> Void
+    let onProductTap: (HomeProduct) -> Void
+    let onWithdrawTap: () -> Void
+
+    @ViewBuilder
+    var body: some View {
+        switch route {
+        case let .quoteInquiry(product):
+            QuoteInquiryView(
+                product: product,
+                onBack: onBack,
+                onViewInquiries: { onRoute(.accountCollection(.quoteHistory)) }
+            )
+        case let .accountCollection(destination):
+            HomeAccountCollectionRouteView(
+                destination: destination,
+                addressViewModel: addressViewModel,
+                onBack: onBack,
+                onRoute: onRoute,
+                onMessage: onMessage,
+                onProductTap: onProductTap,
+                onWithdrawTap: onWithdrawTap
+            )
+        default:
+            EmptyView()
+        }
+    }
+}
+
+struct HomeProfileRouteView: View {
+    let route: HomeModalRoute
+    let onBack: () -> Void
+    let onBackToDrawer: () -> Void
+    let onRoute: (HomeModalRoute) -> Void
+    let onMessage: (String) -> Void
+
+    @ViewBuilder
+    var body: some View {
+        switch route {
+        case .accountVerification:
+            AccountVerificationRouteView(
+                onBack: onBack,
+                onVerified: { onRoute(.accountCollection(.editProfile)) },
+                onMessage: onMessage
+            )
+        case .companyIntroduction:
+            CompanyIntroductionView(
+                onBack: onBackToDrawer,
+                onOpenMap: { onMessage("주소가 임시 정보라 지도 앱과 연결되지 않았어요.") }
+            )
+        default:
+            EmptyView()
+        }
+    }
+}
+
 struct HomeAccountCollectionRouteView: View {
     let destination: AccountCollectionDestination
     @ObservedObject var addressViewModel: AddressesViewModel
@@ -36,6 +134,7 @@ struct HomeOrderRouteView: View {
     let onBack: () -> Void
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
+    let onAddressChange: (OrderHistoryItem) -> Void
 
     @ViewBuilder
     var body: some View {
@@ -46,13 +145,13 @@ struct HomeOrderRouteView: View {
                 onCancelReturn: { onRoute(.returnHistory(backToOrderHistory: true)) },
                 onOrderDetail: { onRoute(.orderDetail($0)) },
                 onCancelOrder: { _ in onMessage("주문 취소는 서버 연동 후 이용할 수 있어요.") },
-                onTrackDelivery: { _ in onMessage("배송 조회는 서버 연동 후 이용할 수 있어요.") },
+                onTrackDelivery: { onRoute(.deliveryTracking($0)) },
                 onReorder: { _ in onMessage("다시 담기는 장바구니 연결 후 이용할 수 있어요.") }
             )
         case let .orderDetail(order):
             OrderDetailView(
                 order: order,
-                onBack: { onRoute(.orderHistory) },
+                onBack: onBack,
                 onTrackDelivery: { onRoute(.deliveryTracking(order)) },
                 onReturnExchange: { onRoute(.returnRequest(order)) },
                 onDocumentDownload: { onMessage("거래명세서는 주문 서비스 연동 후 다운로드할 수 있어요.") },
@@ -65,7 +164,7 @@ struct HomeOrderRouteView: View {
                 order: order,
                 onBack: { onRoute(.orderDetail(order)) },
                 onUnavailableKind: { onMessage("\($0.rawValue) 화면은 별도 작업에서 연결할 예정이에요.") },
-                onAddressChange: { onMessage("배송지 변경은 배송지 관리 화면 연결 후 이용할 수 있어요.") },
+                onAddressChange: { onAddressChange(order) },
                 onSubmit: onMessage
             )
         case let .returnHistory(backToOrderHistory):
@@ -189,6 +288,88 @@ struct AddressEditorRouteView: View {
             get: { presentedMessage != nil },
             set: { if !$0 { presentedMessage = nil } }
         )
+    }
+}
+
+struct HomeSupportRouteView: View {
+    let route: HomeModalRoute
+    let onBack: () -> Void
+    let onRoute: (HomeModalRoute) -> Void
+    let onMessage: (String) -> Void
+
+    @ViewBuilder
+    var body: some View {
+        switch route {
+        case .customerCenter:
+            CustomerCenterView(
+                onBack: onBack,
+                onCall: { onMessage("고객센터 전화 연결은 번호 연동 후 이용할 수 있어요.") },
+                onContact: { onRoute(.accountCollection(.contactHistory)) }
+            )
+        case .announcements:
+            AnnouncementsView(
+                onBack: onBack,
+                onOpenAnnouncement: { onRoute(.announcementDetail($0)) }
+            )
+        case let .announcementDetail(announcement):
+            AnnouncementDetailView(
+                announcement: announcement,
+                onBack: { onRoute(.announcements) },
+                onDownload: { onMessage("\($0)은 파일 서비스 연동 후 다운로드할 수 있어요.") }
+            )
+        default:
+            EmptyView()
+        }
+    }
+}
+
+struct HomeWithdrawalRouteView: View {
+    let route: HomeModalRoute
+    @ObservedObject var noticeViewModel: AccountWithdrawalNoticeViewModel
+    let activeOrderCount: Int
+    let onRoute: (HomeModalRoute) -> Void
+    let onHome: () -> Void
+
+    @ViewBuilder
+    var body: some View {
+        switch route {
+        case .accountWithdrawalNotice:
+            AccountWithdrawalNoticeView(
+                viewModel: noticeViewModel,
+                onBack: { onRoute(.accountCollection(.editProfile)) },
+                onContinue: { onRoute(.accountWithdrawalReason) }
+            )
+        case .accountWithdrawalBlocked:
+            AccountWithdrawalBlockedView(
+                viewModel: AccountWithdrawalBlockedViewModel(activeOrderCount: activeOrderCount),
+                onBack: { onRoute(.accountCollection(.editProfile)) },
+                onOrderHistory: { onRoute(.orderHistory) }
+            )
+        case .accountWithdrawalReason:
+            AccountWithdrawalReasonView(
+                onBack: { onRoute(.accountWithdrawalNotice) },
+                onSubmit: { onRoute(.accountWithdrawalComplete) }
+            )
+        case .accountWithdrawalComplete:
+            AccountWithdrawalCompleteView(onHome: onHome)
+        default:
+            EmptyView()
+        }
+    }
+}
+
+struct HomeLoadErrorView: View {
+    let onRetry: () -> Void
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("홈 정보를 불러오지 못했어요.")
+                .font(EUMTypography.bodyMedium)
+                .foregroundStyle(EUMColor.text2SwiftUI)
+            EUMButton(title: "다시 시도", kind: .secondary, action: onRetry)
+                .frame(maxWidth: 180)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

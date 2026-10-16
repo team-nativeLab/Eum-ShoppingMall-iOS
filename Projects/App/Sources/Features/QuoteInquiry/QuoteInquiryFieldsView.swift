@@ -5,6 +5,7 @@ struct QuoteInquiryFieldsView: View {
     @Binding var isDatePickerPresented: Bool
     @Binding var isFileImporterPresented: Bool
     let onMessage: (String) -> Void
+    let onShowPrivacyConsent: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -27,7 +28,7 @@ struct QuoteInquiryFieldsView: View {
                 EUMTextField(title: "납품 지역", placeholder: "예: 경기도 00시", text: $viewModel.deliveryArea)
                 detailsField
                 QuoteAttachmentField(viewModel: viewModel, isFileImporterPresented: $isFileImporterPresented)
-                QuotePrivacyAgreement(viewModel: viewModel, onMessage: onMessage)
+                QuotePrivacyAgreement(viewModel: viewModel, onShowPrivacyConsent: onShowPrivacyConsent)
             }
         }
     }
@@ -182,7 +183,7 @@ private struct QuoteAttachmentField: View {
 
 private struct QuotePrivacyAgreement: View {
     @ObservedObject var viewModel: QuoteInquiryViewModel
-    let onMessage: (String) -> Void
+    let onShowPrivacyConsent: () -> Void
 
     var body: some View {
         HStack(spacing: 8) {
@@ -212,9 +213,7 @@ private struct QuotePrivacyAgreement: View {
                 .font(EUMTypography.captionRegular)
                 .foregroundStyle(EUMColor.text1SwiftUI)
             Spacer(minLength: 0)
-            Button("보기") {
-                onMessage("개인정보 동의 내용은 약관 화면 연결 후 확인할 수 있어요.")
-            }
+            Button("보기", action: onShowPrivacyConsent)
             .font(EUMTypography.captionRegular)
             .foregroundStyle(EUMColor.text2SwiftUI)
             .underline()

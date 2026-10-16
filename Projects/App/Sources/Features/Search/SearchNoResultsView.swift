@@ -3,6 +3,7 @@ import SwiftUI
 struct SearchNoResultsView: View {
     let searchQuery: String
     let onPopularSearches: () -> Void
+    let onQuoteTap: () -> Void
 
     var body: some View {
         ScrollView {
@@ -68,7 +69,7 @@ struct SearchNoResultsView: View {
                     .foregroundStyle(EUMColor.text2SwiftUI)
             }
 
-            EUMButton(title: "견적 문의하기", kind: .secondary, size: .medium) {}
+            EUMButton(title: "견적 문의하기", kind: .secondary, size: .medium, action: onQuoteTap)
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)

@@ -5,13 +5,23 @@ struct HomeLandingContentView: View {
     @Binding var searchText: String
     let onFavoriteTap: (String) -> Void
     let onQuoteTap: () -> Void
+    let onSearchSubmit: () -> Void
+    let onHeroTap: () -> Void
+    let onCategoryTap: (HomeCategory) -> Void
+    let onRecommendedTap: () -> Void
+    let onBestSellersTap: () -> Void
+    let onProductTap: (HomeProduct) -> Void
 
     var body: some View {
         ScrollView(.vertical) {
             VStack(alignment: .leading, spacing: 40) {
                 VStack(alignment: .leading, spacing: 28) {
                     VStack(spacing: 16) {
-                        EUMSearchBar(text: $searchText, placeholder: "어떤 제품을 찾고 계신가요?")
+                        EUMSearchBar(
+                            text: $searchText,
+                            placeholder: "어떤 제품을 찾고 계신가요?",
+                            onSubmit: onSearchSubmit
+                        )
                             .padding(.horizontal, EUMSpacing.homeContentInset)
 
                         EUMHeroBanner(pages: [
@@ -22,7 +32,7 @@ struct HomeLandingContentView: View {
                                 subtitle: content.hero.subtitle,
                                 imageName: content.hero.imageName,
                                 actionTitle: content.hero.actionTitle,
-                                action: {}
+                                action: onHeroTap
                             )
                         ])
                         .padding(.horizontal, EUMSpacing.homeContentInset)
@@ -31,7 +41,9 @@ struct HomeLandingContentView: View {
                     ScrollView(.horizontal) {
                         HStack(spacing: 12) {
                             ForEach(content.categories) { category in
-                                EUMCategoryItem(title: category.title, iconName: category.iconName) {}
+                                EUMCategoryItem(title: category.title, iconName: category.iconName) {
+                                    onCategoryTap(category)
+                                }
                             }
                         }
                         .padding(.horizontal, EUMSpacing.homeContentInset)
@@ -52,7 +64,7 @@ struct HomeLandingContentView: View {
 
     private func recommendedSection(_ products: [HomeProduct]) -> some View {
         VStack(alignment: .leading, spacing: 16) {
-            EUMSectionHeader(title: "추천 제품", action: {})
+            EUMSectionHeader(title: "추천 제품", action: onRecommendedTap)
                 .padding(.horizontal, EUMSpacing.homeContentInset)
             ScrollView(.horizontal) {
                 HStack(alignment: .top, spacing: 12) {
@@ -68,7 +80,7 @@ struct HomeLandingContentView: View {
 
     private func bestSellerSection(_ products: [HomeProduct]) -> some View {
         VStack(alignment: .leading, spacing: 16) {
-            EUMSectionHeader(title: "베스트 셀러", action: {})
+            EUMSectionHeader(title: "베스트 셀러", action: onBestSellersTap)
             LazyVGrid(
                 columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
                 alignment: .leading,
@@ -78,7 +90,7 @@ struct HomeLandingContentView: View {
                     productCard(product, layout: .grid)
                 }
             }
-            EUMButton(title: "베스트 셀러 전체 보기", kind: .secondary) {}
+            EUMButton(title: "베스트 셀러 전체 보기", kind: .secondary, action: onBestSellersTap)
         }
         .padding(.horizontal, EUMSpacing.homeContentInset)
     }
@@ -92,7 +104,8 @@ struct HomeLandingContentView: View {
             isSoldOut: product.isSoldOut,
             isPriceHidden: product.isPriceHidden,
             isFavorite: product.isFavorite,
-            onFavoriteTap: { onFavoriteTap(product.id) }
+            onFavoriteTap: { onFavoriteTap(product.id) },
+            onTap: { onProductTap(product) }
         )
     }
 

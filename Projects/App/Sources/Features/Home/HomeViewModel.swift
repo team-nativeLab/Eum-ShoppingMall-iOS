@@ -33,6 +33,25 @@ struct HomeContent {
     let cartCount: Int
 }
 
+struct HomeProductListSelection {
+    let title: String
+    let products: [HomeProduct]
+}
+
+extension CartItem {
+    var homeProduct: HomeProduct {
+        HomeProduct(
+            id: id,
+            title: title,
+            price: isQuoteProduct ? nil : "₩00,000",
+            imageName: "ProductPlaceholder",
+            isFavorite: false,
+            isSoldOut: isSoldOut,
+            isPriceHidden: isQuoteProduct
+        )
+    }
+}
+
 protocol HomeRepository {
     func fetchHome() async throws -> HomeContent
 }

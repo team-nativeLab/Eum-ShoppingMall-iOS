@@ -180,6 +180,8 @@ struct ProductDetailSections: View {
 }
 
 struct ProductDetailRelatedSection: View {
+    let onProductTap: (HomeProduct) -> Void
+
     private let products = (0..<4).map { index in
         HomeProduct(
             id: "related-\(index)",
@@ -203,7 +205,12 @@ struct ProductDetailRelatedSection: View {
             ScrollView(.horizontal) {
                 HStack(alignment: .top, spacing: 12) {
                     ForEach(products) { product in
-                        EUMProductCard(title: product.title, price: product.price, layout: .carousel)
+                        EUMProductCard(
+                            title: product.title,
+                            price: product.price,
+                            layout: .carousel,
+                            onTap: { onProductTap(product) }
+                        )
                     }
                 }
                 .padding(.horizontal, 20)

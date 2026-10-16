@@ -7,6 +7,7 @@ struct CartItemRow: View {
     let onRemove: () -> Void
     let onOptionChange: () -> Void
     let onQuoteRequest: () -> Void
+    var onProductTap: () -> Void = {}
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -114,11 +115,16 @@ struct CartItemRow: View {
     }
 
     private var productTitle: some View {
-        Text(item.title)
-            .font(EUMTypography.labelMedium)
-            .tracking(-0.07)
-            .foregroundStyle(item.isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
-            .lineLimit(1)
+        Button(action: onProductTap) {
+            Text(item.title)
+                .font(EUMTypography.labelMedium)
+                .tracking(-0.07)
+                .foregroundStyle(item.isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
+                .lineLimit(1)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(item.title) 상품 상세")
     }
 
     private var selectionAccessibilityLabel: String {

@@ -36,16 +36,19 @@ struct LoginView: View {
     let onClose: () -> Void
     var onSignUpTap: () -> Void = {}
     var onEmailLookupTap: () -> Void = {}
+    var onPasswordLookupTap: () -> Void = {}
 
     init(
         onClose: @escaping () -> Void,
         onSignUpTap: @escaping () -> Void = {},
         onEmailLookupTap: @escaping () -> Void = {},
+        onPasswordLookupTap: @escaping () -> Void = {},
         initialErrorState: Bool = false
     ) {
         self.onClose = onClose
         self.onSignUpTap = onSignUpTap
         self.onEmailLookupTap = onEmailLookupTap
+        self.onPasswordLookupTap = onPasswordLookupTap
         _viewModel = StateObject(wrappedValue: LoginViewModel(initialErrorState: initialErrorState))
     }
 
@@ -252,7 +255,7 @@ struct LoginView: View {
         HStack(spacing: 12) {
             accountLink("이메일 찾기", action: onEmailLookupTap)
             linkDivider
-            accountLink("비밀번호 찾기")
+            accountLink("비밀번호 찾기", action: onPasswordLookupTap)
             linkDivider
             accountLink("회원가입", emphasized: true, action: onSignUpTap)
         }
