@@ -4,6 +4,7 @@ struct CompanyIntroductionView: View {
     let viewModel: CompanyIntroductionViewModel
     let onBack: () -> Void
     let onOpenMap: () -> Void
+    @State private var selectedSectionIndex = 0
 
     init(
         viewModel: CompanyIntroductionViewModel = CompanyIntroductionViewModel(),
@@ -18,20 +19,27 @@ struct CompanyIntroductionView: View {
     var body: some View {
         VStack(spacing: 0) {
             topBar
-            ScrollView {
-                VStack(spacing: 0) {
-                    introduction
-                    sectionNavigation
-                    overviewSection
-                    businessSection
-                    historySection
-                    certificationSection
-                    partnersSection
-                    locationSection
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(spacing: 0) {
+                        introduction
+                        sectionNavigation { index in
+                            selectedSectionIndex = index
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                proxy.scrollTo("company-section-\(index)", anchor: .top)
+                            }
+                        }
+                        overviewSection.id("company-section-0")
+                        businessSection.id("company-section-1")
+                        historySection.id("company-section-2")
+                        certificationSection.id("company-section-3")
+                        partnersSection.id("company-section-4")
+                        locationSection.id("company-section-5")
+                    }
+                    .padding(.bottom, 24)
                 }
-                .padding(.bottom, 24)
+                .scrollIndicators(.hidden)
             }
-            .scrollIndicators(.hidden)
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
     }
@@ -99,11 +107,18 @@ struct CompanyIntroductionView: View {
         .padding(.bottom, 28)
     }
 
-    private var sectionNavigation: some View {
+    private func sectionNavigation(onSelect: @escaping (Int) -> Void) -> some View {
         ScrollView(.horizontal) {
             HStack(spacing: 8) {
                 ForEach(Array(viewModel.sectionNavigation.enumerated()), id: \.offset) { index, title in
-                    CompanyIntroductionSectionChip(title: title, isSelected: index == 0)
+                    Button {
+                        onSelect(index)
+                    } label: {
+                        CompanyIntroductionSectionChip(title: title, isSelected: index == selectedSectionIndex)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(title)
+                    .accessibilityIdentifier("company-section-tab-\(index)")
                 }
             }
             .padding(.horizontal, EUMSpacing.homeContentInset)
@@ -112,7 +127,6 @@ struct CompanyIntroductionView: View {
         .scrollIndicators(.hidden)
         .overlay(alignment: .top) { divider }
         .overlay(alignment: .bottom) { divider }
-        .accessibilityLabel("회사소개 섹션")
     }
 
     private var overviewSection: some View {
