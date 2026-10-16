@@ -22,6 +22,7 @@ final class GuestMyPageViewModel: ObservableObject {
 struct GuestMyPageView: View {
     @StateObject private var viewModel = GuestMyPageViewModel()
     @State private var presentedMessage: String?
+    @State private var isShowingAnnouncements = false
 
     let cartCount: Int
     let onLoginTap: () -> Void
@@ -51,6 +52,14 @@ struct GuestMyPageView: View {
             Button("확인", role: .cancel) { presentedMessage = nil }
         } message: {
             Text(presentedMessage ?? "")
+        }
+        .overlay {
+            if isShowingAnnouncements {
+                AnnouncementsView(
+                    onBack: { isShowingAnnouncements = false },
+                    onOpenAnnouncement: { _ in presentedMessage = "공지사항 상세 화면은 이슈 #95에서 연결할 예정이에요." }
+                )
+            }
         }
     }
 
@@ -136,7 +145,11 @@ struct GuestMyPageView: View {
         VStack(spacing: 0) {
             ForEach(Array(viewModel.menuItems.enumerated()), id: \.element.id) { index, item in
                 Button {
-                    presentedMessage = "\(item.title) 화면은 아직 연결되지 않았어요."
+                    if item.title == "공지사항" {
+                        isShowingAnnouncements = true
+                    } else {
+                        presentedMessage = "\(item.title) 화면은 아직 연결되지 않았어요."
+                    }
                 } label: {
                     HStack(spacing: 12) {
                         Image(item.iconName)
