@@ -24,15 +24,35 @@ final class CheckoutPaymentViewModel: ObservableObject {
     @Published private(set) var selectedPaymentMethod: CheckoutPaymentMethod = .creditCard
     @Published private(set) var selectedReceiptOption: CheckoutReceiptOption
     @Published private(set) var isOrderAgreementAccepted = false
+    @Published private(set) var isEnteringTaxInvoiceInfo = false
+    @Published var businessRegistrationNumber = ""
+    @Published var taxInvoiceCompanyName = ""
+    @Published var taxInvoiceRepresentativeName = ""
+    @Published var taxInvoiceEmail = ""
 
     let availableCouponCount = 0
     let availablePoints = 0
 
-    init(initialReceiptOption: CheckoutReceiptOption = .cashReceipt) {
+    init(
+        initialReceiptOption: CheckoutReceiptOption = .cashReceipt,
+        startsWithDirectTaxInvoiceInput: Bool = false
+    ) {
         selectedReceiptOption = initialReceiptOption
+        isEnteringTaxInvoiceInfo = startsWithDirectTaxInvoiceInput
     }
 
-    var canPay: Bool { isOrderAgreementAccepted }
+    var canPay: Bool {
+        guard isOrderAgreementAccepted else { return false }
+        guard selectedReceiptOption == .taxInvoice, isEnteringTaxInvoiceInfo else { return true }
+        return isTaxInvoiceInfoValid
+    }
+
+    var isTaxInvoiceInfoValid: Bool {
+        businessRegistrationNumber.count == 10
+            && !taxInvoiceCompanyName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && !taxInvoiceRepresentativeName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && taxInvoiceEmail.contains("@") && taxInvoiceEmail.contains(".")
+    }
 
     func selectPaymentMethod(_ method: CheckoutPaymentMethod) {
         selectedPaymentMethod = method
@@ -40,6 +60,14 @@ final class CheckoutPaymentViewModel: ObservableObject {
 
     func selectReceiptOption(_ option: CheckoutReceiptOption) {
         selectedReceiptOption = option
+    }
+
+    func startTaxInvoiceInfoEntry() {
+        isEnteringTaxInvoiceInfo = true
+    }
+
+    func updateBusinessRegistrationNumber(_ value: String) {
+        businessRegistrationNumber = String(value.filter(\.isNumber).prefix(10))
     }
 
     func toggleOrderAgreement() {
@@ -53,19 +81,16 @@ struct CheckoutPaymentView: View {
 
     let onBack: () -> Void
     let onPaymentComplete: (CheckoutPaymentMethod) -> Void
-    let onEditBusinessInfo: () -> Void
 
     private let horizontalInset: CGFloat = 20
 
     init(
         onBack: @escaping () -> Void,
-        onPaymentComplete: @escaping (CheckoutPaymentMethod) -> Void,
-        onEditBusinessInfo: @escaping () -> Void = {}
+        onPaymentComplete: @escaping (CheckoutPaymentMethod) -> Void
     ) {
         self.init(
             onBack: onBack,
             onPaymentComplete: onPaymentComplete,
-            onEditBusinessInfo: onEditBusinessInfo,
             viewModel: CheckoutPaymentViewModel()
         )
     }
@@ -73,13 +98,11 @@ struct CheckoutPaymentView: View {
     init(
         onBack: @escaping () -> Void,
         onPaymentComplete: @escaping (CheckoutPaymentMethod) -> Void,
-        onEditBusinessInfo: @escaping () -> Void,
         viewModel: CheckoutPaymentViewModel
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.onBack = onBack
         self.onPaymentComplete = onPaymentComplete
-        self.onEditBusinessInfo = onEditBusinessInfo
     }
 
     var body: some View {
@@ -146,7 +169,7 @@ struct CheckoutPaymentView: View {
 
     private var discountSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            sectionHeading("할인")
+            CheckoutPaymentSectionHeading(title: "할인")
 
             Button {
                 presentedMessage = "사용 가능한 쿠폰이 없어요."
@@ -194,7 +217,7 @@ struct CheckoutPaymentView: View {
 
     private var paymentMethodSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            sectionHeading("결제수단")
+            CheckoutPaymentSectionHeading(title: "결제수단")
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                 ForEach(CheckoutPaymentMethod.allCases) { method in
                     CheckoutPaymentMethodButton(method: method, isSelected: viewModel.selectedPaymentMethod == method) {
@@ -211,7 +234,7 @@ struct CheckoutPaymentView: View {
 
     private var receiptSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeading("증빙 서류")
+            CheckoutPaymentSectionHeading(title: "증빙 서류")
             HStack(spacing: 16) {
                 ForEach(CheckoutReceiptOption.allCases) { option in
                     receiptOption(option)
@@ -220,7 +243,7 @@ struct CheckoutPaymentView: View {
             .padding(.bottom, 20)
 
             if viewModel.selectedReceiptOption == .taxInvoice {
-                CheckoutTaxInvoiceBusinessInfo(onEdit: onEditBusinessInfo)
+                CheckoutTaxInvoiceBusinessInfo(viewModel: viewModel)
             }
         }
         .padding(.horizontal, horizontalInset)
@@ -237,7 +260,7 @@ struct CheckoutPaymentView: View {
 
     private var paymentAmountSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeading("결제 금액")
+            CheckoutPaymentSectionHeading(title: "결제 금액")
             VStack(spacing: 8) {
                 amountRow(title: "상품금액", amount: "₩00,000")
                 amountRow(title: "배송비", amount: "₩0")
@@ -359,14 +382,6 @@ struct CheckoutPaymentView: View {
         Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
     }
 
-    private func sectionHeading(_ title: String) -> some View {
-        Text(title)
-            .font(EUMTypography.labelLarge)
-            .tracking(-0.16)
-            .foregroundStyle(EUMColor.text1SwiftUI)
-            .frame(height: 40, alignment: .center)
-            .accessibilityAddTraits(.isHeader)
-    }
 }
 
 struct CheckoutPaymentViewPreview: PreviewProvider {
@@ -374,8 +389,10 @@ struct CheckoutPaymentViewPreview: PreviewProvider {
         CheckoutPaymentView(
             onBack: {},
             onPaymentComplete: { _ in },
-            onEditBusinessInfo: {},
-            viewModel: CheckoutPaymentViewModel(initialReceiptOption: .taxInvoice)
+            viewModel: CheckoutPaymentViewModel(
+                initialReceiptOption: .taxInvoice,
+                startsWithDirectTaxInvoiceInput: true
+            )
         )
     }
 }
