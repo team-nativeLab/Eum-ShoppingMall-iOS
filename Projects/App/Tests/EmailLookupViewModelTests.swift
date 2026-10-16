@@ -40,6 +40,16 @@ final class EmailLookupViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.canFindEmail)
     }
 
+    func testVerifiedButUnmatchedDetailsReturnNoEmail() {
+        let viewModel = EmailLookupViewModel()
+        viewModel.updateName("김이음")
+        viewModel.updateVerificationCode("123456")
+        _ = viewModel.verifyCode()
+
+        XCTAssertTrue(viewModel.canFindEmail)
+        XCTAssertNil(viewModel.findEmail())
+    }
+
     func testTimerStopsAtZero() {
         let viewModel = EmailLookupViewModel()
         for _ in 0..<180 {
