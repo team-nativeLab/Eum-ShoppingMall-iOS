@@ -4,6 +4,7 @@ struct SignUpView: View {
     @StateObject private var viewModel = SignUpViewModel()
     @State private var presentedMessage: String?
     @State private var isShowingTermsModal = false
+    @State private var isShowingPrivacyConsent = false
     let onBack: () -> Void
 
     var body: some View {
@@ -31,6 +32,15 @@ struct SignUpView: View {
                     onAgree: {
                         viewModel.agreeToTerms()
                         isShowingTermsModal = false
+                    }
+                )
+            }
+            if isShowingPrivacyConsent {
+                PrivacyConsentView(
+                    onClose: { isShowingPrivacyConsent = false },
+                    onAgree: {
+                        viewModel.agreeToPrivacy()
+                        isShowingPrivacyConsent = false
                     }
                 )
             }
@@ -196,7 +206,13 @@ struct SignUpView: View {
                 details: true,
                 onDetailsTap: { isShowingTermsModal = true }
             )
-            agreementRow("[필수] 개인정보 수집·이용 동의", isOn: viewModel.agreedToPrivacy, action: viewModel.togglePrivacy, details: true)
+            agreementRow(
+                "[필수] 개인정보 수집·이용 동의",
+                isOn: viewModel.agreedToPrivacy,
+                action: viewModel.togglePrivacy,
+                details: true,
+                onDetailsTap: { isShowingPrivacyConsent = true }
+            )
             agreementRow("[선택] 마케팅 정보 수신 동의", isOn: viewModel.agreedToMarketing, action: viewModel.toggleMarketing, details: true)
         }
         .padding(16)
