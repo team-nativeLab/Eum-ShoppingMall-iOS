@@ -1,4 +1,5 @@
 import XCTest
+import UserNotifications
 @testable import EumShoppingMall
 
 @MainActor
@@ -27,5 +28,13 @@ final class SettingsViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.marketingSMSEnabled)
         XCTAssertTrue(viewModel.marketingEmailEnabled)
         XCTAssertTrue(viewModel.nightMarketingEnabled)
+    }
+
+    func testDeviceNotificationAuthorizationAllowsActiveStatuses() {
+        XCTAssertTrue(SettingsViewModel.allowsNotifications(status: .authorized))
+        XCTAssertTrue(SettingsViewModel.allowsNotifications(status: .provisional))
+        XCTAssertTrue(SettingsViewModel.allowsNotifications(status: .ephemeral))
+        XCTAssertFalse(SettingsViewModel.allowsNotifications(status: .denied))
+        XCTAssertFalse(SettingsViewModel.allowsNotifications(status: .notDetermined))
     }
 }
