@@ -308,7 +308,11 @@ struct HomeView: View {
                 onBack: { presentedRoute = nil },
                 onLoginTap: { presentedRoute = .settingsLogin },
                 onPolicyTap: { presentedMessage = "\($0) 화면은 후속 퍼블리싱 이슈에서 연결됩니다." },
-                onLogoutTap: { presentedMessage = "로그아웃 확인 화면은 준비 중입니다." },
+                onLogoutTap: {
+                    presentedRoute = nil
+                    isGuestAccount = true
+                    selectedTab = .account
+                },
                 onWithdrawalTap: showWithdrawalEntry
             )
         case .accountWithdrawalNotice, .accountWithdrawalBlocked, .accountWithdrawalReason, .accountWithdrawalComplete:
