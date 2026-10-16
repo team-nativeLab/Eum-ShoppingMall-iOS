@@ -14,6 +14,7 @@ final class ProductListNavigationUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["개인보호장비"].exists)
+        XCTAssertTrue(app.buttons["home-tab-홈"].exists)
     }
 
     @MainActor
@@ -31,6 +32,7 @@ final class ProductListNavigationUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["개인보호장비"].exists)
+        XCTAssertTrue(app.buttons["category-search"].exists)
     }
 
     @MainActor
@@ -47,7 +49,7 @@ final class ProductListNavigationUITests: XCTestCase {
         app.buttons["search-back"].tap()
 
         XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["개인보호장비"].exists)
+        XCTAssertTrue(app.buttons["category-search"].exists)
     }
 
     @MainActor
@@ -62,8 +64,8 @@ final class ProductListNavigationUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["최근 검색어"].waitForExistence(timeout: 5))
         app.buttons["search-back"].tap()
 
-        XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["product-list-back"].exists)
+        XCTAssertTrue(app.buttons["product-list-search"].exists)
     }
 
     @MainActor
@@ -79,7 +81,7 @@ final class ProductListNavigationUITests: XCTestCase {
         app.buttons["search-back"].tap()
 
         XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["개인보호장비"].exists)
+        XCTAssertTrue(app.buttons["category-search"].exists)
     }
 
     @MainActor
@@ -94,9 +96,11 @@ final class ProductListNavigationUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
 
         app.buttons["product-detail-back"].tap()
-        XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
-        app.buttons["product-list-back"].tap()
+        let productListBackButton = app.buttons["product-list-back"]
+        XCTAssertTrue(productListBackButton.waitForExistence(timeout: 5))
+        productListBackButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["home-tab-홈"].exists)
     }
 
     @MainActor
@@ -111,6 +115,6 @@ final class ProductListNavigationUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["장바구니"].waitForExistence(timeout: 5))
         app.buttons["tab-홈"].tap()
 
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["home-tab-홈"].exists)
     }
 }
