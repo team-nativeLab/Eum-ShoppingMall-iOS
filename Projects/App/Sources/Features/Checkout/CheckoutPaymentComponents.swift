@@ -9,7 +9,7 @@ struct CheckoutPaymentSectionHeading: View {
             .font(EUMTypography.labelLarge)
             .tracking(-0.16)
             .foregroundStyle(EUMColor.text1SwiftUI)
-            .frame(height: 40, alignment: .center)
+            .frame(height: 48, alignment: .center)
             .accessibilityAddTraits(.isHeader)
     }
 }
@@ -26,7 +26,7 @@ struct CheckoutPaymentMethodButton: View {
                 .tracking(-0.07)
                 .foregroundStyle(isSelected ? EUMColor.text1SwiftUI : EUMColor.text2SwiftUI)
                 .frame(maxWidth: .infinity)
-                .frame(height: 48)
+                .frame(height: 56)
                 .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
                 .overlay {
                     RoundedRectangle(cornerRadius: EUMRadius.button)
@@ -164,15 +164,15 @@ struct CheckoutReceiptOptionButton: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 ZStack {
                     Circle()
                         .stroke(isSelected ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI, lineWidth: isSelected ? 1.5 : 1)
-                        .frame(width: 18, height: 18)
+                        .frame(width: 20, height: 20)
                     if isSelected {
                         Circle()
                             .fill(EUMColor.text1SwiftUI)
-                            .frame(width: 10, height: 10)
+                            .frame(width: 12, height: 12)
                     }
                 }
                 Text(option.rawValue)
@@ -186,5 +186,76 @@ struct CheckoutReceiptOptionButton: View {
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+}
+
+struct CheckoutCashReceiptPanel: View {
+    @ObservedObject var viewModel: CheckoutPaymentViewModel
+
+    private var isIncomeDeduction: Bool { viewModel.cashReceiptPurpose == .incomeDeduction }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 4) {
+                ForEach(CashReceiptPurpose.allCases) { purpose in
+                    Button {
+                        viewModel.selectCashReceiptPurpose(purpose)
+                    } label: {
+                        Text(purpose.rawValue)
+                            .font(EUMTypography.labelMedium)
+                            .tracking(-0.07)
+                            .foregroundStyle(viewModel.cashReceiptPurpose == purpose ? EUMColor.text1SwiftUI : EUMColor.text2SwiftUI)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 36)
+                            .background {
+                                if viewModel.cashReceiptPurpose == purpose {
+                                    RoundedRectangle(cornerRadius: EUMRadius.small)
+                                        .fill(EUMColor.backgroundSwiftUI)
+                                        .shadow(color: EUMColor.text1SwiftUI.opacity(0.06), radius: 3, x: 0, y: 1)
+                                }
+                            }
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(viewModel.cashReceiptPurpose == purpose ? .isSelected : [])
+                }
+            }
+            .padding(4)
+            .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(isIncomeDeduction ? "휴대폰 번호 *" : "사업자등록번호 *")
+                    .font(EUMTypography.labelMedium)
+                    .tracking(-0.07)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+                TextField(
+                    isIncomeDeduction ? "010-0000-0000" : "숫자 10자리",
+                    text: Binding(
+                        get: { viewModel.cashReceiptIdentifier },
+                        set: viewModel.updateCashReceiptIdentifier
+                    )
+                )
+                .font(EUMTypography.bodyMedium)
+                .tracking(-0.075)
+                .foregroundStyle(EUMColor.text1SwiftUI)
+                .keyboardType(.numberPad)
+                .padding(.horizontal, 14)
+                .frame(height: 48)
+                .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
+                .overlay {
+                    RoundedRectangle(cornerRadius: EUMRadius.button)
+                        .strokeBorder(EUMColor.lineControlSwiftUI, lineWidth: 1)
+                }
+                .accessibilityLabel(isIncomeDeduction ? "현금영수증 휴대폰 번호" : "현금영수증 사업자등록번호")
+            }
+
+            if isIncomeDeduction {
+                Text("현금영수증은 입금이 확인된 뒤 발급됩니다.")
+                    .font(EUMTypography.captionRegular)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
     }
 }
