@@ -7,6 +7,7 @@ struct AuthenticationFlowView: View {
         case emailLookup
         case emailLookupResult(String)
         case emailLookupEmpty
+        case passwordLookup
     }
 
     @State private var screen = Screen.login
@@ -27,7 +28,7 @@ struct AuthenticationFlowView: View {
             case .emailLookup:
                 EmailLookupView(
                     onBack: { screen = .login },
-                    onPasswordLookup: { presentedMessage = "비밀번호 찾기는 별도 화면 작업에서 연결할 예정이에요." },
+                    onPasswordLookup: { screen = .passwordLookup },
                     onFindEmail: { email in
                         if let email {
                             screen = .emailLookupResult(email)
@@ -41,13 +42,20 @@ struct AuthenticationFlowView: View {
                     email: email,
                     onClose: onClose,
                     onLogin: { screen = .login },
-                    onPasswordLookup: { presentedMessage = "비밀번호 찾기는 별도 화면 작업에서 연결할 예정이에요." }
+                    onPasswordLookup: { screen = .passwordLookup }
                 )
             case .emailLookupEmpty:
                 EmailLookupEmptyView(
                     onClose: onClose,
                     onFindAgain: { screen = .emailLookup },
                     onSignUp: { screen = .signUp }
+                )
+            case .passwordLookup:
+                PasswordLookupView(
+                    onBack: { screen = .emailLookup },
+                    onContinue: { _ in
+                        presentedMessage = "비밀번호 재설정 화면은 다음 단계에서 연결됩니다."
+                    }
                 )
             }
         }
