@@ -24,4 +24,29 @@ final class AccountWithdrawalReasonViewModelTests: XCTestCase {
 
         XCTAssertFalse(viewModel.canSubmit)
     }
+
+    func testIncorrectPasswordSetsErrorState() {
+        let viewModel = AccountWithdrawalReasonViewModel()
+        viewModel.updatePassword("incorrect")
+
+        XCTAssertFalse(viewModel.validatePassword())
+        XCTAssertTrue(viewModel.isPasswordInvalid)
+    }
+
+    func testEditingPasswordClearsErrorState() {
+        let viewModel = AccountWithdrawalReasonViewModel()
+        viewModel.updatePassword("incorrect")
+        _ = viewModel.validatePassword()
+
+        viewModel.updatePassword("password1")
+
+        XCTAssertFalse(viewModel.isPasswordInvalid)
+    }
+
+    func testMockPasswordPassesValidation() {
+        let viewModel = AccountWithdrawalReasonViewModel()
+
+        XCTAssertTrue(viewModel.validatePassword())
+        XCTAssertFalse(viewModel.isPasswordInvalid)
+    }
 }
