@@ -36,4 +36,11 @@ final class TermsDocumentTests: XCTestCase {
             "이전 약관입니다. 현재 약관은 0000.00.00부터 시행 중입니다.  현재 약관 보기"
         )
     }
+
+    func testScheduledRevisionNoticeCopyMatchesTheDesignedScreen() {
+        XCTAssertEqual(
+            TermsDocument.revisionScheduledNoticePrefix + TermsDocument.revisionScheduledLabel,
+            "0000.00.00부터 개정 약관이 시행됩니다.  개정 약관 보기"
+        )
+    }
 }

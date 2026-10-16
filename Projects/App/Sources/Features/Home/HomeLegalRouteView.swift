@@ -35,7 +35,7 @@ struct HomeLegalRouteView: View {
             )
         case .terms:
             TermsView(
-                version: .current,
+                version: .revisionScheduled,
                 onBack: actions.backToSettings,
                 onVersionTap: { actions.message("약관 버전 선택 화면은 후속 퍼블리싱 이슈에서 연결됩니다.") }
             )
