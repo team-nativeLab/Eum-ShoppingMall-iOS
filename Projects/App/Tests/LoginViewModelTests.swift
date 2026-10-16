@@ -22,4 +22,24 @@ final class LoginViewModelTests: XCTestCase {
         viewModel.toggleKeepSignedIn()
         XCTAssertTrue(viewModel.shouldKeepSignedIn)
     }
+
+    func testSubmitShowsInlineErrorOnlyWhenCredentialsArePresent() {
+        let viewModel = LoginViewModel()
+
+        viewModel.submit()
+        XCTAssertFalse(viewModel.showsLoginError)
+
+        viewModel.email = "user@example.com"
+        viewModel.password = "wrong-password"
+        viewModel.submit()
+        XCTAssertTrue(viewModel.showsLoginError)
+    }
+
+    func testErrorPreviewStartsWithFigmaSampleValues() {
+        let viewModel = LoginViewModel(initialErrorState: true)
+
+        XCTAssertEqual(viewModel.email, "example@email.com")
+        XCTAssertEqual(viewModel.password, "password")
+        XCTAssertTrue(viewModel.showsLoginError)
+    }
 }
