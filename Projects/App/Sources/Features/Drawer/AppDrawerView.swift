@@ -25,6 +25,7 @@ final class AppDrawerViewModel: ObservableObject {
 struct AppDrawerView: View {
     @StateObject private var viewModel = AppDrawerViewModel()
 
+    @Binding var isPresented: Bool
     let onDismiss: () -> Void
     let onMyInfo: () -> Void
     let onDestination: (String) -> Void
@@ -33,21 +34,28 @@ struct AppDrawerView: View {
 
     var body: some View {
         ZStack(alignment: .leading) {
-            EUMColor.text1SwiftUI.opacity(0.48)
-                .ignoresSafeArea()
-                .onTapGesture(perform: onDismiss)
-                .accessibilityLabel("메뉴 닫기")
+            if isPresented {
+                EUMColor.text1SwiftUI.opacity(0.48)
+                    .ignoresSafeArea()
+                    .onTapGesture(perform: onDismiss)
+                    .accessibilityLabel("메뉴 닫기")
+                    .transition(.opacity)
+            }
 
-            drawerPanel
-                .frame(width: 320)
-                .frame(maxHeight: .infinity, alignment: .top)
-                .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
-                .shadow(color: EUMColor.text1SwiftUI.opacity(0.16), radius: 32, x: 8, y: 0)
-                .accessibilityAddTraits(.isModal)
+            if isPresented {
+                drawerPanel
+                    .frame(width: 320)
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+                    .shadow(color: EUMColor.text1SwiftUI.opacity(0.16), radius: 32, x: 8, y: 0)
+                    .accessibilityAddTraits(.isModal)
+                    .transition(.move(edge: .leading))
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .ignoresSafeArea()
-        .transition(.move(edge: .leading))
+        .allowsHitTesting(isPresented)
+        .accessibilityHidden(!isPresented)
     }
 
     private var drawerPanel: some View {
@@ -181,6 +189,6 @@ struct AppDrawerView: View {
 
 struct AppDrawerViewPreview: PreviewProvider {
     static var previews: some View {
-        AppDrawerView(onDismiss: {}, onMyInfo: {}, onDestination: { _ in }, onSettings: {}, onLogout: {})
+        AppDrawerView(isPresented: .constant(true), onDismiss: {}, onMyInfo: {}, onDestination: { _ in }, onSettings: {}, onLogout: {})
     }
 }
