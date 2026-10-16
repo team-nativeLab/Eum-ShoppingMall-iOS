@@ -3,7 +3,6 @@ import SwiftUI
 struct HomeLegalRouteView: View {
     struct Actions {
         let back: () -> Void
-        let backToSettings: () -> Void
         let login: () -> Void
         let onRoute: (HomeModalRoute) -> Void
         let message: (String) -> Void
@@ -40,20 +39,20 @@ struct HomeLegalRouteView: View {
         case .terms:
             TermsView(
                 version: .revisionScheduled,
-                onBack: actions.backToSettings,
+                onBack: actions.back,
                 onPreviousVersionSelected: { actions.onRoute(.termsPrevious) }
             )
         case .termsPrevious:
             TermsView(
                 version: .previous,
-                onBack: actions.backToSettings,
-                onPreviousVersionSelected: { actions.onRoute(.termsPrevious) }
+                onBack: actions.back,
+                onPreviousVersionSelected: {}
             )
         case .privacyPolicy:
-            PrivacyPolicyView(onBack: actions.backToSettings)
+            PrivacyPolicyView(onBack: actions.back)
         case .usageGuide:
             UsageGuideView(
-                onBack: actions.backToSettings,
+                onBack: actions.back,
                 onCustomerCenterTap: { actions.onRoute(.customerCenter) }
             )
         default:
@@ -66,7 +65,6 @@ struct HomeLegalRouteContainer: View {
     let route: HomeModalRoute
     let isGuestAccount: Bool
     let back: () -> Void
-    let backToSettings: () -> Void
     let login: () -> Void
     let onRoute: (HomeModalRoute) -> Void
     let message: (String) -> Void
@@ -79,7 +77,6 @@ struct HomeLegalRouteContainer: View {
             isGuestAccount: isGuestAccount,
             actions: HomeLegalRouteView.Actions(
                 back: back,
-                backToSettings: backToSettings,
                 login: login,
                 onRoute: onRoute,
                 message: message,

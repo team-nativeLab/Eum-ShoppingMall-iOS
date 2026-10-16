@@ -59,9 +59,9 @@ final class MyPageViewModel: ObservableObject {
 struct MyPageView: View {
     @StateObject private var viewModel = MyPageViewModel()
     @State private var presentedMessage: String?
-    @State private var isShowingAnnouncements = false
-    @State private var selectedAnnouncement: AnnouncementItem?
-    @State private var isShowingCustomerCenter = false
+
+    var onCustomerCenterTap: () -> Void = {}
+    var onAnnouncementsTap: () -> Void = {}
 
     let cartCount: Int
     let onSelectTab: (EUMTabBar.Tab) -> Void
@@ -93,28 +93,6 @@ struct MyPageView: View {
             Button("확인", role: .cancel) { presentedMessage = nil }
         } message: {
             Text(presentedMessage ?? "")
-        }
-        .overlay {
-            if isShowingCustomerCenter {
-                CustomerCenterView(
-                    onBack: { isShowingCustomerCenter = false },
-                    onCall: { presentedMessage = "고객센터 전화 연결은 번호 연동 후 이용할 수 있어요." },
-                    onContact: onContactHistoryTap
-                )
-            } else if isShowingAnnouncements {
-                if let selectedAnnouncement {
-                    AnnouncementDetailView(
-                        announcement: selectedAnnouncement,
-                        onBack: { self.selectedAnnouncement = nil },
-                        onDownload: { presentedMessage = "\($0)은 파일 서비스 연동 후 다운로드할 수 있어요." }
-                    )
-                } else {
-                    AnnouncementsView(
-                        onBack: { isShowingAnnouncements = false },
-                        onOpenAnnouncement: { selectedAnnouncement = $0 }
-                    )
-                }
-            }
         }
     }
 
@@ -290,9 +268,9 @@ struct MyPageView: View {
                     } else if item.title == "1:1 문의 내역" {
                         onContactHistoryTap()
                     } else if item.title == "공지사항" {
-                        isShowingAnnouncements = true
+                        onAnnouncementsTap()
                     } else if item.title == "고객센터" {
-                        isShowingCustomerCenter = true
+                        onCustomerCenterTap()
                     } else {
                         showUnavailable(item.title)
                     }

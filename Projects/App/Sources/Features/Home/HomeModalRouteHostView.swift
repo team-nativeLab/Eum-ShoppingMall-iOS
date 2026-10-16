@@ -6,8 +6,7 @@ struct HomeModalRouteHostView: View {
     @ObservedObject var withdrawalNoticeViewModel: AccountWithdrawalNoticeViewModel
     let isGuestAccount: Bool
     let activeWithdrawalOrderCount: Int
-    let onBack: (HomeModalRoute) -> Void
-    let onBackToDrawer: () -> Void
+    let onBack: () -> Void
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
@@ -20,14 +19,15 @@ struct HomeModalRouteHostView: View {
     var body: some View {
         switch route {
         case .authentication:
-            AuthenticationFlowView(onClose: { onBack(route) })
+            AuthenticationFlowView(onClose: onBack)
         case .settingsLogin:
-            AuthenticationFlowView(onClose: { onRoute(.settings) })
+            AuthenticationFlowView(onClose: onBack)
         case .quoteInquiry, .accountCollection:
             HomeAccountRouteView(
                 route: route,
                 addressViewModel: addressViewModel,
-                onBack: { onBack(route) },
+                onBack: onBack,
+                onHome: onHome,
                 onRoute: onRoute,
                 onMessage: onMessage,
                 onProductTap: onProductTap,
@@ -36,7 +36,7 @@ struct HomeModalRouteHostView: View {
         case .orderHistory, .orderDetail, .deliveryTracking, .returnRequest, .returnHistory, .quoteDetail:
             HomeOrderRouteView(
                 route: route,
-                onBack: { onBack(route) },
+                onBack: onBack,
                 onRoute: onRoute,
                 onMessage: onMessage,
                 onAddressChange: onAddressChange
@@ -44,19 +44,17 @@ struct HomeModalRouteHostView: View {
         case .accountVerification, .companyIntroduction:
             HomeProfileRouteView(
                 route: route,
-                onBack: { onBack(route) },
-                onBackToDrawer: onBackToDrawer,
+                onBack: onBack,
                 onRoute: onRoute,
                 onMessage: onMessage
             )
         case .customerCenter, .announcements, .announcementDetail:
-            HomeSupportRouteView(route: route, onBack: { onBack(route) }, onRoute: onRoute, onMessage: onMessage)
+            HomeSupportRouteView(route: route, onBack: onBack, onRoute: onRoute, onMessage: onMessage)
         case .settings, .terms, .termsPrevious, .privacyPolicy, .usageGuide:
             HomeLegalRouteContainer(
                 route: route,
                 isGuestAccount: isGuestAccount,
-                back: { onBack(route) },
-                backToSettings: { onRoute(.settings) },
+                back: onBack,
                 login: { onRoute(.settingsLogin) },
                 onRoute: onRoute,
                 message: onMessage,
@@ -69,13 +67,14 @@ struct HomeModalRouteHostView: View {
                 noticeViewModel: withdrawalNoticeViewModel,
                 activeOrderCount: activeWithdrawalOrderCount,
                 onRoute: onRoute,
+                onBack: onBack,
                 onHome: onHome
             )
         case let .addressEditor(address):
             AddressEditorRouteView(
                 address: address,
-                onBack: { onRoute(.accountCollection(.addresses)) },
-                onSave: { addressViewModel.save($0); onRoute(.accountCollection(.addresses)) }
+                onBack: onBack,
+                onSave: { addressViewModel.save($0); onBack() }
             )
         }
     }
