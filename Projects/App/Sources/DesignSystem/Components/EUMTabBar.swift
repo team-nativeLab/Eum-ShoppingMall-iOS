@@ -23,6 +23,7 @@ struct EUMTabBar: View {
 
     let selectedTab: Tab
     var cartCount: Int = 0
+    var accessibilityIDPrefix = "tab"
     var onSelect: (Tab) -> Void
 
     var body: some View {
@@ -62,6 +63,7 @@ struct EUMTabBar: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(tab.rawValue)
+                    .accessibilityIdentifier("\(accessibilityIDPrefix)-\(tab.id)")
                     .accessibilityAddTraits(tab == selectedTab ? .isSelected : [])
                 }
             }

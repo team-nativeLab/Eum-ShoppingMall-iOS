@@ -76,7 +76,12 @@ struct CategoryView: View {
                 .scrollIndicators(.hidden)
             }
 
-            EUMTabBar(selectedTab: .category, cartCount: cartCount, onSelect: onSelectTab)
+            EUMTabBar(
+                selectedTab: .category,
+                cartCount: cartCount,
+                accessibilityIDPrefix: "category-tab",
+                onSelect: onSelectTab
+            )
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
     }
@@ -152,6 +157,7 @@ struct CategoryView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel("검색")
+            .accessibilityIdentifier("category-search")
         }
         .padding(.horizontal, 8)
         .frame(height: 56)

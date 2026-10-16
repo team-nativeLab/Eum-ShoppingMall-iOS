@@ -114,6 +114,7 @@ struct ProductDetailView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel("뒤로 가기")
+            .accessibilityIdentifier("product-detail-back")
 
             Spacer()
 

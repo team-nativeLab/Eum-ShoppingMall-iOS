@@ -39,6 +39,15 @@ let project = Project(
             deploymentTargets: .iOS("17.0"),
             buildableFolders: ["Projects/App/Tests"],
             dependencies: [.target(name: "EumShoppingMall")]
+        ),
+        .target(
+            name: "EumShoppingMallUITests",
+            destinations: .iOS,
+            product: .uiTests,
+            bundleId: "com.teamnativelab.eumshoppingmall.uitests",
+            deploymentTargets: .iOS("17.0"),
+            buildableFolders: ["Projects/App/UITests"],
+            dependencies: [.target(name: "EumShoppingMall")]
         )
     ]
 )
