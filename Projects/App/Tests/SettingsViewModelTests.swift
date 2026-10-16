@@ -37,4 +37,28 @@ final class SettingsViewModelTests: XCTestCase {
         XCTAssertFalse(SettingsViewModel.allowsNotifications(status: .denied))
         XCTAssertFalse(SettingsViewModel.allowsNotifications(status: .notDetermined))
     }
+
+    func testTurningOffMarketingAppPushShowsFigmaSuccessToast() {
+        let viewModel = SettingsViewModel()
+
+        viewModel.setMarketingSetting(false, for: .appPush)
+
+        XCTAssertFalse(viewModel.marketingAppPushEnabled)
+        XCTAssertEqual(
+            viewModel.marketingChangeToast,
+            "0000.00.00 마케팅 앱 푸시 수신 거부가 처리되었습니다."
+        )
+        viewModel.dismissMarketingToast()
+        XCTAssertNil(viewModel.marketingChangeToast)
+    }
+
+    func testOtherMarketingChoicesShowChannelAndConsentInToast() {
+        let viewModel = SettingsViewModel()
+
+        viewModel.setMarketingSetting(true, for: .sms)
+
+        XCTAssertTrue(viewModel.marketingSMSEnabled)
+        XCTAssertEqual(viewModel.marketingChangeToast, "0000.00.00 마케팅 문자(SMS) 수신 동의가 처리되었습니다.")
+        viewModel.dismissMarketingToast()
+    }
 }
