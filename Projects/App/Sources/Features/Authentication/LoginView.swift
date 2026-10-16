@@ -22,6 +22,7 @@ struct LoginView: View {
 
     let onClose: () -> Void
     var onSignUpTap: () -> Void = {}
+    var onEmailLookupTap: () -> Void = {}
 
     var body: some View {
         VStack(spacing: 0) {
@@ -173,7 +174,7 @@ struct LoginView: View {
 
     private var accountLinks: some View {
         HStack(spacing: 12) {
-            accountLink("이메일 찾기")
+            accountLink("이메일 찾기", action: onEmailLookupTap)
             linkDivider
             accountLink("비밀번호 찾기")
             linkDivider
