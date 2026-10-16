@@ -16,6 +16,11 @@ struct ContactInquiryRecord: Identifiable, Equatable {
     let status: ContactInquiryStatus
     let title: String
     let summary: String
+    let relatedOrderNumber: String
+    let content: String
+    let attachmentName: String?
+    let answerDate: String?
+    let answer: String?
 }
 
 @MainActor
@@ -47,7 +52,12 @@ final class ContactInquiryHistoryViewModel: ObservableObject {
             category: "문의 유형",
             status: status,
             title: "문의 제목",
-            summary: "문의 내용"
+            summary: "문의 내용",
+            relatedOrderNumber: "0000000000",
+            content: "문의 내용",
+            attachmentName: "첨부파일.jpg",
+            answerDate: status == .answered ? "0000.00.00 00:00" : nil,
+            answer: status == .answered ? "답변 내용" : nil
         )
     }
 }
