@@ -5,10 +5,7 @@ struct HomeView: View {
     @StateObject private var addressesViewModel = AddressesViewModel()
     @StateObject private var withdrawalNoticeViewModel = AccountWithdrawalNoticeViewModel()
     @State private var searchText = ""
-    @State private var selectedTab = EUMTabBar.Tab.home
-    @State private var searchReturnTab = EUMTabBar.Tab.home
-    @State private var selectedProductList: HomeProductListSelection?
-    @State private var navigation = HomeNavigationPath()
+    @State private var navigation = HomeNavigationState()
     @State private var isShowingDrawer = false
     @State private var isGuestAccount = false
     @State private var presentedMessage: String?
@@ -38,7 +35,7 @@ struct HomeView: View {
                 onMyInfo: {
                     isShowingDrawer = false
                     isGuestAccount = false
-                    selectedTab = .account
+                    selectTab(.account)
                 },
                 onDestination: { destination in
                     isShowingDrawer = false
@@ -62,7 +59,7 @@ struct HomeView: View {
                 onLogout: {
                     isShowingDrawer = false
                     isGuestAccount = true
-                    selectedTab = .account
+                    selectTab(.account)
                 }
             )
             .zIndex(isShowingDrawer ? 1 : 0)
@@ -84,7 +81,7 @@ struct HomeView: View {
 
     @ViewBuilder
     private func tabContent(_ content: HomeContent) -> some View {
-        switch selectedTab {
+        switch navigation.selectedTab {
         case .cart:
             CartView(
                 cartCount: content.cartCount,
@@ -101,7 +98,7 @@ struct HomeView: View {
                 onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
                 onProductTap: openProductDetail,
                 onQuoteTap: { openRoute(.quoteInquiry(nil)) },
-                onBack: { selectedTab = searchReturnTab },
+                onBack: { navigation.backFromSearch() },
                 onSelectTab: selectTab
             )
         case .account:
@@ -126,36 +123,23 @@ struct HomeView: View {
 
     @ViewBuilder
     private func categoryView(_ content: HomeContent) -> some View {
-        if let selectedProductList {
-            ProductListView(
-                title: selectedProductList.title,
-                products: selectedProductList.products,
-                cartCount: content.cartCount,
-                onBack: { self.selectedProductList = nil },
-                onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
-                onSelectTab: selectTab,
-                onProductTap: openProductDetail,
-                onSearchTap: { selectTab(.search) }
-            )
-        } else {
-            CategoryView(
-                onSearchTap: { selectTab(.search) },
-                onAllProductsTap: {
-                    openProductList(title: "전체 제품", products: content.recommendedProducts + content.bestSellerProducts)
-                },
-                onCategoryTap: { categoryID in
-                    if categoryID == "custom" {
-                        openRoute(.quoteInquiry(nil))
-                    } else if let category = content.categories.first(where: { $0.id == categoryID }) {
-                        openProductList(title: category.title, products: content.recommendedProducts + content.bestSellerProducts)
-                    }
-                },
-                onProductTap: openProductDetail,
-                onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
-                onSelectTab: selectTab,
-                cartCount: content.cartCount
-            )
-        }
+        CategoryView(
+            onSearchTap: { navigation.push(.contextualSearch) },
+            onAllProductsTap: {
+                openProductList(title: "전체 제품", products: content.recommendedProducts + content.bestSellerProducts)
+            },
+            onCategoryTap: { categoryID in
+                if categoryID == "custom" {
+                    openRoute(.quoteInquiry(nil))
+                } else if let category = content.categories.first(where: { $0.id == categoryID }) {
+                    openProductList(title: category.title, products: content.recommendedProducts + content.bestSellerProducts)
+                }
+            },
+            onProductTap: openProductDetail,
+            onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
+            onSelectTab: selectTab,
+            cartCount: content.cartCount
+        )
     }
 
     private func homeView(_ content: HomeContent) -> some View {
@@ -170,7 +154,7 @@ struct HomeView: View {
                 searchText: $searchText,
                 onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
                 onQuoteTap: { openRoute(.quoteInquiry(nil)) },
-                onSearchSubmit: { selectTab(.search) },
+                onSearchSubmit: { navigation.push(.contextualSearch) },
                 onHeroTap: {
                     companyIntroductionReturnsToDrawer = false
                     openRoute(.companyIntroduction)
@@ -179,7 +163,6 @@ struct HomeView: View {
                     if category.id == "custom" {
                         openRoute(.quoteInquiry(nil))
                     } else {
-                        selectTab(.category)
                         openProductList(title: category.title, products: content.recommendedProducts + content.bestSellerProducts)
                     }
                 },
@@ -191,26 +174,18 @@ struct HomeView: View {
                 },
                 onProductTap: openProductDetail
             )
-            EUMTabBar(selectedTab: selectedTab, cartCount: content.cartCount, onSelect: selectTab)
+            EUMTabBar(selectedTab: navigation.selectedTab, cartCount: content.cartCount, onSelect: selectTab)
         }
     }
 
     private func selectTab(_ tab: EUMTabBar.Tab) {
-        navigation.reset()
         companyIntroductionReturnsToDrawer = false
-        if tab == .search {
-            if selectedTab != .search { searchReturnTab = selectedTab }
-        } else {
-            selectedProductList = nil
-        }
-        selectedTab = tab
+        navigation.selectTab(tab)
     }
 
     private func returnHome() {
-        navigation.reset()
         companyIntroductionReturnsToDrawer = false
-        selectedProductList = nil
-        selectedTab = .home
+        navigation.returnHome()
     }
 
     private func openRoute(_ route: HomeModalRoute) {
@@ -226,15 +201,13 @@ struct HomeView: View {
     }
 
     private func logout() {
-        navigation.reset()
         companyIntroductionReturnsToDrawer = false
         isGuestAccount = true
-        selectedTab = .account
+        navigation.selectTab(.account)
     }
 
     private func openProductList(title: String, products: [HomeProduct]) {
-        selectedProductList = HomeProductListSelection(title: title, products: products)
-        selectedTab = .category
+        navigation.push(.productList(HomeProductListSelection(title: title, products: products)))
     }
 
     private func openProductDetail(_ product: HomeProduct) {
@@ -256,14 +229,14 @@ private extension HomeView {
             tabContent(content)
                 .navigationLayer(isActive: navigation.isEmpty)
             ForEach(navigation.entries) { entry in
-                destinationView(entry.destination)
+                destinationView(entry.destination, content: content)
                     .navigationLayer(isActive: entry.id == navigation.topID)
             }
         }
     }
 
     @ViewBuilder
-    func destinationView(_ destination: HomeDestination) -> some View {
+    func destinationView(_ destination: HomeDestination, content: HomeContent) -> some View {
         switch destination {
         case let .screen(route):
             modalRouteHost(route)
@@ -276,6 +249,10 @@ private extension HomeView {
                 onPurchase: { navigation.push(.checkoutAddress) },
                 onRelatedProductTap: openProductDetail
             )
+        case let .productList(selection):
+            productListDestination(selection, content: content)
+        case .contextualSearch:
+            contextualSearchDestination(content: content)
         case .checkoutAddress:
             CheckoutAddressView(
                 onBack: goBack,
@@ -298,6 +275,43 @@ private extension HomeView {
                 }
             )
         }
+    }
+
+    @ViewBuilder
+    private func productListDestination(_ selection: HomeProductListSelection, content: HomeContent) -> some View {
+        ProductListView(
+            title: selection.title,
+            products: selection.products,
+            selectedTab: navigation.selectedTab,
+            cartCount: content.cartCount,
+            onBack: goBack,
+            onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
+            onSelectTab: { tab in
+                if tab == .search {
+                    navigation.push(.contextualSearch)
+                } else {
+                    selectTab(tab)
+                }
+            },
+            onProductTap: openProductDetail,
+            onSearchTap: { navigation.push(.contextualSearch) }
+        )
+    }
+
+    @ViewBuilder
+    private func contextualSearchDestination(content: HomeContent) -> some View {
+        SearchView(
+            searchText: $searchText,
+            cartCount: content.cartCount,
+            products: content.recommendedProducts + content.bestSellerProducts,
+            onFavoriteTap: { viewModel.toggleFavorite(productID: $0) },
+            onProductTap: openProductDetail,
+            onQuoteTap: { openRoute(.quoteInquiry(nil)) },
+            onBack: goBack,
+            onSelectTab: { tab in
+                if tab != .search { selectTab(tab) }
+            }
+        )
     }
 
     func modalRouteHost(_ route: HomeModalRoute) -> some View {
