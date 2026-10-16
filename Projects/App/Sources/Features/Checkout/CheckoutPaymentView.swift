@@ -48,7 +48,7 @@ struct CheckoutPaymentView: View {
     @State private var presentedMessage: String?
 
     let onBack: () -> Void
-    let onPaymentComplete: () -> Void
+    let onPaymentComplete: (CheckoutPaymentMethod) -> Void
 
     private let horizontalInset: CGFloat = 20
 
@@ -329,7 +329,9 @@ struct CheckoutPaymentView: View {
 
     private var bottomAction: some View {
         VStack(spacing: 0) {
-            EUMButton(title: "₩00,000 결제하기", size: .large, action: onPaymentComplete)
+            EUMButton(title: "₩00,000 결제하기", size: .large) {
+                onPaymentComplete(viewModel.selectedPaymentMethod)
+            }
                 .disabled(!viewModel.canPay)
                 .padding(.horizontal, horizontalInset)
                 .padding(.vertical, 12)
@@ -386,6 +388,6 @@ private struct CheckoutReceiptOptionButton: View {
 
 struct CheckoutPaymentViewPreview: PreviewProvider {
     static var previews: some View {
-        CheckoutPaymentView(onBack: {}, onPaymentComplete: {})
+        CheckoutPaymentView(onBack: {}, onPaymentComplete: { _ in })
     }
 }
