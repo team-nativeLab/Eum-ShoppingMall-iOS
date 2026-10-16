@@ -33,27 +33,13 @@ struct AddressesView: View {
     }
 
     private var topBar: some View {
-        ZStack {
-            Text("배송지 관리")
-                .font(EUMTypography.labelLarge)
-                .tracking(-0.16)
-                .foregroundStyle(EUMColor.text1SwiftUI)
-            HStack {
-                Button(action: onBack) {
-                    Image("ProductDetailBack")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("마이페이지로 돌아가기")
-                Spacer()
-                Color.clear.frame(width: 44, height: 44)
-            }
-            .padding(.horizontal, 8)
+        EUMBackTopBar(
+            title: "배송지 관리",
+            backAccessibilityLabel: "마이페이지로 돌아가기",
+            onBack: onBack
+        ) {
+            Color.clear.frame(width: 44, height: 44)
         }
-        .frame(height: 56)
     }
 
     private func addressCard(_ address: ShippingAddress) -> some View {

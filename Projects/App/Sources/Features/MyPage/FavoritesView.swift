@@ -38,30 +38,16 @@ struct FavoritesView: View {
     }
 
     private var topBar: some View {
-        ZStack {
-            Text("찜한 상품")
-                .font(EUMTypography.labelLarge)
-                .tracking(-0.16)
+        EUMBackTopBar(
+            title: "찜한 상품",
+            backAccessibilityLabel: "마이페이지로 돌아가기",
+            onBack: onBack
+        ) {
+            Button(viewModel.isEditing ? "완료" : "편집", action: viewModel.toggleEditing)
+                .font(EUMTypography.labelMedium)
                 .foregroundStyle(EUMColor.text1SwiftUI)
-            HStack {
-                Button(action: onBack) {
-                    Image("ProductDetailBack")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("마이페이지로 돌아가기")
-                Spacer()
-                Button(viewModel.isEditing ? "완료" : "편집", action: viewModel.toggleEditing)
-                    .font(EUMTypography.labelMedium)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
-                    .frame(minWidth: 44, minHeight: 44, alignment: .trailing)
-            }
-            .padding(.horizontal, 8)
+                .frame(minWidth: 44, minHeight: 44, alignment: .trailing)
         }
-        .frame(height: 56)
     }
 
     private var countAndSort: some View {
