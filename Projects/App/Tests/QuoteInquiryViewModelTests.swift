@@ -37,4 +37,17 @@ final class QuoteInquiryViewModelTests: XCTestCase {
         viewModel.details.append("a")
         XCTAssertFalse(viewModel.canSubmit)
     }
+
+    @MainActor
+    func testCompletionDetailsUseMockReferenceAndSubmittedFields() {
+        let viewModel = QuoteInquiryViewModel()
+        viewModel.inquiryType = .bulk
+        viewModel.deliveryDate = "2026.10.16"
+        viewModel.addSampleProduct()
+
+        XCTAssertEqual(viewModel.completionDetails.inquiryNumber, "Q-00000000-000")
+        XCTAssertEqual(viewModel.completionDetails.inquiryType, "대량 구매")
+        XCTAssertEqual(viewModel.completionDetails.productSummary, "제품명 외 1건")
+        XCTAssertEqual(viewModel.completionDetails.deliveryDate, "2026.10.16")
+    }
 }
