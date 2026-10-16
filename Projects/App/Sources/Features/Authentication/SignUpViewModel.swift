@@ -92,6 +92,10 @@ final class SignUpViewModel: ObservableObject {
         agreedToTerms.toggle()
     }
 
+    func agreeToTerms() {
+        agreedToTerms = true
+    }
+
     func togglePrivacy() {
         agreedToPrivacy.toggle()
     }
