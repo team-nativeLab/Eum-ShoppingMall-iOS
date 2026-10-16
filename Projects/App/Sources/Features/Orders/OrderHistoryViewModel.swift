@@ -76,8 +76,9 @@ final class OrderHistoryViewModel: ObservableObject {
 
     let orders: [OrderHistoryItem]
 
-    init(orders: [OrderHistoryItem] = OrderHistoryItem.samples) {
+    init(orders: [OrderHistoryItem] = OrderHistoryItem.samples, initialStatus: OrderHistoryStatus = .all) {
         self.orders = orders
+        selectedStatus = initialStatus
     }
 
     var filteredOrders: [OrderHistoryItem] {

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct OrderHistoryView: View {
-    @StateObject private var viewModel = OrderHistoryViewModel()
+    @StateObject private var viewModel: OrderHistoryViewModel
 
     let onBack: () -> Void
     let onCancelReturn: () -> Void
@@ -9,6 +9,24 @@ struct OrderHistoryView: View {
     let onCancelOrder: (OrderHistoryItem) -> Void
     let onTrackDelivery: (OrderHistoryItem) -> Void
     let onReorder: (OrderHistoryItem) -> Void
+
+    init(
+        initialStatus: OrderHistoryStatus = .all,
+        onBack: @escaping () -> Void,
+        onCancelReturn: @escaping () -> Void,
+        onOrderDetail: @escaping (OrderHistoryItem) -> Void,
+        onCancelOrder: @escaping (OrderHistoryItem) -> Void,
+        onTrackDelivery: @escaping (OrderHistoryItem) -> Void,
+        onReorder: @escaping (OrderHistoryItem) -> Void
+    ) {
+        _viewModel = StateObject(wrappedValue: OrderHistoryViewModel(initialStatus: initialStatus))
+        self.onBack = onBack
+        self.onCancelReturn = onCancelReturn
+        self.onOrderDetail = onOrderDetail
+        self.onCancelOrder = onCancelOrder
+        self.onTrackDelivery = onTrackDelivery
+        self.onReorder = onReorder
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -31,7 +49,7 @@ struct OrderHistoryView: View {
     private var topBar: some View {
         EUMBackTopBar(
             title: "주문내역",
-            backAccessibilityLabel: "마이페이지로 돌아가기",
+            backAccessibilityLabel: "이전 화면으로 돌아가기",
             contentSpacing: 0,
             onBack: onBack
         ) {

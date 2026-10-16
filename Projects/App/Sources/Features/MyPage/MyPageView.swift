@@ -65,6 +65,7 @@ struct MyPageView: View {
 
     let cartCount: Int
     let onSelectTab: (EUMTabBar.Tab) -> Void
+    var onOrderStatusTap: (OrderHistoryStatus) -> Void = { _ in }
     var onOrderHistoryTap: () -> Void = {}
     var onFavoritesTap: () -> Void = {}
     var onRecentlyViewedTap: () -> Void = {}
@@ -232,19 +233,25 @@ struct MyPageView: View {
 
             HStack(spacing: 0) {
                 ForEach(viewModel.orderStatuses) { status in
-                    VStack(spacing: 4) {
-                        Text("\(status.count)")
-                            .font(EUMTypography.heading3)
-                            .tracking(-0.27)
-                            .foregroundStyle(EUMColor.text3SwiftUI)
-                        Text(status.title)
-                            .font(.custom("NotoSansKR-Regular", size: 12))
-                            .foregroundStyle(EUMColor.text2SwiftUI)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
+                    Button {
+                        onOrderStatusTap(OrderHistoryStatus(rawValue: status.title) ?? .all)
+                    } label: {
+                        VStack(spacing: 4) {
+                            Text("\(status.count)")
+                                .font(EUMTypography.heading3)
+                                .tracking(-0.27)
+                                .foregroundStyle(EUMColor.text3SwiftUI)
+                            Text(status.title)
+                                .font(.custom("NotoSansKR-Regular", size: 12))
+                                .foregroundStyle(EUMColor.text2SwiftUI)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 76)
                     }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 76)
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("\(status.title) 주문 보기")
                 }
             }
             .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))

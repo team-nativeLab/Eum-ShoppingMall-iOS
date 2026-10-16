@@ -6,7 +6,7 @@ enum HomeModalRoute {
     case quoteInquiry(HomeProduct?)
     case quoteDetail(QuoteInquiryRecord)
     case accountCollection(AccountCollectionDestination)
-    case orderHistory
+    case orderHistory(status: OrderHistoryStatus = .all)
     case orderDetail(OrderHistoryItem)
     case deliveryTracking(OrderHistoryItem)
     case returnRequest(OrderHistoryItem)
@@ -38,4 +38,16 @@ enum AccountCollectionDestination {
     case contactHistory
     case contactDetail(ContactInquiryRecord)
     case notifications
+}
+
+extension HomeModalRoute {
+    static func destination(for notificationKind: NotificationKind) -> HomeModalRoute {
+        switch notificationKind {
+        case .delivery: .orderHistory(status: .inTransit)
+        case .order: .orderHistory()
+        case .quote: .accountCollection(.quoteHistory)
+        case .contact: .accountCollection(.contactHistory)
+        case .notice: .announcements
+        }
+    }
 }
