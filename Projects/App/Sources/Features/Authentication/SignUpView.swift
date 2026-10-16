@@ -1,70 +1,5 @@
 import SwiftUI
 
-@MainActor
-final class SignUpViewModel: ObservableObject {
-    @Published var email = "" {
-        didSet { isEmailChecked = false }
-    }
-    @Published var password = ""
-    @Published var passwordConfirmation = ""
-    @Published var name = ""
-    @Published var phoneNumber = "" {
-        didSet { isPhoneVerified = false }
-    }
-    @Published var verificationCode = "" {
-        didSet { isPhoneVerified = false }
-    }
-    @Published private(set) var isEmailChecked = false
-    @Published private(set) var isPhoneVerified = false
-    @Published private(set) var agreedToTerms = false
-    @Published private(set) var agreedToPrivacy = false
-    @Published private(set) var agreedToMarketing = false
-
-    var passwordIsValid: Bool {
-        password.range(of: "^(?=.*[A-Za-z])(?=.*\\d).{8,}$", options: .regularExpression) != nil
-    }
-
-    var canSubmit: Bool {
-        email.contains("@") && email.contains(".") && isEmailChecked && passwordIsValid
-            && password == passwordConfirmation && !name.isEmpty
-            && phoneNumber.filter(\.isNumber).count >= 10
-            && isPhoneVerified && agreedToTerms && agreedToPrivacy
-    }
-
-    func markEmailChecked() -> Bool {
-        guard email.contains("@"), email.contains(".") else { return false }
-        isEmailChecked = true
-        return true
-    }
-
-    func verifyPhoneCode() -> Bool {
-        guard phoneNumber.filter(\.isNumber).count >= 10, verificationCode == "123456" else {
-            return false
-        }
-        isPhoneVerified = true
-        return true
-    }
-
-    func toggleTerms() {
-        agreedToTerms.toggle()
-    }
-
-    func togglePrivacy() {
-        agreedToPrivacy.toggle()
-    }
-
-    func toggleMarketing() {
-        agreedToMarketing.toggle()
-    }
-
-    func toggleAllAgreements() {
-        let shouldAgree = !(agreedToTerms && agreedToPrivacy && agreedToMarketing)
-        agreedToTerms = shouldAgree
-        agreedToPrivacy = shouldAgree
-        agreedToMarketing = shouldAgree
-    }
-}
-
 struct SignUpView: View {
     @StateObject private var viewModel = SignUpViewModel()
     @State private var presentedMessage: String?
@@ -121,6 +56,9 @@ struct SignUpView: View {
             passwordConfirmationField
             nameField
             phoneVerification
+            if viewModel.isBusinessMember {
+                BusinessSignUpInformationView(viewModel: viewModel) { presentedMessage = $0 }
+            }
             agreements
         }
         .padding(.horizontal, EUMSpacing.homeContentInset)
@@ -130,8 +68,8 @@ struct SignUpView: View {
 
     private var memberTypePicker: some View {
         HStack(spacing: 4) {
-            memberTypeButton("개인 회원", isSelected: true)
-            memberTypeButton("사업자 회원", isSelected: false)
+            memberTypeButton("개인 회원", isSelected: !viewModel.isBusinessMember)
+            memberTypeButton("사업자 회원", isSelected: viewModel.isBusinessMember)
         }
         .padding(4)
         .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
@@ -139,9 +77,7 @@ struct SignUpView: View {
 
     private func memberTypeButton(_ title: String, isSelected: Bool) -> some View {
         Button {
-            if !isSelected {
-                presentedMessage = "사업자 회원 가입 화면은 별도 화면에서 이어집니다."
-            }
+            viewModel.selectMemberType(isBusiness: title == "사업자 회원")
         } label: {
             Text(title)
                 .font(EUMTypography.labelMedium)
@@ -158,6 +94,7 @@ struct SignUpView: View {
                 }
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     private var emailRow: some View {
@@ -262,23 +199,7 @@ struct SignUpView: View {
     ) -> some View {
         HStack(spacing: 10) {
             Button(action: action) {
-                RoundedRectangle(cornerRadius: EUMRadius.small)
-                    .fill(isOn ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI)
-                    .frame(width: 20, height: 20)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: EUMRadius.small)
-                            .stroke(
-                                isOn ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI,
-                                lineWidth: 1.5
-                            )
-                    }
-                    .overlay {
-                        if isOn {
-                            Image(systemName: "checkmark")
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundStyle(EUMColor.inverseSwiftUI)
-                        }
-                    }
+                agreementCheckbox(isOn: isOn)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(title)
@@ -299,6 +220,24 @@ struct SignUpView: View {
         }
         .frame(minHeight: isAll ? 24 : 20)
         .contentShape(Rectangle())
+    }
+
+    private func agreementCheckbox(isOn: Bool) -> some View {
+        RoundedRectangle(cornerRadius: EUMRadius.small)
+            .fill(isOn ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI)
+            .frame(width: 20, height: 20)
+            .overlay {
+                RoundedRectangle(cornerRadius: EUMRadius.small)
+                    .stroke(isOn ? EUMColor.text1SwiftUI : EUMColor.lineControlSwiftUI, lineWidth: 1.5)
+            }
+            .overlay {
+                if isOn {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(EUMColor.inverseSwiftUI)
+                }
+            }
+            .accessibilityHidden(true)
     }
 
     private var bottomAction: some View {

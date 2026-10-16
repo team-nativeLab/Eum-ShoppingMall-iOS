@@ -60,4 +60,33 @@ final class SignUpViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.agreedToPrivacy)
         XCTAssertFalse(viewModel.agreedToMarketing)
     }
+
+    @MainActor
+    func testBusinessMemberRequiresBusinessFieldsAndCertificate() {
+        let viewModel = SignUpViewModel()
+        viewModel.selectMemberType(isBusiness: true)
+
+        XCTAssertTrue(viewModel.isBusinessMember)
+        XCTAssertTrue(viewModel.isBusinessRegistrationVerified)
+        XCTAssertFalse(viewModel.canSubmit)
+
+        viewModel.companyName = "이음산업건설"
+        viewModel.representativeName = "홍길동"
+        viewModel.registrationCertificateName = "business-license.pdf"
+
+        XCTAssertTrue(viewModel.verifyBusinessRegistration())
+        viewModel.businessRegistrationNumber = "1234567890"
+        XCTAssertFalse(viewModel.isBusinessRegistrationVerified)
+        XCTAssertTrue(viewModel.verifyBusinessRegistration())
+    }
+
+    @MainActor
+    func testBusinessRegistrationVerificationRequiresTenDigits() {
+        let viewModel = SignUpViewModel()
+        viewModel.selectMemberType(isBusiness: true)
+        viewModel.businessRegistrationNumber = "12345"
+
+        XCTAssertFalse(viewModel.verifyBusinessRegistration())
+        XCTAssertFalse(viewModel.isBusinessRegistrationVerified)
+    }
 }
