@@ -96,7 +96,12 @@ struct ProductListView: View {
             }
             .scrollIndicators(.hidden)
 
-            EUMTabBar(selectedTab: selectedTab, cartCount: cartCount, onSelect: onSelectTab)
+            EUMTabBar(
+                selectedTab: selectedTab,
+                cartCount: cartCount,
+                accessibilityIDPrefix: "product-list-tab",
+                onSelect: onSelectTab
+            )
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
     }
@@ -113,6 +118,7 @@ struct ProductListView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel("뒤로 가기")
+            .accessibilityIdentifier("product-list-back")
 
             Spacer(minLength: 0)
             Text(title)
@@ -133,6 +139,7 @@ struct ProductListView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel("검색")
+            .accessibilityIdentifier("product-list-search")
         }
         .padding(.horizontal, 8)
         .frame(height: 56)

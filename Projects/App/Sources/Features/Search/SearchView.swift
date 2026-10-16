@@ -61,6 +61,7 @@ struct SearchView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel("뒤로 가기")
+            .accessibilityIdentifier("search-back")
 
             HStack(spacing: 8) {
                 Image("DesignSearch")

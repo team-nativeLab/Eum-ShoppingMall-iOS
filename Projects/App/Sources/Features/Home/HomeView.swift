@@ -174,7 +174,12 @@ struct HomeView: View {
                 },
                 onProductTap: openProductDetail
             )
-            EUMTabBar(selectedTab: navigation.selectedTab, cartCount: content.cartCount, onSelect: selectTab)
+            EUMTabBar(
+                selectedTab: navigation.selectedTab,
+                cartCount: content.cartCount,
+                accessibilityIDPrefix: "home-tab",
+                onSelect: selectTab
+            )
         }
     }
 

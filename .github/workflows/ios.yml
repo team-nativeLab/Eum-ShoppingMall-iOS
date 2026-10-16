@@ -26,3 +26,11 @@ jobs:
         run: brew install tuist
       - name: Generate project
         run: tuist generate --no-open
+      - name: Run unit and UI tests
+        run: >-
+          xcodebuild test
+          -workspace EumShoppingMall.xcworkspace
+          -scheme EumShoppingMall
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest'
+          -parallel-testing-enabled NO
+          CODE_SIGNING_ALLOWED=NO
