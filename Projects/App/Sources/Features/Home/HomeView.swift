@@ -16,6 +16,7 @@ enum HomeModalRoute {
     case terms
     case termsPrevious
     case privacyPolicy
+    case usageGuide
     case addressEditor(ShippingAddress?)
     case accountWithdrawalNotice
     case accountWithdrawalBlocked
@@ -305,24 +306,23 @@ struct HomeView: View {
                 onVerified: { presentedRoute = .accountCollection(.editProfile) },
                 onMessage: { presentedMessage = $0 }
             )
-        case .settings, .terms, .termsPrevious, .privacyPolicy:
-            HomeLegalRouteView(
+        case .settings, .terms, .termsPrevious, .privacyPolicy, .usageGuide:
+            HomeLegalRouteContainer(
                 route: route,
                 isGuestAccount: isGuestAccount,
-                actions: HomeLegalRouteView.Actions(
-                    back: { presentedRoute = nil },
-                    backToSettings: { presentedRoute = .settings },
-                    login: { presentedRoute = .settingsLogin },
-                    openTerms: { presentedRoute = .terms },
-                    openPrivacyPolicy: { presentedRoute = .privacyPolicy },
-                    message: { presentedMessage = $0 },
-                    logout: {
-                        presentedRoute = nil
-                        isGuestAccount = true
-                        selectedTab = .account
-                    },
-                    withdrawal: showWithdrawalEntry
-                )
+                back: { presentedRoute = nil },
+                backToSettings: { presentedRoute = .settings },
+                login: { presentedRoute = .settingsLogin },
+                openTerms: { presentedRoute = .terms },
+                openPrivacyPolicy: { presentedRoute = .privacyPolicy },
+                openUsageGuide: { presentedRoute = .usageGuide },
+                message: { presentedMessage = $0 },
+                logout: {
+                    presentedRoute = nil
+                    isGuestAccount = true
+                    selectedTab = .account
+                },
+                withdrawal: showWithdrawalEntry
             )
         case .accountWithdrawalNotice, .accountWithdrawalBlocked, .accountWithdrawalReason, .accountWithdrawalComplete:
             accountWithdrawalRouteView(route)
