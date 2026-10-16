@@ -68,6 +68,7 @@ struct MyPageView: View {
     var onCouponsTap: () -> Void = {}
     var onAddressesTap: () -> Void = {}
     var onQuoteHistoryTap: () -> Void = {}
+    var onContactHistoryTap: () -> Void = {}
     var onReturnsHistoryTap: () -> Void = {}
     var onAccountVerificationTap: () -> Void = {}
 
@@ -260,6 +261,8 @@ struct MyPageView: View {
                         onReturnsHistoryTap()
                     } else if item.title == "견적 문의 내역" {
                         onQuoteHistoryTap()
+                    } else if item.title == "1:1 문의 내역" {
+                        onContactHistoryTap()
                     } else {
                         showUnavailable(item.title)
                     }
