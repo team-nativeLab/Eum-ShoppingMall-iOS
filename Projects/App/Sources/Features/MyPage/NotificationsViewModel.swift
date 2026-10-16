@@ -41,7 +41,10 @@ struct AppNotification: Identifiable, Equatable {
 
 @MainActor
 final class NotificationsViewModel: ObservableObject {
-    @Published private(set) var notifications = [
+    @Published private(set) var notifications: [AppNotification]
+
+    init() {
+        notifications = [
         AppNotification(
             id: "notification-delivery",
             kind: .delivery,
@@ -87,7 +90,12 @@ final class NotificationsViewModel: ObservableObject {
             isToday: false,
             isUnread: false
         )
-    ]
+        ]
+    }
+
+    init(notifications: [AppNotification]) {
+        self.notifications = notifications
+    }
 
     var unreadCount: Int {
         notifications.filter(\.isUnread).count
