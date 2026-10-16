@@ -6,6 +6,10 @@ struct AnnouncementItem: Identifiable, Equatable {
     let date: String
     let isPinned: Bool
     let opensDetail: Bool
+    let viewCount = "000"
+    let bodyText = "공지 내용이 들어갑니다. 공지 본문은 관리자가 작성한 내용으로 서버에서 받아 보여 줍니다.\n\n공지 내용이 들어갑니다."
+    let attachmentName = "파일명.pdf"
+    let attachmentSize = "0.0MB"
 }
 
 struct AnnouncementsViewModel {
