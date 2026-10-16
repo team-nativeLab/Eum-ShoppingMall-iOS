@@ -7,33 +7,51 @@ struct QuoteInquiryView: View {
     @State private var isFileImporterPresented = false
     @State private var isDatePickerPresented = false
     @State private var selectedDate = Date()
+    @State private var isSubmitted = false
     let onBack: () -> Void
+    let onViewInquiries: () -> Void
 
-    init(product: HomeProduct? = nil, onBack: @escaping () -> Void) {
+    init(
+        product: HomeProduct? = nil,
+        onBack: @escaping () -> Void,
+        onViewInquiries: @escaping () -> Void = {}
+    ) {
         self.onBack = onBack
+        self.onViewInquiries = onViewInquiries
         _viewModel = StateObject(wrappedValue: QuoteInquiryViewModel(product: product))
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            topBar
-            ScrollView {
-                VStack(spacing: 24) {
-                    QuoteInquiryIntroSection()
-                    QuoteInquiryProductsSection(viewModel: viewModel)
-                    QuoteInquiryFieldsView(
-                        viewModel: viewModel,
-                        isDatePickerPresented: $isDatePickerPresented,
-                        isFileImporterPresented: $isFileImporterPresented,
-                        onMessage: { presentedMessage = $0 }
-                    )
+        Group {
+            if isSubmitted {
+                QuoteInquiryCompletionView(
+                    details: viewModel.completionDetails,
+                    onClose: onBack,
+                    onContinueShopping: onBack,
+                    onViewInquiries: onViewInquiries
+                )
+            } else {
+                VStack(spacing: 0) {
+                    topBar
+                    ScrollView {
+                        VStack(spacing: 24) {
+                            QuoteInquiryIntroSection()
+                            QuoteInquiryProductsSection(viewModel: viewModel)
+                            QuoteInquiryFieldsView(
+                                viewModel: viewModel,
+                                isDatePickerPresented: $isDatePickerPresented,
+                                isFileImporterPresented: $isFileImporterPresented,
+                                onMessage: { presentedMessage = $0 }
+                            )
+                        }
+                        .padding(.horizontal, EUMSpacing.homeContentInset)
+                        .padding(.vertical, 24)
+                    }
+                    .scrollIndicators(.hidden)
+                    QuoteInquiryBottomAction(isEnabled: viewModel.canSubmit) {
+                        isSubmitted = true
+                    }
                 }
-                .padding(.horizontal, EUMSpacing.homeContentInset)
-                .padding(.vertical, 24)
-            }
-            .scrollIndicators(.hidden)
-            QuoteInquiryBottomAction(isEnabled: viewModel.canSubmit) {
-                presentedMessage = "견적 문의 접수는 서버 연동 후 이용할 수 있어요."
             }
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())

@@ -266,7 +266,11 @@ struct HomeView: View {
         switch route {
         case .authentication: AuthenticationFlowView(onClose: { presentedRoute = nil })
         case let .quoteInquiry(product):
-            QuoteInquiryView(product: product, onBack: { presentedRoute = nil })
+            QuoteInquiryView(
+                product: product,
+                onBack: { presentedRoute = nil },
+                onViewInquiries: { presentedRoute = .accountCollection(.quoteHistory) }
+            )
         case let .accountCollection(destination):
             HomeAccountCollectionRouteView(
                 destination: destination,
