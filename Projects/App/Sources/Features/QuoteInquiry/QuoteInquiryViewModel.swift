@@ -15,6 +15,15 @@ struct QuoteInquiryProduct: Identifiable, Equatable {
     )
 }
 
+struct QuoteInquiryCompletionDetails {
+    let inquiryNumber: String
+    let inquiryType: String
+    let companyName: String
+    let contactName: String
+    let productSummary: String
+    let deliveryDate: String
+}
+
 enum QuoteInquiryType: String, CaseIterable, Identifiable {
     case custom = "맞춤 제작"
     case bulk = "대량 구매"
@@ -57,6 +66,20 @@ final class QuoteInquiryViewModel: ObservableObject {
             && phoneNumber.filter(\.isNumber).count >= 10
             && email.contains("@") && email.contains(".") && agreedToPrivacy
             && details.count <= 1_000
+    }
+
+    var completionDetails: QuoteInquiryCompletionDetails {
+        let productSummary = products.first.map { product in
+            "\(product.name) 외 \(max(products.count - 1, 0))건"
+        } ?? "제품 없음"
+        return QuoteInquiryCompletionDetails(
+            inquiryNumber: "Q-00000000-000",
+            inquiryType: inquiryType.rawValue,
+            companyName: company,
+            contactName: contactName,
+            productSummary: productSummary,
+            deliveryDate: deliveryDate.isEmpty ? "0000.00.00" : deliveryDate
+        )
     }
 
     func addSampleProduct() {
