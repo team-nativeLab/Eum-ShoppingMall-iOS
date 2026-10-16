@@ -6,6 +6,7 @@ struct QuoteHistoryView: View {
     let onBack: () -> Void
     let onNewInquiry: () -> Void
     let onDocument: () -> Void
+    let onOpenDetail: (QuoteInquiryRecord) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -88,7 +89,7 @@ struct QuoteHistoryView: View {
         } else {
             VStack(spacing: 12) {
                 ForEach(viewModel.visibleInquiries) { inquiry in
-                    QuoteInquiryCard(inquiry: inquiry, onDocument: onDocument)
+                    QuoteInquiryCard(inquiry: inquiry, onDocument: onDocument, onOpenDetail: onOpenDetail)
                 }
             }
         }
@@ -116,19 +117,12 @@ struct QuoteHistoryView: View {
 private struct QuoteInquiryCard: View {
     let inquiry: QuoteInquiryRecord
     let onDocument: () -> Void
+    let onOpenDetail: (QuoteInquiryRecord) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             header
-            VStack(alignment: .leading, spacing: 4) {
-                Text(inquiry.title)
-                    .font(EUMTypography.labelLarge)
-                    .tracking(-0.16)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
-                Text(inquiry.productSummary)
-                    .font(EUMTypography.captionRegular)
-                    .foregroundStyle(EUMColor.text3SwiftUI)
-            }
+            titleAndSummary
             if inquiry.showsDocument {
                 documentNotice
             }
@@ -137,6 +131,34 @@ private struct QuoteInquiryCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
+    }
+
+    @ViewBuilder
+    private var titleAndSummary: some View {
+        if inquiry.status == .quoteSent {
+            Button {
+                onOpenDetail(inquiry)
+            } label: {
+                titleAndSummaryContent
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("\(inquiry.title) 상세 보기")
+        } else {
+            titleAndSummaryContent
+        }
+    }
+
+    private var titleAndSummaryContent: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(inquiry.title)
+                .font(EUMTypography.labelLarge)
+                .tracking(-0.16)
+                .foregroundStyle(EUMColor.text1SwiftUI)
+            Text(inquiry.productSummary)
+                .font(EUMTypography.captionRegular)
+                .foregroundStyle(EUMColor.text3SwiftUI)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var header: some View {
