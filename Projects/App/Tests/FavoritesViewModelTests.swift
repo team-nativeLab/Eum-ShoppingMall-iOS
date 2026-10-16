@@ -11,6 +11,12 @@ final class FavoritesViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.products.filter(\.isSoldOut).count, 2)
     }
 
+    func testExplicitEmptyProductsOverrideMockSamples() {
+        let viewModel = FavoritesViewModel(products: [])
+
+        XCTAssertTrue(viewModel.products.isEmpty)
+    }
+
     func testRemovingFavoriteUpdatesCountAndSelection() {
         let viewModel = FavoritesViewModel()
         viewModel.toggleEditing()

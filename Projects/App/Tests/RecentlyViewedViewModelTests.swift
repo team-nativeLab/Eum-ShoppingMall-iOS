@@ -13,6 +13,13 @@ final class RecentlyViewedViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.groups[1].products[0].isSoldOut)
     }
 
+    func testExplicitEmptyGroupsOverrideMockSamples() {
+        let viewModel = RecentlyViewedViewModel(groups: [])
+
+        XCTAssertTrue(viewModel.groups.isEmpty)
+        XCTAssertEqual(viewModel.productCount, 0)
+    }
+
     func testRemovingLastProductRemovesItsDateGroup() {
         let viewModel = RecentlyViewedViewModel()
 

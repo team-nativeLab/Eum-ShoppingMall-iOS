@@ -16,7 +16,11 @@ final class FavoritesViewModel: ObservableObject {
     @Published var isEditing = false
     @Published private(set) var selectedProductIDs: Set<String> = []
 
-    init(products: [HomeProduct] = FavoritesViewModel.samples) {
+    init() {
+        products = Self.samples
+    }
+
+    init(products: [HomeProduct]) {
         self.products = products
     }
 
