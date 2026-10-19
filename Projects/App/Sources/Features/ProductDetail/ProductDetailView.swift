@@ -31,6 +31,9 @@ struct ProductDetailView: View {
     let onOpenCart: () -> Void
     let onPurchase: () -> Void
     let onRelatedProductTap: (HomeProduct) -> Void
+    let onProductInquiry: () -> Void
+    let onShowAllReviews: () -> Void
+    let onShippingDetails: () -> Void
 
     init(
         product: HomeProduct,
@@ -38,7 +41,10 @@ struct ProductDetailView: View {
         onQuoteTap: @escaping () -> Void,
         onOpenCart: @escaping () -> Void,
         onPurchase: @escaping () -> Void,
-        onRelatedProductTap: @escaping (HomeProduct) -> Void
+        onRelatedProductTap: @escaping (HomeProduct) -> Void,
+        onProductInquiry: @escaping () -> Void = {},
+        onShowAllReviews: @escaping () -> Void = {},
+        onShippingDetails: @escaping () -> Void = {}
     ) {
         self.product = product
         self.onBack = onBack
@@ -46,6 +52,9 @@ struct ProductDetailView: View {
         self.onOpenCart = onOpenCart
         self.onPurchase = onPurchase
         self.onRelatedProductTap = onRelatedProductTap
+        self.onProductInquiry = onProductInquiry
+        self.onShowAllReviews = onShowAllReviews
+        self.onShippingDetails = onShippingDetails
         _viewModel = StateObject(wrappedValue: ProductDetailViewModel(isFavorite: product.isFavorite))
     }
 
@@ -262,7 +271,10 @@ struct ProductDetailView: View {
     private var detailSections: some View {
         ProductDetailSections(
             isDetailExpanded: $viewModel.isDetailExpanded,
-            onQuoteTap: onQuoteTap
+            onQuoteTap: onQuoteTap,
+            onProductInquiry: onProductInquiry,
+            onShowAllReviews: onShowAllReviews,
+            onShippingDetails: onShippingDetails
         )
     }
 

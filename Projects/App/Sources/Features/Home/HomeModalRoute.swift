@@ -24,6 +24,9 @@ enum HomeModalRoute {
     case customerCenter
     case announcements
     case announcementDetail(AnnouncementItem)
+    case inquiryCompose(InquiryComposeContext)
+    case inquiryComplete
+    case productReviews(HomeProduct)
 }
 
 enum AccountCollectionDestination {
