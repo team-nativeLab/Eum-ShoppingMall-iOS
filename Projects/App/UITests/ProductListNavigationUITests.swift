@@ -104,6 +104,34 @@ final class ProductListNavigationUITests: XCTestCase {
     }
 
     @MainActor
+    func testProductReviewAndInquiryActionsOpenTheirScreensAndReturnToDetail() {
+        let app = XCUIApplication()
+        app.launch()
+        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+
+        app.buttons["개인보호장비"].tap()
+        XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
+        app.staticTexts["제품명"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
+
+        let allReviewsButton = app.buttons["product-all-reviews"]
+        let inquiryButton = app.buttons["product-inquiry"]
+        for _ in 0..<8 where !allReviewsButton.exists || !inquiryButton.exists {
+            app.swipeUp()
+        }
+        XCTAssertTrue(allReviewsButton.waitForExistence(timeout: 5))
+        allReviewsButton.tap()
+        XCTAssertTrue(app.staticTexts["상품 리뷰"].waitForExistence(timeout: 5))
+        app.buttons["product-reviews-back"].tap()
+
+        XCTAssertTrue(inquiryButton.waitForExistence(timeout: 5))
+        inquiryButton.tap()
+        XCTAssertTrue(app.staticTexts["상품 문의하기"].waitForExistence(timeout: 5))
+        app.buttons["inquiry-compose-back"].tap()
+        XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
     func testChangingTabFromProductListClearsNestedRoute() {
         let app = XCUIApplication()
         app.launch()

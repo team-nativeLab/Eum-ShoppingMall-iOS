@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @StateObject private var addressesViewModel = AddressesViewModel()
+    @StateObject private var contactInquiryViewModel = ContactInquiryHistoryViewModel()
     @StateObject private var withdrawalNoticeViewModel = AccountWithdrawalNoticeViewModel()
     @State private var searchText = ""
     @State private var navigation = HomeNavigationState()
@@ -252,7 +253,10 @@ private extension HomeView {
                 onQuoteTap: { openRoute(.quoteInquiry(product)) },
                 onOpenCart: { selectTab(.cart) },
                 onPurchase: { navigation.push(.checkoutAddress) },
-                onRelatedProductTap: openProductDetail
+                onRelatedProductTap: openProductDetail,
+                onProductInquiry: { openRoute(.inquiryCompose(.product(name: product.title))) },
+                onShowAllReviews: { openRoute(.productReviews(product)) },
+                onShippingDetails: { presentedMessage = "배송·교환 정책 상세 디자인이 아직 준비되지 않았어요." }
             )
         case let .productList(selection):
             productListDestination(selection, content: content)
@@ -323,6 +327,7 @@ private extension HomeView {
         HomeModalRouteHostView(
             route: route,
             addressViewModel: addressesViewModel,
+            contactInquiryViewModel: contactInquiryViewModel,
             withdrawalNoticeViewModel: withdrawalNoticeViewModel,
             isGuestAccount: isGuestAccount,
             activeWithdrawalOrderCount: activeWithdrawalOrderCount,
@@ -331,10 +336,20 @@ private extension HomeView {
             onMessage: { presentedMessage = $0 },
             onProductTap: openProductDetail,
             onAddressChange: { _ in openRoute(.accountCollection(.addresses)) },
+            onViewContactInquiries: viewContactInquiries,
             onHome: returnHome,
             onWithdrawal: showWithdrawalEntry,
             onLogout: logout
         )
+    }
+
+    private func viewContactInquiries() {
+        navigation.back()
+        navigation.back()
+        if case .screen(.accountCollection(.contactHistory))? = navigation.entries.last?.destination {
+            return
+        }
+        openRoute(.accountCollection(.contactHistory))
     }
 }
 

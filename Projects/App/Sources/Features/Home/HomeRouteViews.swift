@@ -44,6 +44,7 @@ struct HomeAccountTabView: View {
 struct HomeAccountRouteView: View {
     let route: HomeModalRoute
     @ObservedObject var addressViewModel: AddressesViewModel
+    @ObservedObject var contactInquiryViewModel: ContactInquiryHistoryViewModel
     let onBack: () -> Void
     let onHome: () -> Void
     let onRoute: (HomeModalRoute) -> Void
@@ -65,6 +66,7 @@ struct HomeAccountRouteView: View {
             HomeAccountCollectionRouteView(
                 destination: destination,
                 addressViewModel: addressViewModel,
+                contactInquiryViewModel: contactInquiryViewModel,
                 onBack: onBack,
                 onRoute: onRoute,
                 onMessage: onMessage,
@@ -106,6 +108,7 @@ struct HomeProfileRouteView: View {
 struct HomeAccountCollectionRouteView: View {
     let destination: AccountCollectionDestination
     @ObservedObject var addressViewModel: AddressesViewModel
+    @ObservedObject var contactInquiryViewModel: ContactInquiryHistoryViewModel
     let onBack: () -> Void
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
@@ -116,7 +119,9 @@ struct HomeAccountCollectionRouteView: View {
         AccountCollectionRouteView(
             destination: destination,
             addressViewModel: addressViewModel,
+            contactInquiryViewModel: contactInquiryViewModel,
             onBack: onBack,
+            onRoute: onRoute,
             onOpenNotification: { onRoute(.destination(for: $0)) },
             onPointsTap: { onRoute(.accountCollection(.points)) },
             onAddAddress: { onRoute(.addressEditor(nil)) },
@@ -195,7 +200,9 @@ struct HomeOrderRouteView: View {
 struct AccountCollectionRouteView: View {
     let destination: AccountCollectionDestination
     @ObservedObject var addressViewModel: AddressesViewModel
+    @ObservedObject var contactInquiryViewModel: ContactInquiryHistoryViewModel
     let onBack: () -> Void
+    let onRoute: (HomeModalRoute) -> Void
     let onOpenNotification: (NotificationKind) -> Void
     let onPointsTap: () -> Void
     let onAddAddress: () -> Void
@@ -232,8 +239,9 @@ struct AccountCollectionRouteView: View {
             )
         case .contactHistory:
             ContactInquiryHistoryView(
+                viewModel: contactInquiryViewModel,
                 onBack: onBack,
-                onNewInquiry: { onAction("1:1 문의 작성 화면은 별도 작업에서 연결됩니다.") },
+                onNewInquiry: { onRoute(.inquiryCompose(.contact)) },
                 onOpenDetail: onOpenContactInquiryDetail
             )
         case let .contactDetail(inquiry):

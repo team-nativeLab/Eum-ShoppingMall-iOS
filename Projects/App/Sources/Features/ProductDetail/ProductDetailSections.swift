@@ -3,6 +3,9 @@ import SwiftUI
 struct ProductDetailSections: View {
     @Binding var isDetailExpanded: Bool
     var onQuoteTap: () -> Void = {}
+    var onProductInquiry: () -> Void = {}
+    var onShowAllReviews: () -> Void = {}
+    var onShippingDetails: () -> Void = {}
 
     var body: some View {
         VStack(spacing: 0) {
@@ -68,7 +71,7 @@ struct ProductDetailSections: View {
             HStack {
                 sectionTitle("배송·교환")
                 Spacer()
-                Button {} label: {
+                Button(action: onShippingDetails) {
                     HStack(spacing: 2) {
                         Text("자세히 보기")
                         Image("SectionChevron")
@@ -80,6 +83,7 @@ struct ProductDetailSections: View {
                     .foregroundStyle(EUMColor.text2SwiftUI)
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("product-shipping-details")
             }
 
             VStack(alignment: .leading, spacing: 10) {
@@ -97,7 +101,7 @@ struct ProductDetailSections: View {
             HStack {
                 sectionTitle("리뷰 (0)")
                 Spacer()
-                Button {} label: {
+                Button(action: onShowAllReviews) {
                     HStack(spacing: 2) {
                         Text("전체 보기")
                         Image("SectionChevron")
@@ -109,6 +113,7 @@ struct ProductDetailSections: View {
                     .foregroundStyle(EUMColor.text2SwiftUI)
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("product-all-reviews")
             }
 
             Text("아직 작성된 리뷰가 없습니다.")
@@ -126,8 +131,9 @@ struct ProductDetailSections: View {
             HStack {
                 sectionTitle("상품 문의 (0)")
                 Spacer()
-                EUMButton(title: "문의하기", kind: .secondary, size: .small) {}
+                EUMButton(title: "문의하기", kind: .secondary, size: .small, action: onProductInquiry)
                     .frame(width: 76, height: 36)
+                    .accessibilityIdentifier("product-inquiry")
             }
 
             Text("상품에 대해 궁금한 점을 남겨 주세요.")

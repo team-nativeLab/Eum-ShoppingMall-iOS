@@ -21,13 +21,14 @@ struct ContactInquiryRecord: Identifiable, Equatable {
     let attachmentName: String?
     let answerDate: String?
     let answer: String?
+    var isPrivate = false
 }
 
 @MainActor
 final class ContactInquiryHistoryViewModel: ObservableObject {
     @Published var selectedStatus: ContactInquiryStatus = .all
 
-    let inquiries: [ContactInquiryRecord]
+    @Published private(set) var inquiries: [ContactInquiryRecord]
 
     init(inquiries: [ContactInquiryRecord]? = nil) {
         self.inquiries = inquiries ?? Self.sampleInquiries
@@ -36,6 +37,11 @@ final class ContactInquiryHistoryViewModel: ObservableObject {
     var visibleInquiries: [ContactInquiryRecord] {
         guard selectedStatus != .all else { return inquiries }
         return inquiries.filter { $0.status == selectedStatus }
+    }
+
+    func add(_ inquiry: ContactInquiryRecord) {
+        inquiries.insert(inquiry, at: 0)
+        selectedStatus = .all
     }
 
     private static let sampleInquiries = [

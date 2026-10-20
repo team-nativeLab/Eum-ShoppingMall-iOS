@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeModalRouteHostView: View {
     let route: HomeModalRoute
     @ObservedObject var addressViewModel: AddressesViewModel
+    @ObservedObject var contactInquiryViewModel: ContactInquiryHistoryViewModel
     @ObservedObject var withdrawalNoticeViewModel: AccountWithdrawalNoticeViewModel
     let isGuestAccount: Bool
     let activeWithdrawalOrderCount: Int
@@ -11,6 +12,7 @@ struct HomeModalRouteHostView: View {
     let onMessage: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
     let onAddressChange: (OrderHistoryItem) -> Void
+    let onViewContactInquiries: () -> Void
     let onHome: () -> Void
     let onWithdrawal: () -> Void
     let onLogout: () -> Void
@@ -26,6 +28,7 @@ struct HomeModalRouteHostView: View {
             HomeAccountRouteView(
                 route: route,
                 addressViewModel: addressViewModel,
+                contactInquiryViewModel: contactInquiryViewModel,
                 onBack: onBack,
                 onHome: onHome,
                 onRoute: onRoute,
@@ -50,6 +53,14 @@ struct HomeModalRouteHostView: View {
             )
         case .customerCenter, .announcements, .announcementDetail:
             HomeSupportRouteView(route: route, onBack: onBack, onRoute: onRoute, onMessage: onMessage)
+        case .inquiryCompose, .inquiryComplete, .productReviews:
+            HomeInquiryRouteView(
+                route: route,
+                contactInquiryViewModel: contactInquiryViewModel,
+                onBack: onBack,
+                onRoute: onRoute,
+                onViewInquiries: onViewContactInquiries
+            )
         case .settings, .terms, .privacyPolicy, .usageGuide:
             HomeLegalRouteContainer(
                 route: route,
