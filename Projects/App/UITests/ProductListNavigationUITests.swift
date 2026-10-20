@@ -132,6 +132,32 @@ final class ProductListNavigationUITests: XCTestCase {
     }
 
     @MainActor
+    func testShippingDetailsOpenAndReturnToTheSameProductDetail() {
+        let app = XCUIApplication()
+        app.launch()
+        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+
+        app.buttons["개인보호장비"].tap()
+        XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
+        app.staticTexts["제품명"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
+
+        let shippingDetailsButton = app.buttons["product-shipping-details"]
+        for _ in 0..<8 where !shippingDetailsButton.exists {
+            app.swipeUp()
+        }
+        XCTAssertTrue(shippingDetailsButton.waitForExistence(timeout: 5))
+        shippingDetailsButton.tap()
+
+        XCTAssertTrue(app.buttons["shipping-policy-back"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["상품 배송 및 교환·반품 안내"].exists)
+        app.buttons["shipping-policy-back"].tap()
+
+        XCTAssertTrue(app.buttons["product-detail-back"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["product-shipping-details"].exists)
+    }
+
+    @MainActor
     func testChangingTabFromProductListClearsNestedRoute() {
         let app = XCUIApplication()
         app.launch()

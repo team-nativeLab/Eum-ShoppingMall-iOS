@@ -63,6 +63,8 @@ struct HomeModalRouteHostView: View {
                 onRoute: onRoute,
                 onViewInquiries: onViewContactInquiries
             )
+        case let .shippingPolicy(product):
+            ProductShippingPolicyView(product: product, onBack: onBack)
         case .settings, .terms, .privacyPolicy, .usageGuide:
             HomeLegalRouteContainer(
                 route: route,

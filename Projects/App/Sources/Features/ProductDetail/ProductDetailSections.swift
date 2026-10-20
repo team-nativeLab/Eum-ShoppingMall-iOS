@@ -1,5 +1,17 @@
 import SwiftUI
 
+struct ProductShippingPolicy: Equatable {
+    let delivery: String
+    let exchangeAndReturnPeriod: String
+    let returnShippingFee: String
+
+    static let sample = ProductShippingPolicy(
+        delivery: "일반 배송 (2~3일) · 무료",
+        exchangeAndReturnPeriod: "수령 후 0일 이내 신청",
+        returnShippingFee: "편도 ₩0"
+    )
+}
+
 struct ProductDetailSections: View {
     @Binding var isDetailExpanded: Bool
     var onQuoteTap: () -> Void = {}
@@ -87,9 +99,17 @@ struct ProductDetailSections: View {
             }
 
             VStack(alignment: .leading, spacing: 10) {
-                ProductDetailKeyValueRow(label: "배송", value: "일반 배송 (2~3일) · 무료", labelWidth: 96)
-                ProductDetailKeyValueRow(label: "교환·반품", value: "수령 후 0일 이내 신청", labelWidth: 96)
-                ProductDetailKeyValueRow(label: "반품 배송비", value: "편도 ₩0", labelWidth: 96)
+                ProductDetailKeyValueRow(label: "배송", value: ProductShippingPolicy.sample.delivery, labelWidth: 96)
+                ProductDetailKeyValueRow(
+                    label: "교환·반품",
+                    value: ProductShippingPolicy.sample.exchangeAndReturnPeriod,
+                    labelWidth: 96
+                )
+                ProductDetailKeyValueRow(
+                    label: "반품 배송비",
+                    value: ProductShippingPolicy.sample.returnShippingFee,
+                    labelWidth: 96
+                )
             }
         }
         .padding(.horizontal, 20)
