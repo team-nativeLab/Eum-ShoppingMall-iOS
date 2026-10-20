@@ -12,6 +12,7 @@ final class ProductListViewModel: ObservableObject {
 
     @Published var selectedCategory = "전체"
     @Published var sortOption: SortOption = .recommended
+    @Published private(set) var filter = ProductListFilter()
 
     let products: [HomeProduct]
 
@@ -20,19 +21,29 @@ final class ProductListViewModel: ObservableObject {
     }
 
     var sortedProducts: [HomeProduct] {
+        let filteredProducts = products.filter(filter.includes)
         switch sortOption {
         case .recommended:
-            products
+            return filteredProducts
         case .priceAscending:
-            products.sorted { ($0.price ?? "").localizedStandardCompare($1.price ?? "") == .orderedAscending }
+            return filteredProducts.sorted { ($0.priceAmount ?? 0) < ($1.priceAmount ?? 0) }
         case .priceDescending:
-            products.sorted { ($0.price ?? "").localizedStandardCompare($1.price ?? "") == .orderedDescending }
+            return filteredProducts.sorted { ($0.priceAmount ?? 0) > ($1.priceAmount ?? 0) }
         }
+    }
+
+    var availableBrands: [String] {
+        ["전체"] + Array(Set(products.compactMap(\.brand))).sorted()
+    }
+
+    func applyFilter(_ filter: ProductListFilter) {
+        self.filter = filter
     }
 }
 
 struct ProductListView: View {
     @StateObject private var viewModel: ProductListViewModel
+    @State private var isShowingFilter = false
 
     let title: String
     let selectedTab: EUMTabBar.Tab
@@ -75,23 +86,33 @@ struct ProductListView: View {
             productControls
 
             ScrollView {
-                LazyVGrid(columns: columns, alignment: .leading, spacing: 24) {
-                    ForEach(viewModel.sortedProducts) { product in
-                        EUMProductCard(
-                            title: product.title,
-                            price: product.price,
-                            layout: .grid,
-                            imageName: product.imageName,
-                            isSoldOut: product.isSoldOut,
-                            isPriceHidden: product.isPriceHidden,
-                            isFavorite: product.isFavorite,
-                            onFavoriteTap: { onFavoriteTap(product.id) },
-                            onTap: { onProductTap(product) }
-                        )
+                Group {
+                    if viewModel.sortedProducts.isEmpty {
+                        Text("조건에 맞는 상품이 없어요.")
+                            .font(EUMTypography.bodyMedium)
+                            .foregroundStyle(EUMColor.text3SwiftUI)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .accessibilityIdentifier("product-list-empty")
+                    } else {
+                        LazyVGrid(columns: columns, alignment: .leading, spacing: 24) {
+                            ForEach(viewModel.sortedProducts) { product in
+                                EUMProductCard(
+                                    title: product.title,
+                                    price: product.price,
+                                    layout: .grid,
+                                    imageName: product.imageName,
+                                    isSoldOut: product.isSoldOut,
+                                    isPriceHidden: product.isPriceHidden,
+                                    isFavorite: product.isFavorite,
+                                    onFavoriteTap: { onFavoriteTap(product.id) },
+                                    onTap: { onProductTap(product) }
+                                )
+                            }
+                        }
+                        .padding(.horizontal, EUMSpacing.homeContentInset)
+                        .padding(.top, 12)
                     }
                 }
-                .padding(.horizontal, EUMSpacing.homeContentInset)
-                .padding(.top, 12)
                 .padding(.bottom, 24)
             }
             .scrollIndicators(.hidden)
@@ -104,6 +125,11 @@ struct ProductListView: View {
             )
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .fullScreenCover(isPresented: $isShowingFilter) {
+            ProductFilterView(filter: viewModel.filter, brands: viewModel.availableBrands) {
+                viewModel.applyFilter($0)
+            }
+        }
     }
 
     private var topBar: some View {
@@ -199,7 +225,7 @@ struct ProductListView: View {
 
             Spacer()
 
-            Button {} label: {
+            Button { isShowingFilter = true } label: {
                 Image("ProductListFilter")
                     .resizable()
                     .scaledToFit()
@@ -208,6 +234,7 @@ struct ProductListView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel("필터")
+            .accessibilityIdentifier("product-list-filter")
 
             Image("ProductListGrid")
                 .resizable()

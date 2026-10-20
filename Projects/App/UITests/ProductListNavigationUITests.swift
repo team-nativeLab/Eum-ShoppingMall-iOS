@@ -145,4 +145,47 @@ final class ProductListNavigationUITests: XCTestCase {
 
         XCTAssertTrue(app.buttons["home-tab-홈"].exists)
     }
+
+    @MainActor
+    func testProductListFilterAppliesToResultsAndReturnsToList() {
+        let app = XCUIApplication()
+        app.launch()
+        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+
+        app.buttons["개인보호장비"].tap()
+        XCTAssertTrue(app.buttons["product-list-filter"].waitForExistence(timeout: 5))
+        app.buttons["product-list-filter"].tap()
+        XCTAssertTrue(app.buttons["product-filter-apply"].waitForExistence(timeout: 5))
+
+        app.buttons["재고 선택"].tap()
+        app.buttons["품절 상품"].tap()
+        app.buttons["product-filter-apply"].tap()
+
+        XCTAssertTrue(app.staticTexts["총 1개"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["product-list-filter"].exists)
+    }
+
+    @MainActor
+    func testAddressEditorCanSearchAddressAndChooseDeliveryRequest() {
+        let app = XCUIApplication()
+        app.launch()
+        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+
+        app.buttons["home-tab-마이"].tap()
+        app.buttons["배송지 관리"].tap()
+        app.buttons["배송지 추가"].tap()
+        app.buttons["address-editor-search"].tap()
+        XCTAssertTrue(app.buttons["address-search-select"].waitForExistence(timeout: 5))
+
+        app.buttons["address-search-result-06164"].tap()
+        app.buttons["address-search-select"].tap()
+        XCTAssertTrue(app.buttons["address-editor-delivery-request"].waitForExistence(timeout: 5))
+
+        app.buttons["address-editor-delivery-request"].tap()
+        XCTAssertTrue(app.buttons["delivery-request-complete"].waitForExistence(timeout: 5))
+        app.buttons["문 앞에 놓아 주세요"].tap()
+        app.buttons["delivery-request-complete"].tap()
+
+        XCTAssertTrue(app.buttons["address-editor-search"].waitForExistence(timeout: 5))
+    }
 }

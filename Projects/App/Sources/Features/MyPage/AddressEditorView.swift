@@ -2,6 +2,8 @@ import SwiftUI
 
 struct AddressEditorView: View {
     @StateObject private var viewModel: AddressEditorViewModel
+    @State private var isShowingAddressSearch = false
+    @State private var isShowingDeliveryRequest = false
 
     let isEditing: Bool
     let onBack: () -> Void
@@ -49,6 +51,16 @@ struct AddressEditorView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             saveAction
         }
+        .fullScreenCover(isPresented: $isShowingAddressSearch) {
+            AddressSearchView { result in
+                viewModel.applyAddressSearchResult(result)
+            }
+        }
+        .fullScreenCover(isPresented: $isShowingDeliveryRequest) {
+            DeliveryRequestView(initialSelection: viewModel.deliveryRequest) {
+                viewModel.deliveryRequest = $0
+            }
+        }
     }
 
     private var topBar: some View {
@@ -79,15 +91,16 @@ struct AddressEditorView: View {
         HStack(alignment: .bottom, spacing: 8) {
             AddressEditorField(title: "주소", text: $viewModel.postalCode, isDisabled: true)
             EUMButton(title: "주소 검색", kind: .secondary, size: .medium) {
-                onUnavailableAction("주소 검색은 주소 서비스 연동 후 이용할 수 있어요.")
+                isShowingAddressSearch = true
             }
             .fixedSize(horizontal: true, vertical: false)
+            .accessibilityIdentifier("address-editor-search")
         }
     }
 
     private var deliveryRequest: some View {
         Button {
-            onUnavailableAction("배송 요청사항은 배송 옵션 연동 후 선택할 수 있어요.")
+            isShowingDeliveryRequest = true
         } label: {
             VStack(alignment: .leading, spacing: 8) {
                 Text("배송 요청사항")
@@ -112,6 +125,7 @@ struct AddressEditorView: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("address-editor-delivery-request")
     }
 
     private var defaultAddressToggle: some View {

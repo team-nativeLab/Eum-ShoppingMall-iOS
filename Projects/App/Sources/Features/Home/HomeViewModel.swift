@@ -15,6 +15,17 @@ struct HomeProduct: Identifiable {
     var isFavorite: Bool
     let isSoldOut: Bool
     let isPriceHidden: Bool
+    var priceAmount: Int?
+    var brand: String?
+    var shippingType: ProductShippingType?
+}
+
+enum ProductShippingType: String, CaseIterable, Identifiable {
+    case standard = "일반 배송"
+    case fast = "빠른 배송"
+    case free = "무료 배송"
+
+    var id: String { rawValue }
 }
 
 struct HomeHeroContent {
@@ -85,7 +96,10 @@ struct MockHomeRepository: HomeRepository {
                     imageName: nil,
                     isFavorite: false,
                     isSoldOut: false,
-                    isPriceHidden: index == 0
+                    isPriceHidden: index == 0,
+                    priceAmount: [25_000, 85_000, 180_000, 450_000][index],
+                    brand: ["브랜드 A", "브랜드 B", "브랜드 C", "브랜드 A"][index],
+                    shippingType: [.standard, .fast, .free, .standard][index]
                 )
             },
             bestSellerProducts: (0..<4).map { index in
@@ -96,7 +110,10 @@ struct MockHomeRepository: HomeRepository {
                     imageName: nil,
                     isFavorite: false,
                     isSoldOut: index == 3,
-                    isPriceHidden: false
+                    isPriceHidden: false,
+                    priceAmount: [35_000, 120_000, 760_000, 250_000][index],
+                    brand: ["브랜드 B", "브랜드 C", "브랜드 A", "브랜드 B"][index],
+                    shippingType: [.fast, .standard, .free, .standard][index]
                 )
             },
             cartCount: 3
