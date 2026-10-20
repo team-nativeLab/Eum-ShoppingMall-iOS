@@ -29,6 +29,8 @@ struct HomeLegalRouteView: View {
                         actions.onRoute(.privacyPolicy)
                     } else if destination == "이용안내" {
                         actions.onRoute(.usageGuide)
+                    } else if destination == "오픈소스 라이선스" {
+                        actions.onRoute(.openSourceLicenses)
                     } else {
                         actions.message("\(destination) 화면은 후속 퍼블리싱 이슈에서 연결됩니다.")
                     }
@@ -48,6 +50,8 @@ struct HomeLegalRouteView: View {
                 onBack: actions.back,
                 onCustomerCenterTap: { actions.onRoute(.customerCenter) }
             )
+        case .openSourceLicenses:
+            OpenSourceLicensesView(onBack: actions.back)
         default:
             HomeRouteRecoveryView(onBack: actions.back)
         }
