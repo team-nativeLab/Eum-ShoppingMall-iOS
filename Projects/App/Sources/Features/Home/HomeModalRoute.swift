@@ -18,6 +18,7 @@ enum HomeModalRoute {
     case terms
     case privacyPolicy
     case usageGuide
+    case openSourceLicenses
     case addressEditor(ShippingAddress?)
     case accountWithdrawalNotice
     case accountWithdrawalBlocked
