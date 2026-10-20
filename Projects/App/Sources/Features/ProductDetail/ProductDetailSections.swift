@@ -14,10 +14,10 @@ struct ProductShippingPolicy: Equatable {
 
 struct ProductDetailSections: View {
     @Binding var isDetailExpanded: Bool
-    var onQuoteTap: () -> Void = {}
-    var onProductInquiry: () -> Void = {}
-    var onShowAllReviews: () -> Void = {}
-    var onShippingDetails: () -> Void = {}
+    let onQuoteTap: () -> Void
+    let onProductInquiry: () -> Void
+    let onShowAllReviews: () -> Void
+    let onShippingDetails: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -206,6 +206,8 @@ struct ProductDetailSections: View {
 }
 
 struct ProductDetailRelatedSection: View {
+    @State private var favoriteProductIDs = Set<String>()
+
     let onProductTap: (HomeProduct) -> Void
 
     private let products = (0..<4).map { index in
@@ -235,7 +237,10 @@ struct ProductDetailRelatedSection: View {
                             title: product.title,
                             price: product.price,
                             layout: .carousel,
-                            onTap: { onProductTap(product) }
+                            isFavorite: favoriteProductIDs.contains(product.id),
+                            onFavoriteTap: { toggleFavorite(productID: product.id) },
+                            onTap: { onProductTap(product) },
+                            favoriteAccessibilityIdentifier: "related-favorite-\(product.id)"
                         )
                     }
                 }
@@ -246,6 +251,14 @@ struct ProductDetailRelatedSection: View {
         .padding(.top, 8)
         .padding(.bottom, 24)
         .id("related")
+    }
+
+    private func toggleFavorite(productID: String) {
+        if favoriteProductIDs.contains(productID) {
+            favoriteProductIDs.remove(productID)
+        } else {
+            favoriteProductIDs.insert(productID)
+        }
     }
 }
 

@@ -66,7 +66,7 @@ struct ProductListView: View {
         onFavoriteTap: @escaping (String) -> Void,
         onSelectTab: @escaping (EUMTabBar.Tab) -> Void,
         onProductTap: @escaping (HomeProduct) -> Void,
-        onSearchTap: @escaping () -> Void = {}
+        onSearchTap: @escaping () -> Void
     ) {
         self.title = title
         self.selectedTab = selectedTab

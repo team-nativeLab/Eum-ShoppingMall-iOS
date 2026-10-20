@@ -60,22 +60,22 @@ struct MyPageView: View {
     @StateObject private var viewModel = MyPageViewModel()
     @State private var presentedMessage: String?
 
-    var onCustomerCenterTap: () -> Void = {}
-    var onAnnouncementsTap: () -> Void = {}
+    let onCustomerCenterTap: () -> Void
+    let onAnnouncementsTap: () -> Void
 
     let cartCount: Int
     let onSelectTab: (EUMTabBar.Tab) -> Void
-    var onOrderStatusTap: (OrderHistoryStatus) -> Void = { _ in }
-    var onOrderHistoryTap: () -> Void = {}
-    var onFavoritesTap: () -> Void = {}
-    var onRecentlyViewedTap: () -> Void = {}
-    var onCouponsTap: () -> Void = {}
-    var onAddressesTap: () -> Void = {}
-    var onQuoteHistoryTap: () -> Void = {}
-    var onContactHistoryTap: () -> Void = {}
-    var onReturnsHistoryTap: () -> Void = {}
-    var onAccountVerificationTap: () -> Void = {}
-    var onSettingsTap: () -> Void = {}
+    let onOrderStatusTap: (OrderHistoryStatus) -> Void
+    let onOrderHistoryTap: () -> Void
+    let onFavoritesTap: () -> Void
+    let onRecentlyViewedTap: () -> Void
+    let onCouponsTap: () -> Void
+    let onAddressesTap: () -> Void
+    let onQuoteHistoryTap: () -> Void
+    let onContactHistoryTap: () -> Void
+    let onReturnsHistoryTap: () -> Void
+    let onAccountVerificationTap: () -> Void
+    let onSettingsTap: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -326,6 +326,22 @@ struct MyPageView: View {
 
 struct MyPageViewPreview: PreviewProvider {
     static var previews: some View {
-        MyPageView(cartCount: 3, onSelectTab: { _ in })
+        MyPageView(
+            onCustomerCenterTap: {},
+            onAnnouncementsTap: {},
+            cartCount: 3,
+            onSelectTab: { _ in },
+            onOrderStatusTap: { _ in },
+            onOrderHistoryTap: {},
+            onFavoritesTap: {},
+            onRecentlyViewedTap: {},
+            onCouponsTap: {},
+            onAddressesTap: {},
+            onQuoteHistoryTap: {},
+            onContactHistoryTap: {},
+            onReturnsHistoryTap: {},
+            onAccountVerificationTap: {},
+            onSettingsTap: {}
+        )
     }
 }

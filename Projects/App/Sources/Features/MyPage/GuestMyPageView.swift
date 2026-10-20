@@ -35,8 +35,8 @@ struct GuestMyPageView: View {
     @StateObject private var viewModel = GuestMyPageViewModel()
     @State private var presentedMessage: String?
 
-    var onCustomerCenterTap: () -> Void = {}
-    var onAnnouncementsTap: () -> Void = {}
+    let onCustomerCenterTap: () -> Void
+    let onAnnouncementsTap: () -> Void
 
     let cartCount: Int
     let onLoginTap: () -> Void
@@ -201,6 +201,8 @@ struct GuestMyPageView: View {
 struct GuestMyPageViewPreview: PreviewProvider {
     static var previews: some View {
         GuestMyPageView(
+            onCustomerCenterTap: {},
+            onAnnouncementsTap: {},
             cartCount: 3,
             onLoginTap: {},
             onSettingsTap: {},

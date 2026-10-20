@@ -7,7 +7,7 @@ struct CartItemRow: View {
     let onRemove: () -> Void
     let onOptionChange: () -> Void
     let onQuoteRequest: () -> Void
-    var onProductTap: () -> Void = {}
+    var onProductTap: () -> Void
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {

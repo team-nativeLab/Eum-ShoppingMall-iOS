@@ -17,7 +17,7 @@ struct QuoteInquiryView: View {
         product: HomeProduct? = nil,
         onBack: @escaping () -> Void,
         onContinueShopping: @escaping () -> Void,
-        onViewInquiries: @escaping () -> Void = {}
+        onViewInquiries: @escaping () -> Void
     ) {
         self.onBack = onBack
         self.onContinueShopping = onContinueShopping
@@ -152,6 +152,6 @@ struct QuoteInquiryView: View {
 
 struct QuoteInquiryViewPreview: PreviewProvider {
     static var previews: some View {
-        QuoteInquiryView(onBack: {}, onContinueShopping: {})
+        QuoteInquiryView(onBack: {}, onContinueShopping: {}, onViewInquiries: {})
     }
 }

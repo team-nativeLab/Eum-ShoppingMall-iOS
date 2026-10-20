@@ -158,6 +158,29 @@ final class ProductListNavigationUITests: XCTestCase {
     }
 
     @MainActor
+    func testRelatedProductFavoriteButtonTogglesItsState() {
+        let app = XCUIApplication()
+        app.launch()
+        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+
+        app.buttons["개인보호장비"].tap()
+        XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
+        app.staticTexts["제품명"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
+
+        let favoriteButton = app.buttons["related-favorite-related-0"]
+        for _ in 0..<10 where !favoriteButton.exists {
+            app.swipeUp()
+        }
+        XCTAssertTrue(favoriteButton.waitForExistence(timeout: 5))
+        XCTAssertEqual(favoriteButton.label, "찜하기")
+        favoriteButton.tap()
+        XCTAssertEqual(favoriteButton.label, "찜 취소")
+        favoriteButton.tap()
+        XCTAssertEqual(favoriteButton.label, "찜하기")
+    }
+
+    @MainActor
     func testChangingTabFromProductListClearsNestedRoute() {
         let app = XCUIApplication()
         app.launch()

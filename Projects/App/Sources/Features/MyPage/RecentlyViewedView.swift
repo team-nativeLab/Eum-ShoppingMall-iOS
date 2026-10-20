@@ -93,6 +93,7 @@ struct RecentlyViewedView: View {
             isPriceHidden: product.isPriceHidden,
             hiddenPriceBadgeTitle: "견적 상품",
             showsFavoriteButton: false,
+            onFavoriteTap: {},
             onTap: { onProductTap(product) }
         )
         .overlay(alignment: .topTrailing) {
