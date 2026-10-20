@@ -31,6 +31,8 @@ final class CheckoutAddressViewModel: ObservableObject {
 struct CheckoutAddressView: View {
     @StateObject private var viewModel = CheckoutAddressViewModel()
     @State private var presentedMessage: String?
+    @State private var isShowingDeliveryRequest = false
+    @State private var deliveryRequest = "선택해 주세요"
 
     let onBack: () -> Void
     let onNext: () -> Void
@@ -51,6 +53,11 @@ struct CheckoutAddressView: View {
             Button("확인", role: .cancel) { presentedMessage = nil }
         } message: {
             Text(presentedMessage ?? "")
+        }
+        .fullScreenCover(isPresented: $isShowingDeliveryRequest) {
+            DeliveryRequestView(initialSelection: deliveryRequest) {
+                deliveryRequest = $0
+            }
         }
     }
 
@@ -137,13 +144,13 @@ struct CheckoutAddressView: View {
         VStack(spacing: 0) {
             sectionTitle("배송 요청사항")
             Button {
-                presentedMessage = "배송 요청사항 선택 항목은 아직 연결되지 않았어요."
+                isShowingDeliveryRequest = true
             } label: {
                 HStack(spacing: 8) {
-                    Text("배송 요청사항을 선택해 주세요")
+                    Text(deliveryRequest == "선택해 주세요" ? "배송 요청사항을 선택해 주세요" : deliveryRequest)
                         .font(EUMTypography.bodyMedium)
                         .tracking(-0.075)
-                        .foregroundStyle(EUMColor.text3SwiftUI)
+                        .foregroundStyle(deliveryRequest == "선택해 주세요" ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Image("ProductOptionChevron")
                         .resizable()
@@ -157,6 +164,7 @@ struct CheckoutAddressView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel("배송 요청사항 선택")
+            .accessibilityIdentifier("checkout-delivery-request")
             .padding(.horizontal, EUMSpacing.homeContentInset)
             .padding(.vertical, 16)
         }

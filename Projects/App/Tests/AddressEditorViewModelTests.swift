@@ -37,4 +37,15 @@ final class AddressEditorViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.makeAddress()?.postalAddress, "(12345)")
         XCTAssertEqual(viewModel.makeAddress()?.detailAddress, "서울시 강남구")
     }
+
+    func testAddressSearchResultUpdatesPostalCodeAndRoadAddress() {
+        let viewModel = AddressEditorViewModel()
+
+        viewModel.applyAddressSearchResult(
+            AddressSearchResult(postalCode: "06164", address: "서울특별시 강남구 테헤란로 427")
+        )
+
+        XCTAssertEqual(viewModel.postalCode, "06164")
+        XCTAssertEqual(viewModel.address, "서울특별시 강남구 테헤란로 427")
+    }
 }

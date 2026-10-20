@@ -44,4 +44,9 @@ final class AddressEditorViewModel: ObservableObject {
             isDefault: isDefault
         )
     }
+
+    func applyAddressSearchResult(_ result: AddressSearchResult) {
+        postalCode = result.postalCode
+        address = result.address
+    }
 }
