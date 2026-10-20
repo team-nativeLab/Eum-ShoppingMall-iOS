@@ -49,7 +49,7 @@ struct HomeLegalRouteView: View {
                 onCustomerCenterTap: { actions.onRoute(.customerCenter) }
             )
         default:
-            EmptyView()
+            HomeRouteRecoveryView(onBack: actions.back)
         }
     }
 }

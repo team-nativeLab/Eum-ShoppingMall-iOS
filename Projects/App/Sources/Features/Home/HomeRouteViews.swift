@@ -74,7 +74,7 @@ struct HomeAccountRouteView: View {
                 onWithdrawTap: onWithdrawTap
             )
         default:
-            EmptyView()
+            HomeRouteRecoveryView(onBack: onBack)
         }
     }
 }
@@ -100,7 +100,7 @@ struct HomeProfileRouteView: View {
                 onOpenMap: { onMessage("주소가 임시 정보라 지도 앱과 연결되지 않았어요.") }
             )
         default:
-            EmptyView()
+            HomeRouteRecoveryView(onBack: onBack)
         }
     }
 }
@@ -191,7 +191,7 @@ struct HomeOrderRouteView: View {
                 onRequote: { onRoute(.quoteInquiry(nil)) }
             )
         default:
-            EmptyView()
+            HomeRouteRecoveryView(onBack: onBack)
         }
     }
 }
@@ -331,7 +331,7 @@ struct HomeSupportRouteView: View {
         case let .eventDetail(event):
             EventDetailView(event: event, onBack: onBack)
         default:
-            EmptyView()
+            HomeRouteRecoveryView(onBack: onBack)
         }
     }
 }
@@ -367,7 +367,7 @@ struct HomeWithdrawalRouteView: View {
         case .accountWithdrawalComplete:
             AccountWithdrawalCompleteView(onHome: onHome)
         default:
-            EmptyView()
+            HomeRouteRecoveryView(onBack: onBack)
         }
     }
 }
