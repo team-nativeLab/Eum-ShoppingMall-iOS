@@ -5,6 +5,7 @@ struct SignUpView: View {
     @State private var presentedMessage: String?
     @State private var isShowingTermsModal = false
     @State private var isShowingPrivacyConsent = false
+    @State private var isShowingMarketingConsent = false
     let onBack: () -> Void
 
     var body: some View {
@@ -43,6 +44,9 @@ struct SignUpView: View {
                         isShowingPrivacyConsent = false
                     }
                 )
+            }
+            if isShowingMarketingConsent {
+                MarketingConsentInfoView(onClose: { isShowingMarketingConsent = false })
             }
         }
     }
@@ -213,7 +217,14 @@ struct SignUpView: View {
                 details: true,
                 onDetailsTap: { isShowingPrivacyConsent = true }
             )
-            agreementRow("[선택] 마케팅 정보 수신 동의", isOn: viewModel.agreedToMarketing, action: viewModel.toggleMarketing, details: true)
+            agreementRow(
+                "[선택] 마케팅 정보 수신 동의",
+                isOn: viewModel.agreedToMarketing,
+                action: viewModel.toggleMarketing,
+                details: true,
+                onDetailsTap: { isShowingMarketingConsent = true },
+                detailsAccessibilityIdentifier: "signup-marketing-consent-view"
+            )
         }
         .padding(16)
         .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
@@ -230,7 +241,8 @@ struct SignUpView: View {
         isAll: Bool = false,
         action: @escaping () -> Void,
         details: Bool = false,
-        onDetailsTap: (() -> Void)? = nil
+        onDetailsTap: (() -> Void)? = nil,
+        detailsAccessibilityIdentifier: String? = nil
     ) -> some View {
         HStack(spacing: 10) {
             Button(action: action) {
@@ -255,6 +267,7 @@ struct SignUpView: View {
                 .font(EUMTypography.captionRegular)
                 .foregroundStyle(EUMColor.text2SwiftUI)
                 .underline()
+                .accessibilityIdentifier(detailsAccessibilityIdentifier ?? "signup-agreement-details")
             }
         }
         .frame(minHeight: isAll ? 24 : 20)
