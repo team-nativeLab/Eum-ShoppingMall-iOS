@@ -77,6 +77,7 @@ struct PasswordLookupView: View {
                 }
         }
         .buttonStyle(.plain)
+        .disabled(isSelected)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
