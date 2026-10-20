@@ -34,15 +34,15 @@ struct LoginView: View {
     @State private var presentedMessage: String?
 
     let onClose: () -> Void
-    var onSignUpTap: () -> Void = {}
-    var onEmailLookupTap: () -> Void = {}
-    var onPasswordLookupTap: () -> Void = {}
+    var onSignUpTap: () -> Void
+    var onEmailLookupTap: () -> Void
+    var onPasswordLookupTap: () -> Void
 
     init(
         onClose: @escaping () -> Void,
-        onSignUpTap: @escaping () -> Void = {},
-        onEmailLookupTap: @escaping () -> Void = {},
-        onPasswordLookupTap: @escaping () -> Void = {},
+        onSignUpTap: @escaping () -> Void,
+        onEmailLookupTap: @escaping () -> Void,
+        onPasswordLookupTap: @escaping () -> Void,
         initialErrorState: Bool = false
     ) {
         self.onClose = onClose
@@ -310,6 +310,12 @@ struct LoginView: View {
 
 struct LoginViewPreview: PreviewProvider {
     static var previews: some View {
-        LoginView(onClose: {}, initialErrorState: true)
+        LoginView(
+            onClose: {},
+            onSignUpTap: {},
+            onEmailLookupTap: {},
+            onPasswordLookupTap: {},
+            initialErrorState: true
+        )
     }
 }

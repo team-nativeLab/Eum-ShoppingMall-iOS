@@ -42,9 +42,9 @@ struct ProductDetailView: View {
         onOpenCart: @escaping () -> Void,
         onPurchase: @escaping () -> Void,
         onRelatedProductTap: @escaping (HomeProduct) -> Void,
-        onProductInquiry: @escaping () -> Void = {},
-        onShowAllReviews: @escaping () -> Void = {},
-        onShippingDetails: @escaping () -> Void = {}
+        onProductInquiry: @escaping () -> Void,
+        onShowAllReviews: @escaping () -> Void,
+        onShippingDetails: @escaping () -> Void
     ) {
         self.product = product
         self.onBack = onBack

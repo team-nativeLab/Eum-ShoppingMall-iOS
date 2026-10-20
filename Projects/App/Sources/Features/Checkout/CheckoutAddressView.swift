@@ -36,7 +36,7 @@ struct CheckoutAddressView: View {
 
     let onBack: () -> Void
     let onNext: () -> Void
-    var onAddressChange: () -> Void = {}
+    let onAddressChange: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -356,6 +356,6 @@ private struct CheckoutOrderItemRow: View {
 
 struct CheckoutAddressViewPreview: PreviewProvider {
     static var previews: some View {
-        CheckoutAddressView(onBack: {}, onNext: {})
+        CheckoutAddressView(onBack: {}, onNext: {}, onAddressChange: {})
     }
 }

@@ -100,7 +100,7 @@ struct SearchResultsView: View {
         onCancel: @escaping () -> Void,
         onFavoriteTap: @escaping (String) -> Void,
         onProductTap: @escaping (HomeProduct) -> Void,
-        onQuoteTap: @escaping () -> Void = {},
+        onQuoteTap: @escaping () -> Void,
         onSelectTab: @escaping (EUMTabBar.Tab) -> Void
     ) {
         _searchText = searchText

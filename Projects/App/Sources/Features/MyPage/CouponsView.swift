@@ -6,7 +6,7 @@ struct CouponsView: View {
     @State private var presentedMessage: String?
 
     let onBack: () -> Void
-    var onPointsTap: () -> Void = {}
+    let onPointsTap: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -245,6 +245,6 @@ private struct CouponTicketView: View {
 
 struct CouponsViewPreview: PreviewProvider {
     static var previews: some View {
-        CouponsView(onBack: {})
+        CouponsView(onBack: {}, onPointsTap: {})
     }
 }

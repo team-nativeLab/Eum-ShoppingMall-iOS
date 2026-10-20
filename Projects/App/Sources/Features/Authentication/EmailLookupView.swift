@@ -89,6 +89,7 @@ struct EmailLookupView: View {
                 }
         }
         .buttonStyle(.plain)
+        .disabled(isSelected)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 

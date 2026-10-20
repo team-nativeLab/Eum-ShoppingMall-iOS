@@ -18,8 +18,9 @@ struct EUMProductCard: View {
     var hiddenPriceBadgeTitle = "금액 미표시"
     var isFavorite = false
     var showsFavoriteButton = true
-    var onFavoriteTap: () -> Void = {}
-    var onTap: () -> Void = {}
+    let onFavoriteTap: () -> Void
+    let onTap: () -> Void
+    var favoriteAccessibilityIdentifier: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -68,6 +69,7 @@ struct EUMProductCard: View {
                             }
                             .buttonStyle(.plain)
                             .accessibilityLabel(isFavorite ? "찜 취소" : "찜하기")
+                            .accessibilityIdentifier(favoriteAccessibilityIdentifier ?? "")
                         }
                     }
 

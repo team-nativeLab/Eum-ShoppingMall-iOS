@@ -119,9 +119,9 @@ struct CartView: View {
         cartCount: Int,
         presentation: Presentation = .standard,
         onSelectTab: @escaping (EUMTabBar.Tab) -> Void,
-        onCheckout: @escaping () -> Void = {},
-        onProductTap: @escaping (CartItem) -> Void = { _ in },
-        onQuoteRequest: @escaping (CartItem) -> Void = { _ in }
+        onCheckout: @escaping () -> Void,
+        onProductTap: @escaping (CartItem) -> Void,
+        onQuoteRequest: @escaping (CartItem) -> Void
     ) {
         self.cartCount = cartCount
         self.presentation = presentation

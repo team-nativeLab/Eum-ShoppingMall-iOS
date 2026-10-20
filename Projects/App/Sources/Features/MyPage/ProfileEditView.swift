@@ -8,7 +8,7 @@ struct ProfileEditView: View {
 
     let onBack: () -> Void
     let onAction: (String) -> Void
-    var onWithdrawTap: () -> Void = {}
+    let onWithdrawTap: () -> Void
 
     var body: some View {
         Group {
@@ -273,6 +273,6 @@ private struct ProfileEditField: View {
 
 struct ProfileEditViewPreview: PreviewProvider {
     static var previews: some View {
-        ProfileEditView(onBack: {}, onAction: { _ in })
+        ProfileEditView(onBack: {}, onAction: { _ in }, onWithdrawTap: {})
     }
 }
