@@ -20,7 +20,7 @@ struct HomeInquiryRouteView: View {
         case .productReviews:
             ProductReviewsView(onBack: onBack)
         default:
-            EmptyView()
+            HomeRouteRecoveryView(onBack: onBack)
         }
     }
 }

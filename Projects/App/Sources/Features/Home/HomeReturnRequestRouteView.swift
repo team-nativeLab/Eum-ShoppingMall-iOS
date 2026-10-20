@@ -25,7 +25,7 @@ struct HomeReturnRequestRouteView: View {
                 }
             )
         default:
-            EmptyView()
+            HomeRouteRecoveryView(onBack: onBack)
         }
     }
 }
