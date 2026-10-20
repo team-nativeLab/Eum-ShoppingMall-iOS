@@ -49,6 +49,8 @@ struct HomeView: View {
                         openRoute(.customerCenter)
                     } else if destination == "공지사항" {
                         openRoute(.announcements)
+                    } else if destination == "이벤트" {
+                        openRoute(.events)
                     } else {
                         presentedMessage = "\(destination) 화면은 아직 연결되지 않았어요."
                     }

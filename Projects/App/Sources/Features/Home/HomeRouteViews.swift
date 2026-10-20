@@ -327,6 +327,10 @@ struct HomeSupportRouteView: View {
                 onBack: onBack,
                 onDownload: { onMessage("\($0)은 파일 서비스 연동 후 다운로드할 수 있어요.") }
             )
+        case .events:
+            EventsView(onBack: onBack, onOpenEvent: { onRoute(.eventDetail($0)) })
+        case let .eventDetail(event):
+            EventDetailView(event: event, onBack: onBack)
         default:
             EmptyView()
         }
