@@ -179,8 +179,8 @@ struct HomeOrderRouteView: View {
         case .returnHistory:
             ReturnHistoryView(
                 onBack: onBack,
-                onDetail: { _ in onMessage("신청 상세는 서버 연동 후 확인할 수 있어요.") },
-                onWithdraw: { _ in onMessage("신청 철회는 서버 연동 후 이용할 수 있어요.") },
+                onDetail: { onRoute(.returnRequestDetail($0)) },
+                onWithdraw: { onRoute(.returnWithdrawalConfirmation($0)) },
                 onRejectionReason: { item in onMessage(item.rejectionReason ?? "반려 사유가 없습니다.") }
             )
         case let .quoteDetail(inquiry):

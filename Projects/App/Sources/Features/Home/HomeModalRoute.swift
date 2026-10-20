@@ -11,6 +11,8 @@ enum HomeModalRoute {
     case deliveryTracking(OrderHistoryItem)
     case returnRequest(OrderHistoryItem)
     case returnHistory
+    case returnRequestDetail(ReturnHistoryItem)
+    case returnWithdrawalConfirmation(ReturnHistoryItem)
     case accountVerification
     case settings
     case terms
