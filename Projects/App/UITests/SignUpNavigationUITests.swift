@@ -19,6 +19,11 @@ final class SignUpNavigationUITests: XCTestCase {
     @MainActor
     private func openSignUp(in app: XCUIApplication) {
         app.launch()
+        let drawerButton = app.buttons["전체 메뉴"]
+        XCTAssertTrue(drawerButton.waitForExistence(timeout: 10))
+        drawerButton.tap()
+        app.buttons["로그아웃"].tap()
+        app.buttons["로그인 / 회원가입"].tap()
         XCTAssertTrue(app.staticTexts["로그인"].waitForExistence(timeout: 10))
         app.buttons["회원가입"].tap()
         XCTAssertTrue(app.buttons["signup-marketing-consent-view"].waitForExistence(timeout: 5))
