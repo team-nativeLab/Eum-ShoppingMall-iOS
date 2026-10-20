@@ -28,6 +28,7 @@ enum HomeModalRoute {
     case announcementDetail(AnnouncementItem)
     case events
     case eventDetail(EventItem)
+    case shippingPolicy(HomeProduct)
     case inquiryCompose(InquiryComposeContext)
     case inquiryComplete
     case productReviews(HomeProduct)

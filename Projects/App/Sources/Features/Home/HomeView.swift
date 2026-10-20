@@ -258,7 +258,7 @@ private extension HomeView {
                 onRelatedProductTap: openProductDetail,
                 onProductInquiry: { openRoute(.inquiryCompose(.product(name: product.title))) },
                 onShowAllReviews: { openRoute(.productReviews(product)) },
-                onShippingDetails: { presentedMessage = "배송·교환 정책 상세 디자인이 아직 준비되지 않았어요." }
+                onShippingDetails: { openRoute(.shippingPolicy(product)) }
             )
         case let .productList(selection):
             productListDestination(selection, content: content)
