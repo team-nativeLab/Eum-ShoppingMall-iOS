@@ -172,7 +172,6 @@ struct HomeOrderRouteView: View {
             ReturnRequestView(
                 order: order,
                 onBack: onBack,
-                onUnavailableKind: { onMessage("\($0.rawValue) 화면은 별도 작업에서 연결할 예정이에요.") },
                 onAddressChange: { onAddressChange(order) },
                 onSubmit: onMessage
             )

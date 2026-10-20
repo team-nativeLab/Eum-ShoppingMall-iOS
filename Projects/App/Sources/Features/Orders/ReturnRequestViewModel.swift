@@ -68,6 +68,22 @@ final class ReturnRequestViewModel: ObservableObject {
 
     var canSubmit: Bool { !selectedProductIDs.isEmpty }
 
+    var pageTitle: String {
+        switch selectedKind {
+        case .cancel: "취소 신청"
+        case .returning: "반품 신청"
+        case .exchange: "교환 신청"
+        }
+    }
+
+    var submitTitle: String {
+        switch selectedKind {
+        case .cancel: "취소 신청하기"
+        case .returning: "반품 신청하기"
+        case .exchange: "교환 신청하기"
+        }
+    }
+
     func quantity(for product: ReturnRequestProduct) -> Int {
         quantities[product.id, default: 0]
     }
@@ -116,6 +132,17 @@ final class ReturnRequestViewModel: ObservableObject {
     }
 
     func submitMessage() -> String {
-        canSubmit ? "반품 신청은 주문 서비스 연동 후 접수할 수 있어요." : "반품할 상품을 선택해 주세요."
+        guard canSubmit else {
+            switch selectedKind {
+            case .cancel: return "취소할 상품을 선택해 주세요."
+            case .returning: return "반품할 상품을 선택해 주세요."
+            case .exchange: return "교환할 상품을 선택해 주세요."
+            }
+        }
+        switch selectedKind {
+        case .cancel: return "취소 신청은 주문 서비스 연동 후 접수할 수 있어요."
+        case .returning: return "반품 신청은 주문 서비스 연동 후 접수할 수 있어요."
+        case .exchange: return "교환 신청은 주문 서비스 연동 후 접수할 수 있어요."
+        }
     }
 }

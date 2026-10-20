@@ -6,20 +6,17 @@ struct ReturnRequestView: View {
     @StateObject private var viewModel: ReturnRequestViewModel
 
     let onBack: () -> Void
-    let onUnavailableKind: (ReturnRequestKind) -> Void
     let onAddressChange: () -> Void
     let onSubmit: (String) -> Void
 
     init(
         order: OrderHistoryItem,
         onBack: @escaping () -> Void,
-        onUnavailableKind: @escaping (ReturnRequestKind) -> Void,
         onAddressChange: @escaping () -> Void,
         onSubmit: @escaping (String) -> Void
     ) {
         _viewModel = StateObject(wrappedValue: ReturnRequestViewModel(order: order))
         self.onBack = onBack
-        self.onUnavailableKind = onUnavailableKind
         self.onAddressChange = onAddressChange
         self.onSubmit = onSubmit
     }
@@ -33,10 +30,16 @@ struct ReturnRequestView: View {
                     ReturnRequestSegmented(selectedKind: viewModel.selectedKind, onSelect: selectKind)
                     productSection
                     reasonSection
-                    photoSection
-                    pickupSection
-                    refundSection
-                    ReturnRequestNotice(message: "단순 변심 반품은 왕복 배송비가 차감됩니다.")
+                    if viewModel.selectedKind != .cancel {
+                        photoSection
+                        pickupSection
+                    }
+                    if viewModel.selectedKind == .exchange {
+                        exchangeOptionSection
+                    } else {
+                        refundSection
+                    }
+                    ReturnRequestNotice(message: noticeMessage)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
@@ -56,7 +59,7 @@ struct ReturnRequestView: View {
 
     private var topBar: some View {
         ZStack {
-            Text("반품 신청")
+            Text(viewModel.pageTitle)
                 .font(EUMTypography.labelLarge)
                 .tracking(-0.16)
                 .foregroundStyle(EUMColor.text1SwiftUI)
@@ -170,7 +173,7 @@ struct ReturnRequestView: View {
             Rectangle()
                 .fill(EUMColor.lineSwiftUI)
                 .frame(height: 1)
-            EUMButton(title: "반품 신청하기", size: .large) {
+            EUMButton(title: viewModel.submitTitle, size: .large) {
                 onSubmit(viewModel.submitMessage())
             }
             .disabled(!viewModel.canSubmit)
@@ -190,11 +193,27 @@ struct ReturnRequestView: View {
     }
 
     private func selectKind(_ kind: ReturnRequestKind) {
-        guard kind == .returning else {
-            onUnavailableKind(kind)
-            return
-        }
         viewModel.selectedKind = kind
+    }
+
+    private var noticeMessage: String {
+        switch viewModel.selectedKind {
+        case .cancel: "취소 가능 여부와 환불 금액은 주문 서비스 연동 후 확인할 수 있습니다."
+        case .returning: "단순 변심 반품은 왕복 배송비가 차감됩니다."
+        case .exchange: "교환 옵션, 재고와 추가 비용은 주문 서비스 연동 후 확인할 수 있습니다."
+        }
+    }
+
+    private var exchangeOptionSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionHeading("교환 옵션")
+            Text("교환 가능한 옵션은 주문 서비스 연동 후 선택할 수 있습니다.")
+                .font(EUMTypography.bodySmall)
+                .foregroundStyle(EUMColor.text3SwiftUI)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(16)
+                .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        }
     }
 }
 
@@ -203,7 +222,6 @@ struct ReturnRequestViewPreview: PreviewProvider {
         ReturnRequestView(
             order: OrderHistoryItem.samples[2],
             onBack: {},
-            onUnavailableKind: { _ in },
             onAddressChange: {},
             onSubmit: { _ in }
         )

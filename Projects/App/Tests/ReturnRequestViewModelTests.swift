@@ -32,4 +32,23 @@ final class ReturnRequestViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.pickupMethod, .courier)
         XCTAssertEqual(viewModel.photos.count, 2)
     }
+
+    @MainActor
+    func testEachRequestKindUpdatesTitleAndKeepsSubmissionExplicitlyUnavailable() {
+        let viewModel = ReturnRequestViewModel(order: OrderHistoryItem.samples[2])
+
+        viewModel.selectedKind = .cancel
+        XCTAssertEqual(viewModel.pageTitle, "취소 신청")
+        XCTAssertEqual(viewModel.submitTitle, "취소 신청하기")
+        XCTAssertEqual(viewModel.submitMessage(), "취소 신청은 주문 서비스 연동 후 접수할 수 있어요.")
+
+        viewModel.selectedKind = .exchange
+        XCTAssertEqual(viewModel.pageTitle, "교환 신청")
+        XCTAssertEqual(viewModel.submitTitle, "교환 신청하기")
+        XCTAssertEqual(viewModel.submitMessage(), "교환 신청은 주문 서비스 연동 후 접수할 수 있어요.")
+
+        viewModel.selectedKind = .returning
+        XCTAssertEqual(viewModel.pageTitle, "반품 신청")
+        XCTAssertEqual(viewModel.submitTitle, "반품 신청하기")
+    }
 }
