@@ -2,6 +2,14 @@ import XCTest
 
 final class ProductListNavigationUITests: XCTestCase {
     @MainActor
+    private func attachScreenshot(of app: XCUIApplication, named name: String) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    @MainActor
     func testHomeProductListBackReturnsToHome() {
         let app = XCUIApplication()
         app.launch()
@@ -95,6 +103,21 @@ final class ProductListNavigationUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["ABS 안전모 (내관 조절형)"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["₩18,000"].exists)
         XCTAssertTrue(app.staticTexts["18%"].exists)
+        app.buttons["장바구니 담기"].tap()
+        XCTAssertTrue(app.staticTexts["옵션 선택"].waitForExistence(timeout: 5))
+        app.buttons["옵션 창 닫기"].tap()
+        app.buttons["바로 구매"].tap()
+        XCTAssertTrue(app.staticTexts["옵션 선택"].waitForExistence(timeout: 5))
+        app.buttons["옵션 창 닫기"].tap()
+        attachScreenshot(of: app, named: "A-05-product-detail-top")
+        app.swipeUp()
+        attachScreenshot(of: app, named: "A-05-product-detail-specifications")
+        app.swipeUp()
+        attachScreenshot(of: app, named: "A-05-product-detail-shipping-reviews")
+        for _ in 0..<3 {
+            app.swipeUp()
+        }
+        attachScreenshot(of: app, named: "A-05-product-detail-lower-sections")
 
         app.buttons["product-detail-back"].tap()
         let productListBackButton = app.buttons["product-list-back"]

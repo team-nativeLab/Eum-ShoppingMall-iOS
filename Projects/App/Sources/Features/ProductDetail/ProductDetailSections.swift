@@ -53,9 +53,7 @@ struct ProductDetailSections: View {
                 }
             }
 
-            Image("ProductPlaceholder")
-                .resizable()
-                .scaledToFill()
+            ProductDetailImagePlaceholder()
                 .frame(maxWidth: .infinity)
                 .frame(height: 240)
                 .clipped()
@@ -210,13 +208,8 @@ struct ProductDetailSections: View {
     }
 
     private var reviewImagePlaceholder: some View {
-        RoundedRectangle(cornerRadius: 4)
-            .fill(EUMColor.backgroundSubtleSwiftUI)
-            .overlay {
-                Image(systemName: "photo")
-                    .font(.system(size: 18))
-                    .foregroundStyle(EUMColor.text3SwiftUI)
-            }
+        ProductDetailImagePlaceholder(iconSize: 24)
+            .clipShape(RoundedRectangle(cornerRadius: 4))
             .frame(width: 56, height: 56)
     }
 

@@ -102,6 +102,26 @@ struct ProductDetailRatingStars: View {
     }
 }
 
+struct ProductDetailImagePlaceholder: View {
+    var iconSize: CGFloat = 32
+
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [EUMColor.imagePlaceholderTopSwiftUI, EUMColor.imagePlaceholderBottomSwiftUI],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            Image("ProductPlaceholder")
+                .renderingMode(.original)
+                .resizable()
+                .scaledToFit()
+                .frame(width: iconSize, height: iconSize)
+        }
+    }
+}
+
 struct ProductDetailSummaryView: View {
     let product: HomeProduct
     let detail: ProductDetailContent

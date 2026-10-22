@@ -164,9 +164,7 @@ struct ProductDetailView: View {
 
     private var gallery: some View {
         ZStack(alignment: .bottomTrailing) {
-            Image("ProductPlaceholder")
-                .resizable()
-                .scaledToFill()
+            ProductDetailImagePlaceholder()
                 .frame(maxWidth: .infinity)
                 .frame(height: 350)
                 .clipped()
@@ -268,13 +266,13 @@ struct ProductDetailView: View {
                         viewModel.isOptionsPresented = true
                     }
                 } else {
-                    EUMButton(title: "장바구니 담기", size: .large) {
-                    viewModel.isOptionsPresented = true
+                    EUMButton(title: "장바구니 담기", kind: .secondary, size: .large) {
+                        viewModel.isOptionsPresented = true
                     }
 
-                EUMButton(title: "바로 구매", kind: .secondary, size: .large) {
-                    viewModel.isOptionsPresented = true
-                }
+                    EUMButton(title: "바로 구매", size: .large) {
+                        viewModel.isOptionsPresented = true
+                    }
                 }
             }
             .padding(.horizontal, 20)
