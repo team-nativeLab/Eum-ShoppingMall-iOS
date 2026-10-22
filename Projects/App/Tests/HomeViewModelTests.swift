@@ -3,6 +3,28 @@ import XCTest
 
 @MainActor
 final class HomeViewModelTests: XCTestCase {
+    func testMockHomeContentMatchesCurrentFigmaFeaturedProducts() async {
+        let viewModel = HomeViewModel()
+        await viewModel.load()
+
+        guard case let .content(content) = viewModel.state else {
+            XCTFail("홈 데이터가 표시 상태여야 합니다.")
+            return
+        }
+
+        XCTAssertEqual(content.hero.eyebrow, "Safe Tomorrow")
+        XCTAssertEqual(content.hero.title, "사람이 있는 곳에,\n더 안전한 내일을.")
+        XCTAssertEqual(content.hero.imageName, "HomeHeroSafety")
+        XCTAssertEqual(content.recommendedProducts.map(\.title), [
+            "세이프가드 ABS 안전모", "경량 안전화 4인치", "전신 안전벨트", "코팅 장갑 10켤레"
+        ])
+        XCTAssertEqual(content.recommendedProducts[0].rating, 4.7)
+        XCTAssertEqual(content.recommendedProducts[0].reviewCount, 3)
+        XCTAssertEqual(content.recommendedProducts[0].originalPrice, "₩22,000")
+        XCTAssertEqual(content.recommendedProducts[0].discountPercentage, 18)
+        XCTAssertTrue(content.bestSellerProducts[3].isSoldOut)
+    }
+
     func testFavoriteToggleUsesSameTransformationForBothProductSections() async {
         let sharedProduct = makeProduct(id: "shared", isFavorite: false)
         let recommendedOnly = makeProduct(id: "recommended-only", isFavorite: false)

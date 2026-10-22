@@ -15,6 +15,10 @@ struct EUMProductCard: View {
     var imageName: String?
     var isSoldOut = false
     var isPriceHidden = false
+    var rating: Double?
+    var reviewCount: Int?
+    var originalPrice: String?
+    var discountPercentage: Int?
     var hiddenPriceBadgeTitle = "금액 미표시"
     var isFavorite = false
     var showsFavoriteButton = true
@@ -80,15 +84,39 @@ struct EUMProductCard: View {
                         .lineLimit(1)
                         .foregroundStyle(isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
 
+                    if let rating, let reviewCount {
+                        EUMRatingStars(rating: rating, reviewCount: reviewCount)
+                    }
+
                     if isPriceHidden {
                         Text("가격 문의")
                             .font(EUMTypography.bodySmall)
                             .foregroundStyle(EUMColor.text2SwiftUI)
                     } else if let price {
-                        Text(price)
-                            .font(Font.custom("NotoSansKR-Bold", size: 16, relativeTo: .body))
-                            .tracking(-0.08)
-                            .foregroundStyle(isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
+                        if let originalPrice, let discountPercentage {
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text(originalPrice)
+                                    .font(EUMTypography.labelExtraSmall)
+                                    .strikethrough()
+                                    .foregroundStyle(EUMColor.text3SwiftUI)
+                                    .frame(height: 20, alignment: .leading)
+
+                                HStack(spacing: 2) {
+                                    Text("\(discountPercentage)%")
+                                        .font(Font.custom("NotoSansKR-Bold", size: 12, relativeTo: .caption))
+                                    Text(price)
+                                        .font(Font.custom("NotoSansKR-Bold", size: 16, relativeTo: .body))
+                                }
+                                .tracking(-0.08)
+                                .foregroundStyle(isSoldOut ? EUMColor.text3SwiftUI : Color(red: 219 / 255, green: 33 / 255, blue: 41 / 255))
+                                .frame(height: 22, alignment: .leading)
+                            }
+                        } else {
+                            Text(price)
+                                .font(Font.custom("NotoSansKR-Bold", size: 16, relativeTo: .body))
+                                .tracking(-0.08)
+                                .foregroundStyle(isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -129,5 +157,35 @@ struct EUMProductCard: View {
                     .frame(width: 32, height: 32)
             }
         }
+    }
+}
+
+struct EUMRatingStars: View {
+    let rating: Double
+    let reviewCount: Int
+
+    var body: some View {
+        HStack(spacing: 4) {
+            if rating > 0 {
+                HStack(spacing: 1) {
+                    ForEach(0..<5, id: \.self) { index in
+                        Image(index < Int(rating) ? "RatingStarFilled" : "RatingStarOutline")
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                    }
+                }
+
+                Text("\(rating, specifier: "%.1f") (\(reviewCount))")
+                    .font(EUMTypography.labelExtraSmall)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
+                    .fixedSize()
+            } else {
+                Text("평점 없음")
+                    .font(EUMTypography.labelExtraSmall)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(rating > 0 ? "평점 \(rating, specifier: "%.1f")점, 리뷰 \(reviewCount)개" : "평점 없음")
     }
 }

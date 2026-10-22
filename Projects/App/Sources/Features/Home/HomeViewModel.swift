@@ -18,6 +18,10 @@ struct HomeProduct: Identifiable {
     var priceAmount: Int?
     var brand: String?
     var shippingType: ProductShippingType?
+    var rating: Double?
+    var reviewCount: Int?
+    var originalPrice: String?
+    var discountPercentage: Int?
 }
 
 enum ProductShippingType: String, CaseIterable, Identifiable {
@@ -83,41 +87,143 @@ struct MockHomeRepository: HomeRepository {
             ],
             hero: HomeHeroContent(
                 eyebrow: "Safe Tomorrow",
-                title: "작은 변화가\n큰 안전을 만듭니다.",
-                subtitle: "현장을 위한 통합 안전 솔루션",
-                imageName: "HeroBannerPlaceholder",
-                actionTitle: "자세히 보기"
+                title: "사람이 있는 곳에,\n더 안전한 내일을.",
+                subtitle: "현장의 안전이, 모두의 일상을 지킵니다.",
+                imageName: "HomeHeroSafety",
+                actionTitle: "제품 둘러보기"
             ),
-            recommendedProducts: (0..<4).map { index in
+            recommendedProducts: recommendedProducts,
+            bestSellerProducts: bestSellerProducts,
+            cartCount: 3
+        )
+    }
+
+    private var recommendedProducts: [HomeProduct] {
+        [
                 HomeProduct(
-                    id: "recommended-\(index)",
-                    title: "제품명",
-                    price: "₩00,000",
+                    id: "recommended-helmet",
+                    title: "세이프가드 ABS 안전모",
+                    price: "₩18,000",
                     imageName: nil,
                     isFavorite: false,
                     isSoldOut: false,
-                    isPriceHidden: index == 0,
-                    priceAmount: [25_000, 85_000, 180_000, 450_000][index],
-                    brand: ["브랜드 A", "브랜드 B", "브랜드 C", "브랜드 A"][index],
-                    shippingType: [.standard, .fast, .free, .standard][index]
-                )
-            },
-            bestSellerProducts: (0..<4).map { index in
+                    isPriceHidden: false,
+                    priceAmount: 18_000,
+                    brand: "세이프가드",
+                    shippingType: .standard,
+                    rating: 4.7,
+                    reviewCount: 3,
+                    originalPrice: "₩22,000",
+                    discountPercentage: 18
+                ),
                 HomeProduct(
-                    id: "best-\(index)",
-                    title: "제품명",
-                    price: "₩00,000",
+                    id: "recommended-boots",
+                    title: "경량 안전화 4인치",
+                    price: "₩54,000",
                     imageName: nil,
                     isFavorite: false,
-                    isSoldOut: index == 3,
+                    isSoldOut: false,
                     isPriceHidden: false,
-                    priceAmount: [35_000, 120_000, 760_000, 250_000][index],
-                    brand: ["브랜드 B", "브랜드 C", "브랜드 A", "브랜드 B"][index],
-                    shippingType: [.fast, .standard, .free, .standard][index]
+                    priceAmount: 54_000,
+                    brand: "브랜드 B",
+                    shippingType: .fast,
+                    rating: 4.7,
+                    reviewCount: 6
+                ),
+                HomeProduct(
+                    id: "recommended-harness",
+                    title: "전신 안전벨트",
+                    price: nil,
+                    imageName: nil,
+                    isFavorite: false,
+                    isSoldOut: false,
+                    isPriceHidden: true,
+                    priceAmount: nil,
+                    brand: "브랜드 C",
+                    shippingType: .standard,
+                    rating: 0,
+                    reviewCount: 0
+                ),
+                HomeProduct(
+                    id: "recommended-gloves",
+                    title: "코팅 장갑 10켤레",
+                    price: nil,
+                    imageName: nil,
+                    isFavorite: false,
+                    isSoldOut: false,
+                    isPriceHidden: true,
+                    priceAmount: nil,
+                    brand: "브랜드 A",
+                    shippingType: .standard,
+                    rating: 4.0,
+                    reviewCount: 1
                 )
-            },
-            cartCount: 3
-        )
+        ]
+    }
+
+    private var bestSellerProducts: [HomeProduct] {
+        [
+                HomeProduct(
+                    id: "best-helmet",
+                    title: "세이프가드 ABS 안전모",
+                    price: "₩18,000",
+                    imageName: nil,
+                    isFavorite: false,
+                    isSoldOut: false,
+                    isPriceHidden: false,
+                    priceAmount: 18_000,
+                    brand: "세이프가드",
+                    shippingType: .standard,
+                    rating: 4.7,
+                    reviewCount: 3,
+                    originalPrice: "₩22,000",
+                    discountPercentage: 18
+                ),
+                HomeProduct(
+                    id: "best-boots",
+                    title: "경량 안전화 4인치",
+                    price: "₩54,000",
+                    imageName: nil,
+                    isFavorite: false,
+                    isSoldOut: false,
+                    isPriceHidden: false,
+                    priceAmount: 54_000,
+                    brand: "브랜드 B",
+                    shippingType: .fast,
+                    rating: 4.7,
+                    reviewCount: 6
+                ),
+                HomeProduct(
+                    id: "best-extinguisher",
+                    title: "분말 소화기 3.3kg",
+                    price: "₩32,000",
+                    imageName: nil,
+                    isFavorite: false,
+                    isSoldOut: false,
+                    isPriceHidden: false,
+                    priceAmount: 32_000,
+                    brand: "브랜드 A",
+                    shippingType: .free,
+                    rating: 5.0,
+                    reviewCount: 1,
+                    originalPrice: "₩35,000",
+                    discountPercentage: 8
+                ),
+                HomeProduct(
+                    id: "best-winter-gloves",
+                    title: "방한 작업 장갑",
+                    price: "₩12,000",
+                    imageName: nil,
+                    isFavorite: false,
+                    isSoldOut: true,
+                    isPriceHidden: false,
+                    priceAmount: 12_000,
+                    brand: "브랜드 B",
+                    shippingType: .standard,
+                    rating: 0,
+                    reviewCount: 0
+                )
+        ]
     }
 }
 

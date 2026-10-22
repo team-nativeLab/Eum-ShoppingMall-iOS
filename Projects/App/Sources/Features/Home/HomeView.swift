@@ -28,6 +28,7 @@ struct HomeView: View {
                 HomeLoadErrorView(onRetry: { Task { await viewModel.retry() } })
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
         .overlay {
             AppDrawerView(
@@ -159,15 +160,11 @@ struct HomeView: View {
                 onQuoteTap: { openRoute(.quoteInquiry(nil)) },
                 onSearchSubmit: { navigation.push(.contextualSearch) },
                 onHeroTap: {
+                    openProductList(title: "전체 제품", products: content.recommendedProducts + content.bestSellerProducts)
+                },
+                onCompanyIntroductionTap: {
                     companyIntroductionReturnsToDrawer = false
                     openRoute(.companyIntroduction)
-                },
-                onCategoryTap: { category in
-                    if category.id == "custom" {
-                        openRoute(.quoteInquiry(nil))
-                    } else {
-                        openProductList(title: category.title, products: content.recommendedProducts + content.bestSellerProducts)
-                    }
                 },
                 onRecommendedTap: {
                     openProductList(title: "추천 제품", products: content.recommendedProducts)

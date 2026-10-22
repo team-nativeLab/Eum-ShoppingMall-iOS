@@ -7,13 +7,12 @@ final class ProductListNavigationUITests: XCTestCase {
         app.launch()
 
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
-        app.buttons["개인보호장비"].tap()
+        app.buttons["제품 둘러보기"].tap()
 
-        XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["전체 제품"].waitForExistence(timeout: 5))
         app.buttons["product-list-back"].tap()
 
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["개인보호장비"].exists)
         XCTAssertTrue(app.buttons["home-tab-홈"].exists)
     }
 
@@ -23,7 +22,7 @@ final class ProductListNavigationUITests: XCTestCase {
         app.launch()
 
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
-        app.buttons["카테고리"].tap()
+        app.buttons["home-tab-카테고리"].tap()
         XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
 
         app.buttons["개인보호장비"].tap()
@@ -41,7 +40,7 @@ final class ProductListNavigationUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
 
-        app.buttons["카테고리"].tap()
+        app.buttons["home-tab-카테고리"].tap()
         XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
         app.buttons["category-search"].tap()
 
@@ -58,7 +57,7 @@ final class ProductListNavigationUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
 
-        app.buttons["개인보호장비"].tap()
+        openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
         app.buttons["product-list-search"].tap()
         XCTAssertTrue(app.staticTexts["최근 검색어"].waitForExistence(timeout: 5))
@@ -74,7 +73,7 @@ final class ProductListNavigationUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
 
-        app.buttons["카테고리"].tap()
+        app.buttons["home-tab-카테고리"].tap()
         XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
         app.buttons["category-tab-검색"].tap()
         XCTAssertTrue(app.staticTexts["최근 검색어"].waitForExistence(timeout: 5))
@@ -90,9 +89,9 @@ final class ProductListNavigationUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
 
-        app.buttons["개인보호장비"].tap()
-        XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
-        app.staticTexts["제품명"].firstMatch.tap()
+        app.buttons["제품 둘러보기"].tap()
+        XCTAssertTrue(app.staticTexts["전체 제품"].waitForExistence(timeout: 5))
+        app.staticTexts["세이프가드 ABS 안전모"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
 
         app.buttons["product-detail-back"].tap()
@@ -109,9 +108,9 @@ final class ProductListNavigationUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
 
-        app.buttons["개인보호장비"].tap()
+        openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
-        app.staticTexts["제품명"].firstMatch.tap()
+        app.staticTexts["세이프가드 ABS 안전모"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
 
         let allReviewsButton = app.buttons["product-all-reviews"]
@@ -137,9 +136,9 @@ final class ProductListNavigationUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
 
-        app.buttons["개인보호장비"].tap()
+        openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
-        app.staticTexts["제품명"].firstMatch.tap()
+        app.staticTexts["세이프가드 ABS 안전모"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
 
         let shippingDetailsButton = app.buttons["product-shipping-details"]
@@ -163,9 +162,9 @@ final class ProductListNavigationUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
 
-        app.buttons["개인보호장비"].tap()
+        openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
-        app.staticTexts["제품명"].firstMatch.tap()
+        app.staticTexts["세이프가드 ABS 안전모"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
 
         let favoriteButton = app.buttons["related-favorite-related-0"]
@@ -186,7 +185,7 @@ final class ProductListNavigationUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
 
-        app.buttons["개인보호장비"].tap()
+        openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
         app.buttons["product-list-tab-장바구니"].tap()
         XCTAssertTrue(app.staticTexts["장바구니"].waitForExistence(timeout: 5))
@@ -201,7 +200,7 @@ final class ProductListNavigationUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
 
-        app.buttons["개인보호장비"].tap()
+        openProductsFromCategoryTab(app)
         XCTAssertTrue(app.buttons["product-list-filter"].waitForExistence(timeout: 5))
         app.buttons["product-list-filter"].tap()
         XCTAssertTrue(app.buttons["product-filter-apply"].waitForExistence(timeout: 5))
@@ -237,4 +236,12 @@ final class ProductListNavigationUITests: XCTestCase {
 
         XCTAssertTrue(app.buttons["address-editor-search"].waitForExistence(timeout: 5))
     }
+    @MainActor
+    private func openProductsFromCategoryTab(_ app: XCUIApplication) {
+        app.buttons["home-tab-카테고리"].tap()
+        XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
+        app.buttons["개인보호장비"].tap()
+        XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
+    }
+
 }
