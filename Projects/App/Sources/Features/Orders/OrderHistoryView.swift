@@ -108,7 +108,10 @@ struct OrderHistoryView: View {
     @ViewBuilder
     private var orderList: some View {
         if viewModel.filteredOrders.isEmpty {
-            emptyState
+            VStack(spacing: 12) {
+                emptyState
+                browseProductsButton
+            }
         } else {
             VStack(spacing: 12) {
                 ForEach(viewModel.filteredOrders) { order in

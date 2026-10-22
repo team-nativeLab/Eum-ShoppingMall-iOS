@@ -14,6 +14,10 @@ final class OrderHistoryNavigationUITests: XCTestCase {
 
         app.buttons["order-history-filter-배송준비"].tap()
         XCTAssertTrue(app.staticTexts["주문 내역이 없습니다"].waitForExistence(timeout: 5))
+        let emptyHistoryScreenshot = XCTAttachment(screenshot: app.screenshot())
+        emptyHistoryScreenshot.name = "A16e-order-history-filter-empty"
+        emptyHistoryScreenshot.lifetime = .keepAlways
+        add(emptyHistoryScreenshot)
         let browseProductsButton = app.buttons["order-history-browse-products"]
         XCTAssertTrue(browseProductsButton.exists)
         XCTAssertTrue(browseProductsButton.isEnabled)
