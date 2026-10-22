@@ -92,7 +92,9 @@ final class ProductListNavigationUITests: XCTestCase {
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
         app.staticTexts["세이프가드 ABS 안전모"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["ABS 안전모 (내관 조절형)"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["₩18,000"].exists)
+        XCTAssertTrue(app.staticTexts["18%"].exists)
 
         app.buttons["product-detail-back"].tap()
         let productListBackButton = app.buttons["product-list-back"]
@@ -111,7 +113,7 @@ final class ProductListNavigationUITests: XCTestCase {
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
         app.staticTexts["세이프가드 ABS 안전모"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["ABS 안전모 (내관 조절형)"].waitForExistence(timeout: 5))
 
         let allReviewsButton = app.buttons["product-all-reviews"]
         let inquiryButton = app.buttons["product-inquiry"]
@@ -119,6 +121,8 @@ final class ProductListNavigationUITests: XCTestCase {
             app.swipeUp()
         }
         XCTAssertTrue(allReviewsButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["리뷰 (3)"].exists)
+        XCTAssertTrue(app.staticTexts["이*현"].exists)
         allReviewsButton.tap()
         XCTAssertTrue(app.staticTexts["상품 리뷰"].waitForExistence(timeout: 5))
         app.buttons["product-reviews-back"].tap()
@@ -127,7 +131,7 @@ final class ProductListNavigationUITests: XCTestCase {
         inquiryButton.tap()
         XCTAssertTrue(app.staticTexts["상품 문의하기"].waitForExistence(timeout: 5))
         app.buttons["inquiry-compose-back"].tap()
-        XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
+        XCTAssertTrue(inquiryButton.waitForExistence(timeout: 5))
     }
 
     @MainActor
@@ -139,7 +143,7 @@ final class ProductListNavigationUITests: XCTestCase {
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
         app.staticTexts["세이프가드 ABS 안전모"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["ABS 안전모 (내관 조절형)"].waitForExistence(timeout: 5))
 
         let shippingDetailsButton = app.buttons["product-shipping-details"]
         for _ in 0..<8 where !shippingDetailsButton.exists {
@@ -150,6 +154,8 @@ final class ProductListNavigationUITests: XCTestCase {
 
         XCTAssertTrue(app.buttons["shipping-policy-back"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["상품 배송 및 교환·반품 안내"].exists)
+        XCTAssertTrue(app.staticTexts["ABS 안전모 (내관 조절형)"].exists)
+        XCTAssertTrue(app.staticTexts["편도 ₩3,000"].exists)
         app.buttons["shipping-policy-back"].tap()
 
         XCTAssertTrue(app.buttons["product-detail-back"].waitForExistence(timeout: 5))
@@ -165,9 +171,9 @@ final class ProductListNavigationUITests: XCTestCase {
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
         app.staticTexts["세이프가드 ABS 안전모"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["ABS 안전모 (내관 조절형)"].waitForExistence(timeout: 5))
 
-        let favoriteButton = app.buttons["related-favorite-related-0"]
+        let favoriteButton = app.buttons["related-favorite-related-boots"]
         for _ in 0..<10 where !favoriteButton.exists {
             app.swipeUp()
         }

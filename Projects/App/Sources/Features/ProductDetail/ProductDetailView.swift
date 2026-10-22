@@ -5,10 +5,18 @@ final class ProductDetailViewModel: ObservableObject {
     enum Tab: String, CaseIterable, Identifiable {
         case information = "정보"
         case shipping = "배송·교환"
-        case reviews = "리뷰 (0)"
-        case inquiries = "문의 (0)"
+        case reviews = "리뷰"
+        case inquiries = "문의"
 
         var id: String { rawValue }
+
+        func title(reviewCount: Int) -> String {
+            switch self {
+            case .reviews: "리뷰 (\(reviewCount))"
+            case .inquiries: "문의 (0)"
+            default: rawValue
+            }
+        }
     }
 
     @Published var selectedTab: Tab = .information
@@ -26,6 +34,7 @@ struct ProductDetailView: View {
     @StateObject private var viewModel: ProductDetailViewModel
 
     let product: HomeProduct
+    private let detail: ProductDetailContent
     let onBack: () -> Void
     let onQuoteTap: () -> Void
     let onOpenCart: () -> Void
@@ -47,6 +56,7 @@ struct ProductDetailView: View {
         onShippingDetails: @escaping () -> Void
     ) {
         self.product = product
+        detail = ProductDetailContent(product: product)
         self.onBack = onBack
         self.onQuoteTap = onQuoteTap
         self.onOpenCart = onOpenCart
@@ -66,7 +76,7 @@ struct ProductDetailView: View {
                 ScrollView {
                     LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
                         gallery
-                        productSummary
+                        ProductDetailSummaryView(product: product, detail: detail)
 
                         Section {
                             detailSections
@@ -177,68 +187,6 @@ struct ProductDetailView: View {
         .accessibilityLabel("상품 이미지, 5장 중 1장")
     }
 
-    private var productSummary: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading, spacing: 8) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack(spacing: 6) {
-                            Text("브랜드명")
-                                .font(EUMTypography.captionMedium)
-                                .foregroundStyle(EUMColor.text3SwiftUI)
-
-                            if product.isPriceHidden {
-                                Text("견적 상품")
-                                    .font(EUMTypography.labelExtraSmall)
-                                    .foregroundStyle(EUMColor.text2SwiftUI)
-                                    .padding(.horizontal, 6)
-                                    .frame(height: 20)
-                                    .overlay(RoundedRectangle(cornerRadius: 4).stroke(EUMColor.lineStrongSwiftUI, lineWidth: 1))
-                            }
-                        }
-
-                        Text(product.title)
-                            .font(EUMTypography.heading2)
-                            .tracking(-0.44)
-                            .foregroundStyle(EUMColor.text1SwiftUI)
-                    }
-
-                    if product.isPriceHidden {
-                        Text("가격 문의")
-                            .font(EUMTypography.heading2)
-                            .foregroundStyle(EUMColor.text2SwiftUI)
-                    } else if let price = product.price {
-                        Text(price)
-                            .font(Font.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
-                            .tracking(-0.36)
-                            .foregroundStyle(EUMColor.text1SwiftUI)
-                    }
-                }
-
-                Text("제품에 대한 간단한 설명이 들어갑니다.\n안전한 작업을 위한 필수 아이템입니다.")
-                    .font(EUMTypography.bodyMedium)
-                    .tracking(-0.075)
-                    .lineSpacing(0)
-                    .foregroundStyle(EUMColor.text2SwiftUI)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            VStack(alignment: .leading, spacing: 8) {
-                ProductDetailKeyValueRow(label: "배송", value: "일반 배송 (2~3일) · 무료", labelWidth: 72)
-                ProductDetailKeyValueRow(label: "인증", value: "KC 인증 0000-0000", labelWidth: 72)
-                ProductDetailKeyValueRow(label: "제조사", value: "제조사명", labelWidth: 72)
-            }
-            .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(EUMColor.backgroundSubtleSwiftUI)
-            .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 24)
-        .padding(.bottom, 32)
-    }
-
     private func detailTabs(onSelect: @escaping (ProductDetailViewModel.Tab) -> Void) -> some View {
         HStack(spacing: 0) {
             ForEach(ProductDetailViewModel.Tab.allCases) { tab in
@@ -246,7 +194,7 @@ struct ProductDetailView: View {
                     onSelect(tab)
                 } label: {
                     VStack(spacing: 0) {
-                        Text(tab.rawValue)
+                        Text(tab.title(reviewCount: detail.reviewCount))
                             .font(EUMTypography.labelMedium)
                             .tracking(-0.07)
                             .foregroundStyle(tab == viewModel.selectedTab ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI)
@@ -270,6 +218,7 @@ struct ProductDetailView: View {
 
     private var detailSections: some View {
         ProductDetailSections(
+            detail: detail,
             isDetailExpanded: $viewModel.isDetailExpanded,
             onQuoteTap: onQuoteTap,
             onProductInquiry: onProductInquiry,
@@ -305,10 +254,9 @@ struct ProductDetailView: View {
                 Button {
                     viewModel.isFavorite.toggle()
                 } label: {
-                    Image("ProductDetailFavorite")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
+                    Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+                        .font(.system(size: 22, weight: .regular))
+                        .foregroundStyle(viewModel.isFavorite ? EUMColor.dangerSwiftUI : EUMColor.text1SwiftUI)
                         .frame(width: 56, height: 56)
                         .overlay(RoundedRectangle(cornerRadius: 8).stroke(EUMColor.lineStrongSwiftUI, lineWidth: 1))
                 }
