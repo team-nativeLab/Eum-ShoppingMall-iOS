@@ -92,13 +92,14 @@ Page: `06 Design — App` (`178:345`). Frame bounds below come from Figma MCP me
 | 661:8268 | A-42r FAQ 검색 결과 · HF | 390 × 844 pt |
 | 661:8437 | A-42z FAQ 검색 결과 없음 · HF | 390 × 844 pt |
 | 663:8212 | A-43 회사소개 · HF | 390 × 2376 pt |
+| 1101:2145 | 리뷰 등록 · HF | 390 × 844 pt |
 
 ## Navigation and scroll notes
 
 - The page tree has no prototype interaction edges in the returned metadata, so a complete screen-to-screen navigation graph is not asserted.
 - Home (`178:369`) has a vertically extending body and horizontal product/category content rails.
 - The screen set includes state variants (e.g. no-price product/cart, sold-out/cart zero orderable, search empty, FAQ empty, notification empty, login errors, confirmation sheets/dialogs). Implement them as distinct designs only after their node contexts and transitions are audited.
-- Loading states and authentication gating could not be confirmed across all 88 frames.
+- Loading states and authentication gating are not confirmed across the listed frames. The 88-frame inventory from 2026-10-20 is still incomplete; node `1101:2145` was added on 2026-10-22, and additional newer frames remain to be reconciled.
 
 ## Related flow documents
 
