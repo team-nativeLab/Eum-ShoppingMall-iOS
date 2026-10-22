@@ -106,3 +106,7 @@ Page: `06 Design — App` (`178:345`). Frame bounds below come from Figma MCP me
 
 - [화면 이동과 검증 범위](ROUTE_AUDIT.md)
 - [추가 화면 디자인 요청과 상태](MISSING_SCREEN_DESIGN_REQUESTS.md)
+
+## A-20e favorites empty (#250)
+
+Figma `927:44560`: 마이 → 찜한 상품 → 마지막 찜 삭제 → 빈 상태 → 상품 둘러보기 → 전체 제품 → 뒤로 → 찜 빈 상태 유지. 로컬 샘플 기반이며 서버 저장은 포함하지 않는다.

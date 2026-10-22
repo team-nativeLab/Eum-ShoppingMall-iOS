@@ -51,6 +51,7 @@ struct HomeAccountRouteView: View {
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
+    let onBrowseProducts: () -> Void
     let onWithdrawTap: () -> Void
 
     @ViewBuilder
@@ -72,6 +73,7 @@ struct HomeAccountRouteView: View {
                 onRoute: onRoute,
                 onMessage: onMessage,
                 onProductTap: onProductTap,
+            onBrowseProducts: onBrowseProducts,
                 onWithdrawTap: onWithdrawTap
             )
         default:
@@ -79,7 +81,6 @@ struct HomeAccountRouteView: View {
         }
     }
 }
-
 struct HomeProfileRouteView: View {
     let route: HomeModalRoute
     let onBack: () -> Void
@@ -114,6 +115,7 @@ struct HomeAccountCollectionRouteView: View {
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
+    let onBrowseProducts: () -> Void
     let onWithdrawTap: () -> Void
 
     var body: some View {
@@ -129,6 +131,7 @@ struct HomeAccountCollectionRouteView: View {
             onEditAddress: { onRoute(.addressEditor($0)) },
             onAction: onMessage,
             onProductTap: onProductTap,
+            onBrowseProducts: onBrowseProducts,
             onNewQuoteInquiry: { onRoute(.quoteInquiry(nil)) },
             onQuoteDocument: { onRoute(.quoteDetail($0)) },
             onOpenQuoteDetail: { onRoute(.quoteDetail($0)) },
@@ -137,7 +140,6 @@ struct HomeAccountCollectionRouteView: View {
         )
     }
 }
-
 struct HomeOrderRouteView: View {
     let route: HomeModalRoute
     let onBack: () -> Void
@@ -198,7 +200,6 @@ struct HomeOrderRouteView: View {
         }
     }
 }
-
 struct AccountCollectionRouteView: View {
     let destination: AccountCollectionDestination
     @ObservedObject var addressViewModel: AddressesViewModel
@@ -211,6 +212,7 @@ struct AccountCollectionRouteView: View {
     let onEditAddress: (ShippingAddress) -> Void
     let onAction: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
+    let onBrowseProducts: () -> Void
     let onNewQuoteInquiry: () -> Void
     let onQuoteDocument: (QuoteInquiryRecord) -> Void
     let onOpenQuoteDetail: (QuoteInquiryRecord) -> Void
@@ -221,7 +223,7 @@ struct AccountCollectionRouteView: View {
     var body: some View {
         switch destination {
         case .favorites:
-            FavoritesView(onBack: onBack, onProductTap: onProductTap)
+            FavoritesView(onBack: onBack, onProductTap: onProductTap, onBrowseProducts: onBrowseProducts)
         case .recentlyViewed:
             RecentlyViewedView(onBack: onBack, onProductTap: onProductTap)
         case .coupons:
