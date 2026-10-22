@@ -278,7 +278,7 @@ struct ProductOptionsSheet: View {
         HStack(spacing: 8) {
             EUMButton(
                 title: "장바구니 담기",
-                kind: isPriceHidden ? .secondary : .primary,
+                kind: .secondary,
                 size: .large
             ) {
                 onAddToCart()
@@ -288,7 +288,7 @@ struct ProductOptionsSheet: View {
 
             EUMButton(
                 title: isPriceHidden ? "견적 문의" : "바로 구매",
-                kind: isPriceHidden ? .primary : .secondary,
+                kind: .primary,
                 size: .large
             ) {
                 onPrimaryAction()
