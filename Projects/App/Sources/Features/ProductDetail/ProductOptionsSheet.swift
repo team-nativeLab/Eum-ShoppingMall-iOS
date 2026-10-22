@@ -58,7 +58,6 @@ struct ProductOptionsSheet: View {
             bottomActions
         }
         .background(EUMColor.backgroundSwiftUI)
-        .accessibilityIdentifier("productOptionsSheet")
     }
 
     private var header: some View {
@@ -272,6 +271,7 @@ struct ProductOptionsSheet: View {
                 onAddToCart()
                 dismiss()
             }
+            .accessibilityIdentifier("product-options-add-to-cart")
 
             EUMButton(
                 title: isPriceHidden ? "견적 문의" : "바로 구매",
@@ -281,6 +281,7 @@ struct ProductOptionsSheet: View {
                 onPrimaryAction()
                 dismiss()
             }
+            .accessibilityIdentifier("product-options-primary-action")
         }
         .padding(.horizontal, 20)
         .padding(.top, 12)

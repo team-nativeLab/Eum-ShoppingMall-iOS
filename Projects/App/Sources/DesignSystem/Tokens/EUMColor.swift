@@ -23,6 +23,7 @@ enum EUMColor {
     static let surfaceDisabled = UIColor(red: 235 / 255, green: 235 / 255, blue: 235 / 255, alpha: 1)
     static let textDisabled = UIColor(red: 179 / 255, green: 179 / 255, blue: 179 / 255, alpha: 1)
     static let danger = UIColor(red: 197 / 255, green: 34 / 255, blue: 31 / 255, alpha: 1)
+    static let dangerBackground = UIColor(red: 255 / 255, green: 233 / 255, blue: 233 / 255, alpha: 1)
 
     static let text1SwiftUI = Color(uiColor: text1)
     static let text2SwiftUI = Color(uiColor: text2)
@@ -45,4 +46,5 @@ enum EUMColor {
     static let surfaceDisabledSwiftUI = Color(uiColor: surfaceDisabled)
     static let textDisabledSwiftUI = Color(uiColor: textDisabled)
     static let dangerSwiftUI = Color(uiColor: danger)
+    static let dangerBackgroundSwiftUI = Color(uiColor: dangerBackground)
 }

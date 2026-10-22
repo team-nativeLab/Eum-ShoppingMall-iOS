@@ -128,6 +128,42 @@ final class ProductListNavigationUITests: XCTestCase {
     }
 
     @MainActor
+    func testHiddenPriceProductShowsBothBuyActions() {
+        let app = XCUIApplication()
+        app.launch()
+        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+
+        openProductsFromCategoryTab(app)
+        XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
+        let hiddenPriceProduct = app.staticTexts["전신 안전벨트"].firstMatch
+        for _ in 0..<5 where !hiddenPriceProduct.exists {
+            app.swipeUp()
+        }
+        XCTAssertTrue(hiddenPriceProduct.waitForExistence(timeout: 5))
+        hiddenPriceProduct.tap()
+
+        XCTAssertTrue(app.staticTexts["금액 미표시"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["평점 없음"].exists)
+        attachScreenshot(of: app, named: "A-05h-hidden-price-top")
+
+        let addToCartButton = app.buttons["장바구니 담기"]
+        let quoteButton = app.buttons["견적 문의"]
+        XCTAssertTrue(addToCartButton.exists)
+        XCTAssertTrue(quoteButton.exists)
+
+        addToCartButton.tap()
+        XCTAssertTrue(app.staticTexts["옵션 선택"].waitForExistence(timeout: 5))
+        app.buttons["product-options-add-to-cart"].tap()
+        XCTAssertTrue(app.alerts["장바구니에 담았습니다."].waitForExistence(timeout: 5))
+        app.alerts.buttons["확인"].tap()
+
+        quoteButton.tap()
+        XCTAssertTrue(app.staticTexts["옵션 선택"].waitForExistence(timeout: 5))
+        app.buttons["product-options-primary-action"].tap()
+        XCTAssertTrue(app.staticTexts["견적 문의"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
     func testProductReviewAndInquiryActionsOpenTheirScreensAndReturnToDetail() {
         let app = XCUIApplication()
         app.launch()

@@ -234,18 +234,20 @@ struct ProductDetailView: View {
             if product.isPriceHidden {
                 HStack(spacing: 8) {
                     Image("ProductDetailInfo")
+                        .renderingMode(.template)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 16, height: 16)
+                        .foregroundStyle(EUMColor.dangerSwiftUI)
                     Text("가격 문의 상품은 견적 문의로 구매할 수 있습니다.")
                         .font(EUMTypography.bodySmall)
                         .tracking(-0.07)
-                        .foregroundStyle(EUMColor.text2SwiftUI)
+                        .foregroundStyle(EUMColor.dangerSwiftUI)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
-                .background(EUMColor.surfaceSwiftUI)
+                .background(EUMColor.dangerBackgroundSwiftUI)
             }
 
             HStack(spacing: 8) {
@@ -262,7 +264,11 @@ struct ProductDetailView: View {
                 .accessibilityLabel(viewModel.isFavorite ? "찜 취소" : "찜하기")
 
                 if product.isPriceHidden {
-                    EUMButton(title: "견적 문의", size: .large) {
+                    EUMButton(title: "장바구니 담기", size: .large) {
+                        viewModel.isOptionsPresented = true
+                    }
+
+                    EUMButton(title: "견적 문의", kind: .secondary, size: .large) {
                         viewModel.isOptionsPresented = true
                     }
                 } else {
