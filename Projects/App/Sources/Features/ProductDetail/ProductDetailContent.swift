@@ -137,7 +137,7 @@ struct ProductDetailSummaryView: View {
                                 .foregroundStyle(EUMColor.text3SwiftUI)
 
                             if product.isPriceHidden {
-                                Text("견적 상품")
+                                Text("금액 미표시")
                                     .font(EUMTypography.labelExtraSmall)
                                     .foregroundStyle(EUMColor.text2SwiftUI)
                                     .padding(.horizontal, 6)
@@ -152,13 +152,17 @@ struct ProductDetailSummaryView: View {
                             .foregroundStyle(EUMColor.text1SwiftUI)
                     }
 
-                    if let rating = detail.rating {
+                    if let rating = detail.rating, rating > 0 {
                         HStack(spacing: 8) {
                             ProductDetailRatingStars(rating: rating, size: 20)
                             Text("\(rating, specifier: "%.1f") · 리뷰 \(detail.reviewCount)개")
                                 .font(EUMTypography.captionRegular)
                                 .foregroundStyle(EUMColor.text3SwiftUI)
                         }
+                    } else {
+                        Text("평점 없음")
+                            .font(EUMTypography.labelExtraSmall)
+                            .foregroundStyle(EUMColor.text3SwiftUI)
                     }
 
                     if product.isPriceHidden {
