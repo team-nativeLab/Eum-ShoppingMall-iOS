@@ -103,6 +103,10 @@ struct ProductListView: View {
                                     imageName: product.imageName,
                                     isSoldOut: product.isSoldOut,
                                     isPriceHidden: product.isPriceHidden,
+                                    rating: product.rating,
+                                    reviewCount: product.reviewCount,
+                                    originalPrice: product.originalPrice,
+                                    discountPercentage: product.discountPercentage,
                                     isFavorite: product.isFavorite,
                                     onFavoriteTap: { onFavoriteTap(product.id) },
                                     onTap: { onProductTap(product) }
@@ -124,6 +128,7 @@ struct ProductListView: View {
                 onSelect: onSelectTab
             )
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
         .fullScreenCover(isPresented: $isShowingFilter) {
             ProductFilterView(filter: viewModel.filter, brands: viewModel.availableBrands) {

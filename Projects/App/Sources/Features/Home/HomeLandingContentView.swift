@@ -7,7 +7,7 @@ struct HomeLandingContentView: View {
     let onQuoteTap: () -> Void
     let onSearchSubmit: () -> Void
     let onHeroTap: () -> Void
-    let onCategoryTap: (HomeCategory) -> Void
+    let onCompanyIntroductionTap: () -> Void
     let onRecommendedTap: () -> Void
     let onBestSellersTap: () -> Void
     let onProductTap: (HomeProduct) -> Void
@@ -33,22 +33,28 @@ struct HomeLandingContentView: View {
                                 imageName: content.hero.imageName,
                                 actionTitle: content.hero.actionTitle,
                                 action: onHeroTap
+                            ),
+                            .init(
+                                id: "home-custom-solution",
+                                eyebrow: "CUSTOM SOLUTION",
+                                title: "현장에 꼭 맞는,\n맞춤 안전 솔루션.",
+                                subtitle: "공간과 환경에 맞는 최적의 솔루션을 제안합니다.",
+                                imageName: "HomeHeroCustomSolution",
+                                actionTitle: "견적 문의하기",
+                                action: onQuoteTap
+                            ),
+                            .init(
+                                id: "home-sustainable-value",
+                                eyebrow: "SUSTAINABLE VALUE",
+                                title: "지속 가능한\n안전의 가치.",
+                                subtitle: "제조부터 현장까지, 안전의 기준을 지킵니다.",
+                                imageName: "HomeHeroSustainable",
+                                actionTitle: "회사소개 보기",
+                                action: onCompanyIntroductionTap
                             )
                         ])
                         .padding(.horizontal, EUMSpacing.homeContentInset)
                     }
-
-                    ScrollView(.horizontal) {
-                        HStack(spacing: 12) {
-                            ForEach(content.categories) { category in
-                                EUMCategoryItem(title: category.title, iconName: category.iconName) {
-                                    onCategoryTap(category)
-                                }
-                            }
-                        }
-                        .padding(.horizontal, EUMSpacing.homeContentInset)
-                    }
-                    .scrollIndicators(.hidden)
                 }
 
                 recommendedSection(content.recommendedProducts)
@@ -103,6 +109,10 @@ struct HomeLandingContentView: View {
             imageName: product.imageName,
             isSoldOut: product.isSoldOut,
             isPriceHidden: product.isPriceHidden,
+            rating: product.rating,
+            reviewCount: product.reviewCount,
+            originalPrice: product.originalPrice,
+            discountPercentage: product.discountPercentage,
             isFavorite: product.isFavorite,
             onFavoriteTap: { onFavoriteTap(product.id) },
             onTap: { onProductTap(product) }

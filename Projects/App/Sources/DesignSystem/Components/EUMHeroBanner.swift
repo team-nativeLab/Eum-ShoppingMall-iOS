@@ -6,7 +6,7 @@ struct EUMHeroBanner: View {
         let eyebrow: String
         let title: String
         let subtitle: String
-        var imageName: String = "HeroBannerPlaceholder"
+        var imageName: String = "HomeHeroSafety"
         let actionTitle: String
         var action: () -> Void
     }
@@ -19,13 +19,14 @@ struct EUMHeroBanner: View {
     var body: some View {
         if let page = pages[safe: currentPage] {
             ZStack(alignment: .topLeading) {
-                Image(page.imageName)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 224)
-                    .clipped()
-                    .accessibilityHidden(true)
+                GeometryReader { geometry in
+                    Image(page.imageName)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geometry.size.width, height: 224)
+                        .clipped()
+                        .accessibilityHidden(true)
+                }
 
                 LinearGradient(
                     stops: [
@@ -86,6 +87,7 @@ struct EUMHeroBanner: View {
                         .accessibilityLabel("배너 \(currentPage + 1)/\(pages.count)")
                 }
             }
+            .frame(maxWidth: .infinity)
             .frame(height: 224)
             .clipShape(RoundedRectangle(cornerRadius: EUMRadius.large))
             .contentShape(RoundedRectangle(cornerRadius: EUMRadius.large))
