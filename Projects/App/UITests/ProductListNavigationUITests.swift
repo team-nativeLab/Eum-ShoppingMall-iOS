@@ -84,13 +84,13 @@ final class ProductListNavigationUITests: XCTestCase {
     }
 
     @MainActor
-    func testProductDetailBackReturnsThroughListToHome() {
+    func testProductDetailBackReturnsThroughListToCategory() {
         let app = XCUIApplication()
         app.launch()
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
 
-        app.buttons["제품 둘러보기"].tap()
-        XCTAssertTrue(app.staticTexts["전체 제품"].waitForExistence(timeout: 5))
+        openProductsFromCategoryTab(app)
+        XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
         app.staticTexts["세이프가드 ABS 안전모"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["브랜드명"].waitForExistence(timeout: 5))
 
@@ -98,8 +98,8 @@ final class ProductListNavigationUITests: XCTestCase {
         let productListBackButton = app.buttons["product-list-back"]
         XCTAssertTrue(productListBackButton.waitForExistence(timeout: 5))
         productListBackButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["home-tab-홈"].exists)
+        XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["개인보호장비"].exists)
     }
 
     @MainActor
