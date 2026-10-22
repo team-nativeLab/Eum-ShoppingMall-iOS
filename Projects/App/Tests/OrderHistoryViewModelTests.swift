@@ -31,4 +31,10 @@ final class OrderHistoryViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.filteredOrders.map(\.id), ["order-transit-1"])
     }
 
+    @MainActor
+    func testEmptyOrderHistoryHasNoFilteredOrders() {
+        let viewModel = OrderHistoryViewModel(orders: [])
+        XCTAssertTrue(viewModel.filteredOrders.isEmpty)
+    }
+
 }
