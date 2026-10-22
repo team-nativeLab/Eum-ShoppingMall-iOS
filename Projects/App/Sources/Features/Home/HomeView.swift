@@ -244,7 +244,7 @@ private extension HomeView {
     func destinationView(_ destination: HomeDestination, content: HomeContent) -> some View {
         switch destination {
         case let .screen(route):
-            modalRouteHost(route)
+            modalRouteHost(route, content: content)
         case let .product(product):
             ProductDetailView(
                 product: product,
@@ -322,7 +322,7 @@ private extension HomeView {
         )
     }
 
-    func modalRouteHost(_ route: HomeModalRoute) -> some View {
+    func modalRouteHost(_ route: HomeModalRoute, content: HomeContent) -> some View {
         HomeModalRouteHostView(
             route: route,
             addressViewModel: addressesViewModel,
@@ -335,6 +335,9 @@ private extension HomeView {
             onRoute: openRoute,
             onMessage: { presentedMessage = $0 },
             onProductTap: openProductDetail,
+            onBrowseProducts: {
+                openProductList(title: "전체 제품", products: content.recommendedProducts + content.bestSellerProducts)
+            },
             onAddressChange: { _ in openRoute(.accountCollection(.addresses)) },
             onViewContactInquiries: viewContactInquiries,
             onHome: returnHome,

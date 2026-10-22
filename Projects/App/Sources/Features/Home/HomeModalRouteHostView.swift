@@ -12,6 +12,7 @@ struct HomeModalRouteHostView: View {
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
+    let onBrowseProducts: () -> Void
     let onAddressChange: (OrderHistoryItem) -> Void
     let onViewContactInquiries: () -> Void
     let onHome: () -> Void
@@ -43,6 +44,7 @@ struct HomeModalRouteHostView: View {
                 onBack: onBack,
                 onRoute: onRoute,
                 onMessage: onMessage,
+                onBrowseProducts: onBrowseProducts,
                 onAddressChange: onAddressChange
             )
         case .returnRequestDetail, .returnWithdrawalConfirmation:

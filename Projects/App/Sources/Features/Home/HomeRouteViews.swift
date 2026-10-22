@@ -143,6 +143,7 @@ struct HomeOrderRouteView: View {
     let onBack: () -> Void
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
+    let onBrowseProducts: () -> Void
     let onAddressChange: (OrderHistoryItem) -> Void
 
     @ViewBuilder
@@ -153,6 +154,7 @@ struct HomeOrderRouteView: View {
                 initialStatus: status,
                 onBack: onBack,
                 onCancelReturn: { onRoute(.returnHistory) },
+                onBrowseProducts: onBrowseProducts,
                 onOrderDetail: { onRoute(.orderDetail($0)) },
                 onCancelOrder: { _ in onMessage("주문 취소는 서버 연동 후 이용할 수 있어요.") },
                 onTrackDelivery: { onRoute(.deliveryTracking($0)) },
