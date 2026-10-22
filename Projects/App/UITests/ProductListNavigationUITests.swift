@@ -153,6 +153,8 @@ final class ProductListNavigationUITests: XCTestCase {
 
         addToCartButton.tap()
         XCTAssertTrue(app.staticTexts["옵션 선택"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["가격 문의 상품은 견적 문의로 구매할 수 있습니다."].exists)
+        attachScreenshot(of: app, named: "A-05sh-hidden-options")
         app.buttons["product-options-add-to-cart"].tap()
         XCTAssertTrue(app.alerts["장바구니에 담았습니다."].waitForExistence(timeout: 5))
         app.alerts.buttons["확인"].tap()
