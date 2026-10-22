@@ -18,7 +18,8 @@ Source: high-fidelity Figma contexts for A-01 (`178:350`), A-02 (`178:369`), A-1
 | line-control | `#949494` | TextField instance border |
 | pressed-dark | `#333333` | Button pressed state |
 | text-disabled | `#B3B3B3` | Button disabled label |
-| danger | `#C5221F` | Danger button default |
+| danger | `#C5221F` | A-05h price inquiry notice / danger button |
+| danger background | `#FFE9E9` | Price-hidden notice (`179:1109`, `180:1258`) |
 | inverse | `#FFFFFF` | Splash/Home component styles |
 | inverse-2 | `rgba(255,255,255,0.72)` | Home component styles |
 | splash overlay | `rgba(13,13,15,0.15 / 0.25 / 0.5)` | Splash gradient stops |
@@ -27,7 +28,7 @@ Source: high-fidelity Figma contexts for A-01 (`178:350`), A-02 (`178:369`), A-1
 | image placeholder secondary top | `#ECECEC` | `HF/Image` tone ph-2 (`353:3555`) |
 | image placeholder secondary bottom | `#DCDCDC` | `HF/Image` tone ph-2 (`353:3555`) |
 
-No primary/secondary brand color or semantic success/warning/error palette was confirmed in the inspected contexts.
+No primary/secondary brand color or full semantic palette was confirmed; A-05h provides the danger foreground/background pair above.
 
 ## Typography
 
