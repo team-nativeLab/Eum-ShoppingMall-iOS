@@ -30,6 +30,7 @@ struct HomeAccountTabView: View {
                 onFavoritesTap: { onRoute(.accountCollection(.favorites)) },
                 onRecentlyViewedTap: { onRoute(.accountCollection(.recentlyViewed)) },
                 onCouponsTap: { onRoute(.accountCollection(.coupons)) },
+                onPointsTap: { onRoute(.accountCollection(.points)) },
                 onAddressesTap: { onRoute(.accountCollection(.addresses)) },
                 onQuoteHistoryTap: { onRoute(.accountCollection(.quoteHistory)) },
                 onContactHistoryTap: { onRoute(.accountCollection(.contactHistory)) },

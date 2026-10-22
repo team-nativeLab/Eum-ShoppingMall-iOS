@@ -14,7 +14,7 @@ final class MyPageViewModelTests: XCTestCase {
     func testShortcutsOrderStatusAndMenuMatchFigmaInventory() {
         let viewModel = MyPageViewModel()
 
-        XCTAssertEqual(viewModel.shortcuts.map(\.title), ["주문내역", "찜한 상품", "최근 본 상품", "쿠폰함"])
+        XCTAssertEqual(viewModel.shortcuts.map(\.title), ["주문내역", "찜한 상품", "최근 본 상품", "쿠폰함", "적립금"])
         XCTAssertEqual(viewModel.orderStatuses.map(\.title), ["입금대기", "결제완료", "배송준비", "배송중", "배송완료"])
         XCTAssertEqual(viewModel.orderStatuses.map(\.count), [0, 0, 0, 0, 0])
         XCTAssertEqual(viewModel.menuItems.count, 7)
