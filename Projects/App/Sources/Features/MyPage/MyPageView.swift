@@ -10,7 +10,8 @@ struct MyPageShortcut: Identifiable, Equatable {
         MyPageShortcut(title: "주문내역", iconName: "MyPageOrder"),
         MyPageShortcut(title: "찜한 상품", iconName: "MyPageFavorites"),
         MyPageShortcut(title: "최근 본 상품", iconName: "MyPageRecent"),
-        MyPageShortcut(title: "쿠폰함", iconName: "MyPageCoupons")
+        MyPageShortcut(title: "쿠폰함", iconName: "MyPageCoupons"),
+        MyPageShortcut(title: "적립금", iconName: "CouponCoins")
     ]
 }
 
@@ -70,6 +71,7 @@ struct MyPageView: View {
     let onFavoritesTap: () -> Void
     let onRecentlyViewedTap: () -> Void
     let onCouponsTap: () -> Void
+    let onPointsTap: () -> Void
     let onAddressesTap: () -> Void
     let onQuoteHistoryTap: () -> Void
     let onContactHistoryTap: () -> Void
@@ -196,6 +198,8 @@ struct MyPageView: View {
                             onRecentlyViewedTap()
                         } else if shortcut.title == "쿠폰함" {
                             onCouponsTap()
+                        } else if shortcut.title == "적립금" {
+                            onPointsTap()
                         } else {
                             showUnavailable(shortcut.title)
                         }
@@ -336,6 +340,7 @@ struct MyPageViewPreview: PreviewProvider {
             onFavoritesTap: {},
             onRecentlyViewedTap: {},
             onCouponsTap: {},
+            onPointsTap: {},
             onAddressesTap: {},
             onQuoteHistoryTap: {},
             onContactHistoryTap: {},

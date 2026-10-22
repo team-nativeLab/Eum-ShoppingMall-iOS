@@ -2,6 +2,22 @@ import XCTest
 
 final class SettingsNavigationUITests: XCTestCase {
     @MainActor
+    func testPointsShortcutOpensPointsAndReturnsToMyPage() {
+        let app = XCUIApplication()
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        app.buttons["home-tab-마이"].tap()
+        XCTAssertTrue(app.staticTexts["마이페이지"].waitForExistence(timeout: 5))
+        app.buttons["적립금"].tap()
+
+        XCTAssertTrue(app.staticTexts["사용 가능 적립금"].waitForExistence(timeout: 5))
+        app.buttons["마이페이지로 돌아가기"].tap()
+        XCTAssertTrue(app.staticTexts["마이페이지"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["적립금"].exists)
+    }
+
+    @MainActor
     func testOpenSourceLicensesOpenAndReturnToSettings() {
         let app = XCUIApplication()
         app.launch()

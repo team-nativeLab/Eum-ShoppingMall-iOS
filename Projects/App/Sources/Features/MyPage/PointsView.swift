@@ -39,7 +39,7 @@ struct PointsView: View {
                         .frame(width: 44, height: 44)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("쿠폰함으로 돌아가기")
+                .accessibilityLabel("마이페이지로 돌아가기")
                 Spacer()
                 Color.clear.frame(width: 44, height: 44)
             }
