@@ -219,7 +219,9 @@ final class ProductListNavigationUITests: XCTestCase {
         XCTAssertTrue(app.alerts["리뷰가 등록되었습니다."].waitForExistence(timeout: 5))
         app.alerts.buttons["확인"].tap()
         XCTAssertTrue(app.staticTexts["상품 리뷰"].waitForExistence(timeout: 5))
-        app.buttons["product-reviews-back"].tap()
+        let productReviewsBackButton = app.buttons["product-reviews-back"]
+        XCTAssertTrue(productReviewsBackButton.waitForExistence(timeout: 5))
+        productReviewsBackButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
 
         XCTAssertTrue(inquiryButton.waitForExistence(timeout: 5))
         inquiryButton.tap()
