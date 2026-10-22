@@ -8,6 +8,7 @@ struct HomeModalRouteHostView: View {
     let isGuestAccount: Bool
     let activeWithdrawalOrderCount: Int
     let onBack: () -> Void
+    let onSearch: () -> Void
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
     let onProductTap: (HomeProduct) -> Void
@@ -55,11 +56,12 @@ struct HomeModalRouteHostView: View {
             )
         case .customerCenter, .announcements, .announcementDetail, .events, .eventDetail:
             HomeSupportRouteView(route: route, onBack: onBack, onRoute: onRoute, onMessage: onMessage)
-        case .inquiryCompose, .inquiryComplete, .productReviews:
+        case .inquiryCompose, .inquiryComplete, .productReviews, .productReviewRegistration:
             HomeInquiryRouteView(
                 route: route,
                 contactInquiryViewModel: contactInquiryViewModel,
                 onBack: onBack,
+                onSearch: onSearch,
                 onRoute: onRoute,
                 onViewInquiries: onViewContactInquiries
             )

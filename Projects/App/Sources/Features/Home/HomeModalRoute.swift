@@ -33,6 +33,7 @@ enum HomeModalRoute {
     case inquiryCompose(InquiryComposeContext)
     case inquiryComplete
     case productReviews(HomeProduct)
+    case productReviewRegistration(HomeProduct)
 }
 
 enum AccountCollectionDestination {

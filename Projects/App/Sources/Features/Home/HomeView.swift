@@ -331,6 +331,7 @@ private extension HomeView {
             isGuestAccount: isGuestAccount,
             activeWithdrawalOrderCount: activeWithdrawalOrderCount,
             onBack: goBack,
+            onSearch: { navigation.push(.contextualSearch) },
             onRoute: openRoute,
             onMessage: { presentedMessage = $0 },
             onProductTap: openProductDetail,
