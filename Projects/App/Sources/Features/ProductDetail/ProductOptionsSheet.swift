@@ -256,10 +256,19 @@ struct ProductOptionsSheet: View {
             }
 
             if isPriceHidden {
-                Text("가격 문의 상품은 견적 문의로 구매할 수 있습니다.")
-                    .font(EUMTypography.captionMedium)
-                    .foregroundStyle(EUMColor.text3SwiftUI)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                HStack(spacing: 6) {
+                    Image(systemName: "info.circle")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(EUMColor.dangerSwiftUI)
+                    Text("가격 문의 상품은 견적 문의로 구매할 수 있습니다.")
+                        .font(EUMTypography.labelExtraSmall)
+                        .foregroundStyle(EUMColor.dangerSwiftUI)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.9)
+                }
+                .padding(.horizontal, 8)
+                .frame(maxWidth: .infinity, minHeight: 24, alignment: .leading)
+                .background(EUMColor.dangerBackgroundSwiftUI, in: RoundedRectangle(cornerRadius: 4))
             }
         }
         .frame(height: isPriceHidden ? 81 : 59, alignment: .top)
@@ -267,7 +276,11 @@ struct ProductOptionsSheet: View {
 
     private var bottomActions: some View {
         HStack(spacing: 8) {
-            EUMButton(title: "장바구니 담기", size: .large) {
+            EUMButton(
+                title: "장바구니 담기",
+                kind: isPriceHidden ? .secondary : .primary,
+                size: .large
+            ) {
                 onAddToCart()
                 dismiss()
             }
