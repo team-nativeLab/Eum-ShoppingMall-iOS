@@ -13,6 +13,7 @@ struct ProductShippingPolicy: Equatable {
 }
 
 struct ProductDetailSections: View {
+    let detail: ProductDetailContent
     @Binding var isDetailExpanded: Bool
     let onQuoteTap: () -> Void
     let onProductInquiry: () -> Void
@@ -43,17 +44,16 @@ struct ProductDetailSections: View {
             sectionTitle("제품 정보")
 
             VStack(alignment: .leading, spacing: 10) {
-                ProductDetailKeyValueRow(label: "모델명", value: "모델명", labelWidth: 96)
-                ProductDetailKeyValueRow(label: "소재", value: "소재 정보", labelWidth: 96)
-                ProductDetailKeyValueRow(label: "사이즈", value: "S / M / L / XL", labelWidth: 96)
-                ProductDetailKeyValueRow(label: "안전인증", value: "KC 인증 0000-0000", labelWidth: 96)
-                ProductDetailKeyValueRow(label: "원산지", value: "원산지", labelWidth: 96)
-                ProductDetailKeyValueRow(label: "제조사", value: "제조사명", labelWidth: 96)
+                ForEach(detail.specifications) { specification in
+                    ProductDetailKeyValueRow(
+                        label: specification.label,
+                        value: specification.value,
+                        labelWidth: 96
+                    )
+                }
             }
 
-            Image("ProductPlaceholder")
-                .resizable()
-                .scaledToFill()
+            ProductDetailImagePlaceholder()
                 .frame(maxWidth: .infinity)
                 .frame(height: 240)
                 .clipped()
@@ -99,15 +99,15 @@ struct ProductDetailSections: View {
             }
 
             VStack(alignment: .leading, spacing: 10) {
-                ProductDetailKeyValueRow(label: "배송", value: ProductShippingPolicy.sample.delivery, labelWidth: 96)
+                ProductDetailKeyValueRow(label: "배송", value: detail.shippingPolicy.delivery, labelWidth: 96)
                 ProductDetailKeyValueRow(
                     label: "교환·반품",
-                    value: ProductShippingPolicy.sample.exchangeAndReturnPeriod,
+                    value: detail.shippingPolicy.exchangeAndReturnPeriod,
                     labelWidth: 96
                 )
                 ProductDetailKeyValueRow(
                     label: "반품 배송비",
-                    value: ProductShippingPolicy.sample.returnShippingFee,
+                    value: detail.shippingPolicy.returnShippingFee,
                     labelWidth: 96
                 )
             }
@@ -119,7 +119,7 @@ struct ProductDetailSections: View {
     private var reviewSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                sectionTitle("리뷰 (0)")
+                sectionTitle("리뷰 (\(detail.reviewCount))")
                 Spacer()
                 Button(action: onShowAllReviews) {
                     HStack(spacing: 2) {
@@ -136,14 +136,81 @@ struct ProductDetailSections: View {
                 .accessibilityIdentifier("product-all-reviews")
             }
 
-            Text("아직 작성된 리뷰가 없습니다.")
-                .font(EUMTypography.bodySmall)
-                .tracking(-0.07)
-                .foregroundStyle(EUMColor.text3SwiftUI)
-                .frame(maxWidth: .infinity, minHeight: 20)
+            if detail.reviews.isEmpty {
+                Text("아직 작성된 리뷰가 없습니다.")
+                    .font(EUMTypography.bodySmall)
+                    .tracking(-0.07)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
+                    .frame(maxWidth: .infinity, minHeight: 20)
+            } else {
+                VStack(alignment: .leading, spacing: 12) {
+                    ForEach(detail.reviews) { review in
+                        reviewCard(review)
+                    }
+                }
+            }
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 24)
+    }
+
+    private func reviewCard(_ review: ProductDetailReview) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 6) {
+                Image(systemName: "person.crop.circle")
+                    .font(.system(size: 18))
+                    .foregroundStyle(EUMColor.text3SwiftUI)
+                Text(review.author)
+                    .font(EUMTypography.captionMedium)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+                Image(systemName: "checkmark.seal")
+                    .font(.system(size: 12))
+                    .foregroundStyle(EUMColor.text2SwiftUI)
+                Text("구매 인증")
+                    .font(EUMTypography.labelExtraSmall)
+                    .foregroundStyle(EUMColor.text2SwiftUI)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background(EUMColor.backgroundSubtleSwiftUI, in: Capsule())
+                Spacer(minLength: 4)
+                Text(review.date)
+                    .font(EUMTypography.labelExtraSmall)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
+            }
+
+            HStack(spacing: 6) {
+                ProductDetailRatingStars(rating: review.rating)
+                Text("\(review.rating, specifier: "%.1f")")
+                    .font(EUMTypography.captionMedium)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("타이틀: - \(review.title)")
+                    .font(EUMTypography.labelExtraSmall)
+                    .foregroundStyle(EUMColor.text2SwiftUI)
+                Text(review.content)
+                    .font(EUMTypography.bodySmall)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            HStack(spacing: 8) {
+                reviewImagePlaceholder
+                reviewImagePlaceholder
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(EUMColor.backgroundSwiftUI)
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private var reviewImagePlaceholder: some View {
+        ProductDetailImagePlaceholder(iconSize: 24)
+            .clipShape(RoundedRectangle(cornerRadius: 4))
+            .frame(width: 56, height: 56)
     }
 
     private var inquirySection: some View {
@@ -210,17 +277,46 @@ struct ProductDetailRelatedSection: View {
 
     let onProductTap: (HomeProduct) -> Void
 
-    private let products = (0..<4).map { index in
+    private let products = [
         HomeProduct(
-            id: "related-\(index)",
-            title: "제품명",
-            price: "₩00,000",
+            id: "related-boots",
+            title: "경량 안전화 4인치",
+            price: "₩54,000",
             imageName: nil,
             isFavorite: false,
             isSoldOut: false,
-            isPriceHidden: false
+            isPriceHidden: false,
+            priceAmount: 54_000,
+            brand: "브랜드 B",
+            rating: 4.7,
+            reviewCount: 6
+        ),
+        HomeProduct(
+            id: "related-harness",
+            title: "전신 안전벨트",
+            price: nil,
+            imageName: nil,
+            isFavorite: false,
+            isSoldOut: false,
+            isPriceHidden: true,
+            brand: "브랜드 C",
+            rating: 0,
+            reviewCount: 0
+        ),
+        HomeProduct(
+            id: "related-gloves",
+            title: "코팅 장갑 10켤레",
+            price: "₩12,000",
+            imageName: nil,
+            isFavorite: false,
+            isSoldOut: false,
+            isPriceHidden: false,
+            priceAmount: 12_000,
+            brand: "브랜드 A",
+            rating: 4.5,
+            reviewCount: 3
         )
-    }
+    ]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -237,6 +333,9 @@ struct ProductDetailRelatedSection: View {
                             title: product.title,
                             price: product.price,
                             layout: .carousel,
+                            isPriceHidden: product.isPriceHidden,
+                            rating: product.rating,
+                            reviewCount: product.reviewCount,
                             isFavorite: favoriteProductIDs.contains(product.id),
                             onFavoriteTap: { toggleFavorite(productID: product.id) },
                             onTap: { onProductTap(product) },

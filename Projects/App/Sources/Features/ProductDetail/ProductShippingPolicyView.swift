@@ -4,7 +4,7 @@ struct ProductShippingPolicyView: View {
     let product: HomeProduct
     let onBack: () -> Void
 
-    private let policy = ProductShippingPolicy.sample
+    private var detail: ProductDetailContent { ProductDetailContent(product: product) }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -19,7 +19,7 @@ struct ProductShippingPolicyView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(product.title)
+                        Text(detail.title)
                             .font(EUMTypography.heading3)
                             .foregroundStyle(EUMColor.text1SwiftUI)
                             .fixedSize(horizontal: false, vertical: true)
@@ -29,11 +29,11 @@ struct ProductShippingPolicyView: View {
                     }
 
                     VStack(spacing: 0) {
-                        policyRow(title: "배송", value: policy.delivery)
+                        policyRow(title: "배송", value: detail.shippingPolicy.delivery)
                         divider
-                        policyRow(title: "교환·반품", value: policy.exchangeAndReturnPeriod)
+                        policyRow(title: "교환·반품", value: detail.shippingPolicy.exchangeAndReturnPeriod)
                         divider
-                        policyRow(title: "반품 배송비", value: policy.returnShippingFee)
+                        policyRow(title: "반품 배송비", value: detail.shippingPolicy.returnShippingFee)
                     }
                     .padding(.horizontal, 16)
                     .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
