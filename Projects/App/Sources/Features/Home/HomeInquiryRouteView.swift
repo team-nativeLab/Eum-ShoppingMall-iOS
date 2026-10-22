@@ -4,6 +4,7 @@ struct HomeInquiryRouteView: View {
     let route: HomeModalRoute
     @ObservedObject var contactInquiryViewModel: ContactInquiryHistoryViewModel
     let onBack: () -> Void
+    let onSearch: () -> Void
     let onRoute: (HomeModalRoute) -> Void
     let onViewInquiries: () -> Void
 
@@ -17,8 +18,12 @@ struct HomeInquiryRouteView: View {
             }
         case .inquiryComplete:
             InquiryCompletionView(onBack: onBack, onViewInquiries: onViewInquiries)
-        case .productReviews:
-            ProductReviewsView(onBack: onBack)
+        case let .productReviews(product):
+            ProductReviewsView(onBack: onBack, onSearch: onSearch) {
+                onRoute(.productReviewRegistration(product))
+            }
+        case let .productReviewRegistration(product):
+            ProductReviewRegistrationView(product: product, onBack: onBack, onSearch: onSearch)
         default:
             HomeRouteRecoveryView(onBack: onBack)
         }

@@ -285,6 +285,8 @@ struct InquiryCompletionView: View {
 
 struct ProductReviewsView: View {
     let onBack: () -> Void
+    let onSearch: () -> Void
+    let onWriteReview: () -> Void
 
     private let reviews = [
         "튼튼하고 착용감이 편해요. 배송도 빨랐습니다.",
@@ -299,7 +301,14 @@ struct ProductReviewsView: View {
                 backAccessibilityIdentifier: "product-reviews-back",
                 onBack: onBack
             ) {
-                Color.clear.frame(width: 44, height: 44)
+                Button(action: onSearch) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 20))
+                        .foregroundStyle(EUMColor.text1SwiftUI)
+                        .frame(width: 44, height: 44)
+                }
+                .accessibilityLabel("검색")
+                .accessibilityIdentifier("product-reviews-search")
             }
 
             ScrollView {
@@ -307,6 +316,8 @@ struct ProductReviewsView: View {
                     Text("평점 4.8 · 리뷰 128개")
                         .font(EUMTypography.bodySmall)
                         .foregroundStyle(EUMColor.text3SwiftUI)
+                    EUMButton(title: "리뷰 작성", kind: .secondary, size: .medium, action: onWriteReview)
+                        .accessibilityIdentifier("product-reviews-write")
                     VStack(alignment: .leading, spacing: 8) {
                         sectionTitle("별점")
                         HStack(spacing: 8) {
