@@ -36,6 +36,7 @@ struct HomeModalRouteHostView: View {
                 onRoute: onRoute,
                 onMessage: onMessage,
                 onProductTap: onProductTap,
+                onBrowseProducts: onBrowseProducts,
                 onWithdrawTap: onWithdrawal
             )
         case .orderHistory, .orderDetail, .deliveryTracking, .returnRequest, .returnHistory, .quoteDetail:
