@@ -225,11 +225,11 @@ struct AccountCollectionRouteView: View {
         case .favorites:
             FavoritesView(onBack: onBack, onProductTap: onProductTap, onBrowseProducts: onBrowseProducts)
         case .recentlyViewed:
-            RecentlyViewedView(onBack: onBack, onProductTap: onProductTap)
+            RecentlyViewedView(onBack: onBack, onProductTap: onProductTap, onBrowseProducts: onBrowseProducts)
         case .coupons:
-            CouponsView(onBack: onBack, onPointsTap: onPointsTap)
+            CouponsView(onBack: onBack, onPointsTap: onPointsTap, onBrowseProducts: onBrowseProducts)
         case .points:
-            PointsView(onBack: onBack)
+            PointsView(onBack: onBack, onBrowseProducts: onBrowseProducts)
         case .editProfile:
             ProfileEditView(onBack: onBack, onAction: onAction, onWithdrawTap: onWithdrawTap)
         case .addresses:

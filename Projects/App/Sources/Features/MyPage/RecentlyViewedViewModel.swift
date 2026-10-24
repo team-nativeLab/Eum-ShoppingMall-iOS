@@ -18,7 +18,7 @@ final class RecentlyViewedViewModel: ObservableObject {
     @Published private(set) var groups: [RecentlyViewedGroup]
 
     init() {
-        groups = Self.samples
+        groups = AccountSampleData.isEmpty ? [] : Self.samples
     }
 
     init(groups: [RecentlyViewedGroup]) {

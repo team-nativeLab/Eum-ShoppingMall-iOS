@@ -13,7 +13,9 @@ struct ShippingAddress: Identifiable {
 
 @MainActor
 final class AddressesViewModel: ObservableObject {
-    @Published private(set) var addresses = [
+    @Published private(set) var addresses: [ShippingAddress]
+
+    static let samples = [
         ShippingAddress(
             id: "address-1", name: "배송지명", recipient: "홍길동", phoneNumber: "010-0000-0000",
             postalAddress: "(00000)", detailAddress: "주소 상세주소", isDefault: true
@@ -27,6 +29,10 @@ final class AddressesViewModel: ObservableObject {
             postalAddress: "(00000)", detailAddress: "주소 상세주소", isDefault: false
         )
     ]
+
+    init(addresses: [ShippingAddress]? = nil) {
+        self.addresses = addresses ?? (AccountSampleData.isEmpty ? [] : Self.samples)
+    }
 
     let addressLimitNotice = "배송지는 최대 0개까지 등록할 수 있습니다."
 

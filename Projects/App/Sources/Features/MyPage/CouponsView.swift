@@ -7,10 +7,16 @@ struct CouponsView: View {
 
     let onBack: () -> Void
     let onPointsTap: () -> Void
+    let onBrowseProducts: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
             topBar
+            if viewModel.availableCoupons.isEmpty && viewModel.completedCoupons.isEmpty {
+                emptyState
+                    .padding(20)
+                    .frame(maxHeight: .infinity)
+            } else {
             ScrollView {
                 VStack(spacing: 20) {
                     registerForm
@@ -23,6 +29,7 @@ struct CouponsView: View {
                 .padding(.bottom, 32)
             }
             .scrollIndicators(.hidden)
+            }
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
         .alert("쿠폰 등록", isPresented: messagePresented) {
@@ -126,7 +133,7 @@ struct CouponsView: View {
     @ViewBuilder
     private var couponList: some View {
         if viewModel.couponsForSelectedTab.isEmpty {
-            Color.clear.frame(height: 1)
+            emptyState
         } else {
             VStack(spacing: 12) {
                 ForEach(viewModel.couponsForSelectedTab) { coupon in
@@ -134,6 +141,14 @@ struct CouponsView: View {
                 }
             }
         }
+    }
+
+    private var emptyState: some View {
+        AccountEmptyState(
+            title: viewModel.selectedTab == .available ? "사용 가능한 쿠폰이 없습니다" : "사용 완료·만료된 쿠폰이 없습니다",
+            message: "보유한 쿠폰은 이곳에서\n확인할 수 있어요.",
+            actionTitle: "상품 보러가기", actionIdentifier: "coupons-empty-browse", onAction: onBrowseProducts
+        )
     }
 
     private var messagePresented: Binding<Bool> {
@@ -245,6 +260,6 @@ private struct CouponTicketView: View {
 
 struct CouponsViewPreview: PreviewProvider {
     static var previews: some View {
-        CouponsView(onBack: {}, onPointsTap: {})
+        CouponsView(onBack: {}, onPointsTap: {}, onBrowseProducts: {})
     }
 }

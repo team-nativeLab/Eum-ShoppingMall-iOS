@@ -10,6 +10,14 @@ struct AddressesView: View {
     var body: some View {
         VStack(spacing: 0) {
             topBar
+            if viewModel.addresses.isEmpty {
+                AccountEmptyState(
+                    title: "등록된 배송지가 없습니다",
+                    message: "배송지를 등록하면 주문 시\n빠르게 선택할 수 있어요."
+                )
+                .padding(20)
+                .frame(maxHeight: .infinity)
+            } else {
             ScrollView {
                 VStack(spacing: 12) {
                     ForEach(viewModel.addresses) { address in
@@ -25,6 +33,7 @@ struct AddressesView: View {
                 .padding(.bottom, 32)
             }
             .scrollIndicators(.hidden)
+            }
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
