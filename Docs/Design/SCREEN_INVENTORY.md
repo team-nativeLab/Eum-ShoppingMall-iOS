@@ -110,3 +110,7 @@ Page: `06 Design — App` (`178:345`). Frame bounds below come from Figma MCP me
 ## A-20e favorites empty (#250)
 
 Figma `927:44560`: 마이 → 찜한 상품 → 마지막 찜 삭제 → 빈 상태 → 상품 둘러보기 → 전체 제품 → 뒤로 → 찜 빈 상태 유지. 로컬 샘플 기반이며 서버 저장은 포함하지 않는다.
+
+## Account empty states (#252)
+
+A-21e / A-22e / A-22pe / A-24e / A-25e implemented. Exact nodes, screenshots, routes and verification: [ACCOUNT_EMPTY_STATES_PARITY.md](ACCOUNT_EMPTY_STATES_PARITY.md).
