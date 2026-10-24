@@ -114,3 +114,7 @@ Figma `927:44560`: 마이 → 찜한 상품 → 마지막 찜 삭제 → 빈 상
 ## Account empty states (#252)
 
 A-21e / A-22e / A-22pe / A-24e / A-25e implemented. Exact nodes, screenshots, routes and verification: [ACCOUNT_EMPTY_STATES_PARITY.md](ACCOUNT_EMPTY_STATES_PARITY.md).
+
+## Latest cancel / return / exchange flow (#253)
+
+A-19c, A-19s, A-19a, A-19b, A-19le, three A-19l filters and A-54 are connected. Existing A-16e/A-20e empty screens use the same latest layout. Node IDs, captures and back routes: [RETURN_FLOW_PARITY.md](RETURN_FLOW_PARITY.md).

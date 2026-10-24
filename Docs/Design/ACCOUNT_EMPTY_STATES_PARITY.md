@@ -13,3 +13,5 @@ Figma file: N3Ic9TfSnUBVMgAuayBVly. Read-only design inspection; SwiftUI impleme
 Shared AccountEmptyState follows inspected 64/28 pt icon, 20/8/24 spacing and 48 pt dark green CTA. The exported icon was byte-compared with the existing FavoritesEmpty SVG (identical). Empty lists hide controls that the empty Figma frames omit; empty filtered results keep their filters available. Existing mock samples remain the default. Initializers accept explicit empty data; the debug-only UI fixture makes those actual states testable without changing release behavior.
 
 Verification: strict SwiftLint and 16 existing ViewModel tests plus 3 UI tests passed on iPhone 17 Pro / iOS 26.5. Captures were visually inspected. Native status/home indicator and available viewport height follow the device; Figma frames have varied canvas heights. No server persistence or physical-device verification.
+
+Final resolved Figma colors and refreshed captures are included with #253 in the combined PR: background #fafafa, icon circle #ffffff, title #171717 and description #4a4a4a.
