@@ -42,9 +42,11 @@ struct PointsView: View {
                         .scaledToFit()
                         .frame(width: 24, height: 24)
                         .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("마이페이지로 돌아가기")
+                .accessibilityIdentifier("points-back")
                 Spacer()
                 Color.clear.frame(width: 44, height: 44)
             }

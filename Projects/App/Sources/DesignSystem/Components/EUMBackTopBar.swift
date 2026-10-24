@@ -50,6 +50,7 @@ struct EUMBackTopBar<TrailingContent: View>: View {
                 .scaledToFit()
                 .frame(width: 24, height: 24)
                 .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel(backAccessibilityLabel)

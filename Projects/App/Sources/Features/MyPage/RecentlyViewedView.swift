@@ -42,6 +42,7 @@ struct RecentlyViewedView: View {
         EUMBackTopBar(
             title: "최근 본 상품",
             backAccessibilityLabel: "마이페이지로 돌아가기",
+            backAccessibilityIdentifier: "recent-back",
             onBack: onBack
         ) {
             Button("전체 삭제", action: viewModel.removeAll)

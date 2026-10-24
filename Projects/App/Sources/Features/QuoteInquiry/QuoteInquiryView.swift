@@ -107,9 +107,11 @@ struct QuoteInquiryView: View {
                         .scaledToFit()
                         .frame(width: 24, height: 24)
                         .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("뒤로 가기")
+                .accessibilityIdentifier("quote-inquiry-back")
                 Spacer()
             }
             .padding(.horizontal, 8)

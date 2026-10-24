@@ -46,6 +46,7 @@ struct CouponsView: View {
         EUMBackTopBar(
             title: "쿠폰함",
             backAccessibilityLabel: "마이페이지로 돌아가기",
+            backAccessibilityIdentifier: "coupons-back",
             onBack: onBack
         ) {
             Color.clear.frame(width: 44, height: 44)

@@ -34,6 +34,7 @@ struct QuoteHistoryView: View {
         EUMBackTopBar(
             title: "견적 문의 내역",
             backAccessibilityLabel: "이전 화면으로 돌아가기",
+            backAccessibilityIdentifier: "quote-history-back",
             onBack: onBack
         ) {
             EmptyView()
