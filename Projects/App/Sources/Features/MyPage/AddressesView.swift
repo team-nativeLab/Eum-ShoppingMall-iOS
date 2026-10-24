@@ -35,7 +35,7 @@ struct AddressesView: View {
             .scrollIndicators(.hidden)
             }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background((viewModel.addresses.isEmpty ? AccountEmptyState.background : EUMColor.backgroundSwiftUI).ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             addAddressAction
         }

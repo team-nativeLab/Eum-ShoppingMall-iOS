@@ -48,7 +48,7 @@ struct HomeModalRouteHostView: View {
                 onBrowseProducts: onBrowseProducts,
                 onAddressChange: onAddressChange
             )
-        case .returnRequestDetail, .returnWithdrawalConfirmation:
+        case .returnHub, .returnOrderSelection, .returnRejectionReason, .returnRequestDetail, .returnWithdrawalConfirmation:
             HomeReturnRequestRouteView(route: route, onBack: onBack, onRoute: onRoute, onMessage: onMessage)
         case .accountVerification, .companyIntroduction:
             HomeProfileRouteView(

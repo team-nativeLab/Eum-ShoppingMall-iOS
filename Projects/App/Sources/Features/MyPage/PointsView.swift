@@ -26,7 +26,7 @@ struct PointsView: View {
             .scrollIndicators(.hidden)
             }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background((viewModel.history.isEmpty ? AccountEmptyState.background : EUMColor.backgroundSwiftUI).ignoresSafeArea())
     }
 
     private var topBar: some View {

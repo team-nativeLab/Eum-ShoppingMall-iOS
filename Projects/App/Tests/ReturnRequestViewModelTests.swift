@@ -3,6 +3,13 @@ import XCTest
 
 final class ReturnRequestViewModelTests: XCTestCase {
     @MainActor
+    func testSelectedOrderChoosesInitialRequestKind() {
+        XCTAssertEqual(ReturnRequestViewModel(order: OrderHistoryItem.samples[0]).selectedKind, .cancel)
+        XCTAssertEqual(ReturnRequestViewModel(order: OrderHistoryItem.samples[1]).selectedKind, .cancel)
+        XCTAssertEqual(ReturnRequestViewModel(order: OrderHistoryItem.samples[2]).selectedKind, .returning)
+    }
+
+    @MainActor
     func testSelectedProductAndQuantityControlSubmissionEligibility() {
         let viewModel = ReturnRequestViewModel(order: OrderHistoryItem.samples[2])
         let firstProduct = viewModel.products[0]

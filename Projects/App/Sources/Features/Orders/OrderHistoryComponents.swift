@@ -31,6 +31,7 @@ struct OrderHistoryOrderCard: View {
     let onCancel: () -> Void
     let onTrack: () -> Void
     let onReorder: () -> Void
+    var selectionAction: (() -> Void)?
 
     var body: some View {
         VStack(spacing: 12) {
@@ -72,10 +73,16 @@ struct OrderHistoryOrderCard: View {
 
     private var product: some View {
         HStack(alignment: .top, spacing: 12) {
-            Image("ProductPlaceholder")
+            Image("RequestProduct")
+                .renderingMode(.original)
                 .resizable()
-                .scaledToFill()
+                .scaledToFit()
+                .frame(width: 32, height: 32)
                 .frame(width: 64, height: 64)
+                .background(LinearGradient(
+                    colors: [EUMColor.imagePlaceholderTopSwiftUI, EUMColor.imagePlaceholderBottomSwiftUI],
+                    startPoint: .top, endPoint: .bottom
+                ))
                 .clipShape(RoundedRectangle(cornerRadius: EUMRadius.medium))
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {
@@ -105,17 +112,49 @@ struct OrderHistoryOrderCard: View {
     private var statusBadge: some View {
         Text(order.status.rawValue)
             .font(EUMTypography.labelExtraSmall)
-            .foregroundStyle(order.status == .delivered ? EUMColor.inverseSwiftUI : EUMColor.text2SwiftUI)
+            .foregroundStyle(selectionAction == nil ? defaultBadgeForeground : selectionBadgeForeground)
             .padding(.horizontal, 6)
             .frame(height: 20)
-            .background(order.status == .delivered ? EUMColor.text1SwiftUI : EUMColor.surfaceSwiftUI)
+            .background(selectionAction == nil ? defaultBadgeBackground : selectionBadgeBackground)
             .clipShape(RoundedRectangle(cornerRadius: EUMRadius.small))
             .fixedSize()
     }
 
+    private var defaultBadgeForeground: Color {
+        order.status == .delivered ? EUMColor.inverseSwiftUI : EUMColor.text2SwiftUI
+    }
+
+    private var defaultBadgeBackground: Color {
+        order.status == .delivered ? EUMColor.text1SwiftUI : EUMColor.surfaceSwiftUI
+    }
+
+    private var selectionBadgeForeground: Color {
+        switch order.status {
+        case .awaitingPayment, .paymentComplete: Color(red: 138 / 255, green: 90 / 255, blue: 0)
+        case .delivered: Color(red: 30 / 255, green: 122 / 255, blue: 60 / 255)
+        default: EUMColor.text2SwiftUI
+        }
+    }
+
+    private var selectionBadgeBackground: Color {
+        switch order.status {
+        case .awaitingPayment, .paymentComplete: Color(red: 1, green: 244 / 255, blue: 224 / 255)
+        case .delivered: Color(red: 232 / 255, green: 243 / 255, blue: 236 / 255)
+        default: EUMColor.backgroundSwiftUI
+        }
+    }
+
     @ViewBuilder
     private var actions: some View {
-        if order.status == .awaitingPayment || order.status == .paymentComplete {
+        if let selectionAction {
+            HStack(spacing: 8) {
+                if order.status == .inTransit || order.status == .delivered {
+                    EUMButton(title: "배송 조회", kind: .secondary, size: .small, action: onTrack)
+                }
+                EUMButton(title: "주문 선택", kind: .secondary, size: .small, action: selectionAction)
+                    .accessibilityIdentifier("return-order-select-\(order.id)")
+            }
+        } else if order.status == .awaitingPayment || order.status == .paymentComplete {
             EUMButton(title: "주문 취소", kind: .secondary, size: .small, action: onCancel)
         } else {
             HStack(spacing: 8) {

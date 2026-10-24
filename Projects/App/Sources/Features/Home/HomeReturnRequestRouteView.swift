@@ -9,6 +9,18 @@ struct HomeReturnRequestRouteView: View {
     @ViewBuilder
     var body: some View {
         switch route {
+        case .returnHub:
+            ReturnHubView(
+                onBack: onBack, onOrders: { onRoute(.orderHistory()) },
+                onHistory: { onRoute(.returnHistory) }, onApply: { onRoute(.returnOrderSelection) }
+            )
+        case .returnOrderSelection:
+            ReturnOrderSelectionView(
+                onBack: onBack, onDetail: { onRoute(.orderDetail($0)) },
+                onTrack: { onRoute(.deliveryTracking($0)) }, onSelect: { onRoute(.returnRequest($0)) }
+            )
+        case let .returnRejectionReason(item):
+            ReturnRejectionReasonView(item: item, onBack: onBack)
         case let .returnRequestDetail(item):
             ReturnRequestDetailView(
                 item: item,

@@ -87,8 +87,8 @@ final class ReturnHistoryViewModel: ObservableObject {
 
     let items: [ReturnHistoryItem]
 
-    init(items: [ReturnHistoryItem] = ReturnHistoryItem.samples) {
-        self.items = items
+    init(items: [ReturnHistoryItem]? = nil) {
+        self.items = items ?? (AccountSampleData.isEmpty ? [] : ReturnHistoryItem.samples)
     }
 
     var filteredItems: [ReturnHistoryItem] {
