@@ -73,7 +73,7 @@ struct ReturnOrderSelectionView: View {
                     Text("주문을 선택하면 신청 가능한 항목을 확인할 수 있어요.")
                         .font(EUMTypography.captionRegular)
                         .foregroundStyle(EUMColor.text2SwiftUI)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: .infinity, minHeight: 30, alignment: .leading)
                         .padding(12)
                         .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 8))
                     Menu {

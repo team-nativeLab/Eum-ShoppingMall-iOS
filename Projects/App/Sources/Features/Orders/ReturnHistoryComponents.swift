@@ -36,15 +36,15 @@ struct ReturnHistoryCard: View {
             header
             product
             if item.kind == .returnRequest {
-            HStack {
-                Text("환불 예정 금액")
-                    .font(EUMTypography.bodySmall)
-                    .foregroundStyle(EUMColor.text2SwiftUI)
-                Spacer()
-                Text(item.refundAmount)
-                    .font(EUMTypography.labelMedium)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
-            }
+                HStack {
+                    Text("환불 예정 금액")
+                        .font(EUMTypography.bodySmall)
+                        .foregroundStyle(EUMColor.text2SwiftUI)
+                    Spacer()
+                    Text(item.refundAmount)
+                        .font(EUMTypography.labelMedium)
+                        .foregroundStyle(EUMColor.text1SwiftUI)
+                }
             }
             if item.status == .requested {
                 EUMButton(title: "신청 철회", kind: .ghost, size: .small, action: onWithdraw)
@@ -107,7 +107,7 @@ struct ReturnHistoryCard: View {
                     startPoint: .top,
                     endPoint: .bottom
                 )
-                Image("ProductPlaceholder")
+                Image("RequestProduct")
                     .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
