@@ -17,7 +17,7 @@ final class AccountEmptyStateUITests: XCTestCase {
             XCTAssertTrue(app.staticTexts["전체 제품"].waitForExistence(timeout: 5))
             app.buttons["product-list-back"].tap()
             XCTAssertTrue(app.staticTexts[title].waitForExistence(timeout: 5))
-            app.buttons["마이페이지로 돌아가기"].tap()
+            tapBack(app, label: "마이페이지로 돌아가기")
         }
     }
 
@@ -29,16 +29,16 @@ final class AccountEmptyStateUITests: XCTestCase {
         capture(app, name: "배송지 빈 상태")
         app.buttons["배송지 추가"].tap()
         XCTAssertTrue(app.staticTexts["배송지 추가"].waitForExistence(timeout: 5))
-        app.buttons["배송지 관리로 돌아가기"].tap()
+        tapBack(app, label: "배송지 관리로 돌아가기")
         XCTAssertTrue(app.staticTexts["등록된 배송지가 없습니다"].waitForExistence(timeout: 5))
-        app.buttons["이전 화면으로 돌아가기"].tap()
+        tapBack(app, label: "이전 화면으로 돌아가기")
         if !app.buttons["견적 문의 내역"].isHittable { app.swipeUp() }
         app.buttons["견적 문의 내역"].tap()
         XCTAssertTrue(app.staticTexts["견적 문의 내역이 없습니다"].waitForExistence(timeout: 5))
         capture(app, name: "견적 문의 빈 상태")
         app.buttons["새 견적 문의"].tap()
         XCTAssertTrue(app.staticTexts["견적 문의"].waitForExistence(timeout: 5))
-        app.buttons["이전 화면으로 돌아가기"].tap()
+        tapBack(app, label: "이전 화면으로 돌아가기")
         XCTAssertTrue(app.staticTexts["견적 문의 내역이 없습니다"].waitForExistence(timeout: 5))
     }
 
@@ -64,6 +64,16 @@ final class AccountEmptyStateUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
         app.buttons["home-tab-마이"].tap()
         return app
+    }
+
+    @MainActor
+    private func tapBack(_ app: XCUIApplication, label: String) {
+        let matches = app.buttons.matching(identifier: label).allElementsBoundByIndex
+        guard let button = matches.first(where: { $0.isHittable }) else {
+            XCTFail("활성 뒤로 버튼을 찾지 못했습니다: \(label)")
+            return
+        }
+        button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
     @MainActor
