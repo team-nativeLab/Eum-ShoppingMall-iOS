@@ -35,7 +35,7 @@ struct RecentlyViewedView: View {
             .scrollIndicators(.hidden)
             }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background((viewModel.groups.isEmpty ? AccountEmptyState.background : EUMColor.backgroundSwiftUI).ignoresSafeArea())
     }
 
     private var topBar: some View {

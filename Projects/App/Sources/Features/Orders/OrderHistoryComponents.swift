@@ -31,6 +31,7 @@ struct OrderHistoryOrderCard: View {
     let onCancel: () -> Void
     let onTrack: () -> Void
     let onReorder: () -> Void
+    var selectionAction: (() -> Void)?
 
     var body: some View {
         VStack(spacing: 12) {
@@ -74,8 +75,13 @@ struct OrderHistoryOrderCard: View {
         HStack(alignment: .top, spacing: 12) {
             Image("ProductPlaceholder")
                 .resizable()
-                .scaledToFill()
+                .scaledToFit()
+                .frame(width: 32, height: 32)
                 .frame(width: 64, height: 64)
+                .background(LinearGradient(
+                    colors: [EUMColor.imagePlaceholderTopSwiftUI, EUMColor.imagePlaceholderBottomSwiftUI],
+                    startPoint: .top, endPoint: .bottom
+                ))
                 .clipShape(RoundedRectangle(cornerRadius: EUMRadius.medium))
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {
@@ -115,7 +121,15 @@ struct OrderHistoryOrderCard: View {
 
     @ViewBuilder
     private var actions: some View {
-        if order.status == .awaitingPayment || order.status == .paymentComplete {
+        if let selectionAction {
+            HStack(spacing: 8) {
+                if order.status == .inTransit || order.status == .delivered {
+                    EUMButton(title: "배송 조회", kind: .secondary, size: .small, action: onTrack)
+                }
+                EUMButton(title: "주문 선택", kind: .secondary, size: .small, action: selectionAction)
+                    .accessibilityIdentifier("return-order-select-\(order.id)")
+            }
+        } else if order.status == .awaitingPayment || order.status == .paymentComplete {
             EUMButton(title: "주문 취소", kind: .secondary, size: .small, action: onCancel)
         } else {
             HStack(spacing: 8) {

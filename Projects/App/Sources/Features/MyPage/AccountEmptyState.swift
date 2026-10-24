@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct AccountEmptyState: View {
+    // Resolved Figma variables for these frames; older app screens use the existing palette.
+    static let background = Color(red: 250 / 255, green: 250 / 255, blue: 250 / 255)
     let title: String
     let message: String
     var actionTitle: String?
@@ -14,18 +16,18 @@ struct AccountEmptyState: View {
                     .resizable()
                     .frame(width: 28, height: 28)
                     .frame(width: 64, height: 64)
-                    .background(EUMColor.surfaceSwiftUI, in: Circle())
+                    .background(.white, in: Circle())
                 Spacer().frame(height: 20)
                 Text(title)
                     .font(EUMTypography.heading3)
                     .tracking(-0.27)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
+                    .foregroundStyle(Color(red: 23 / 255, green: 23 / 255, blue: 23 / 255))
                     .multilineTextAlignment(.center)
                 Spacer().frame(height: 8)
                 Text(message)
                     .font(EUMTypography.bodySmall)
                     .tracking(-0.07)
-                    .foregroundStyle(EUMColor.text2SwiftUI)
+                    .foregroundStyle(Color(red: 74 / 255, green: 74 / 255, blue: 74 / 255))
                     .multilineTextAlignment(.center)
                     .lineSpacing(2)
                     .frame(maxWidth: 280)

@@ -14,23 +14,23 @@ struct ReturnRequestSegmented: View {
                     Text(kind.rawValue)
                         .font(EUMTypography.labelMedium)
                         .tracking(-0.07)
-                        .foregroundStyle(kind == selectedKind ? EUMColor.text1SwiftUI : EUMColor.text2SwiftUI)
+                        .foregroundStyle(kind == selectedKind ? EUMColor.inverseSwiftUI : EUMColor.text2SwiftUI)
                         .frame(maxWidth: .infinity)
                         .frame(height: 36)
                         .background {
                             if kind == selectedKind {
                                 RoundedRectangle(cornerRadius: EUMRadius.medium)
-                                    .fill(EUMColor.backgroundSwiftUI)
-                                    .shadow(color: EUMColor.text1SwiftUI.opacity(0.06), radius: 3, y: 1)
+                                    .fill(Color(red: 20 / 255, green: 26 / 255, blue: 23 / 255))
                             }
                         }
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("return-kind-\(kind.id)")
                 .accessibilityAddTraits(kind == selectedKind ? .isSelected : [])
             }
         }
         .padding(4)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
+        .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).stroke(EUMColor.lineControlSwiftUI, lineWidth: 1))
     }
 }
 
@@ -54,7 +54,7 @@ struct ReturnRequestProductRow: View {
                             lineWidth: isSelected ? 0 : 1.5
                         )
                     if isSelected {
-                        Image("ReturnCheckboxCheck")
+                        Image("RequestCheck")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 14, height: 14)
@@ -66,7 +66,7 @@ struct ReturnRequestProductRow: View {
             .buttonStyle(.plain)
             .accessibilityLabel(isSelected ? "\(product.name) 선택됨" : "\(product.name) 선택")
 
-            Image("ProductPlaceholder")
+            Image("RequestProduct")
                 .renderingMode(.original)
                 .resizable()
                 .scaledToFit()
@@ -109,7 +109,7 @@ struct ReturnRequestQuantityStepper: View {
     var body: some View {
         HStack(spacing: 0) {
             Button(action: onDecrease) {
-                Image("ReturnStepperMinus")
+                Image("RequestMinus")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 16, height: 16)
@@ -127,7 +127,7 @@ struct ReturnRequestQuantityStepper: View {
                 .accessibilityLabel("수량 \(quantity)개")
 
             Button(action: onIncrease) {
-                Image("ProductOptionPlus")
+                Image("RequestPlus")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 16, height: 16)
@@ -220,7 +220,7 @@ struct ReturnRequestTextEditor: View {
 struct ReturnRequestPhotoTile: View {
     var body: some View {
         VStack(spacing: 4) {
-            Image("ReturnPhotoAdd")
+            Image("RequestPhotoAdd")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 20, height: 20)
@@ -251,7 +251,7 @@ struct ReturnRequestPhotoThumbnail: View {
                         .resizable()
                         .scaledToFill()
                 } else {
-                    Image("ProductPlaceholder")
+                    Image("RequestProduct")
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
@@ -270,7 +270,7 @@ struct ReturnRequestPhotoThumbnail: View {
             .clipShape(RoundedRectangle(cornerRadius: EUMRadius.button))
 
             Button(action: onRemove) {
-                Image("ReturnPhotoRemove")
+                Image("RequestPhotoRemove")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 12, height: 12)
@@ -318,10 +318,11 @@ struct ReturnPickupOption: View {
 }
 
 struct ReturnRefundAmountCard: View {
+    var isCancellation = false
     var body: some View {
         VStack(spacing: 12) {
-            summaryRow(title: "상품 금액", value: "₩00,000")
-            summaryRow(title: "반품 배송비", value: "-₩0")
+            summaryRow(title: "상품 금액", value: isCancellation ? "신청 후 안내" : "₩00,000")
+            summaryRow(title: isCancellation ? "취소 수수료" : "반품 배송비", value: isCancellation ? "정책에 따라 안내" : "-₩0")
             Rectangle()
                 .fill(EUMColor.lineSwiftUI)
                 .frame(height: 1)
@@ -330,7 +331,7 @@ struct ReturnRefundAmountCard: View {
                     .font(EUMTypography.labelLarge)
                     .tracking(-0.08)
                 Spacer()
-                Text("₩00,000")
+                Text(isCancellation ? "신청 후 안내" : "₩00,000")
                     .font(.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
                     .tracking(-0.36)
             }
@@ -360,7 +361,7 @@ struct ReturnRequestNotice: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
-            Image("DeliveryInfo")
+            Image("RequestInfo")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 16, height: 16)

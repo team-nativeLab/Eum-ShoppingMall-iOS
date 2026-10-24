@@ -31,7 +31,10 @@ struct CouponsView: View {
             .scrollIndicators(.hidden)
             }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(
+            (viewModel.availableCoupons.isEmpty && viewModel.completedCoupons.isEmpty
+                ? AccountEmptyState.background : EUMColor.backgroundSwiftUI).ignoresSafeArea()
+        )
         .alert("쿠폰 등록", isPresented: messagePresented) {
             Button("확인", role: .cancel) { presentedMessage = nil }
         } message: {
