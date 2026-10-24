@@ -12,22 +12,22 @@ struct FavoritesView: View {
     var body: some View {
         VStack(spacing: 0) {
             topBar
+            if viewModel.products.isEmpty {
+                emptyState.padding(20).frame(maxHeight: .infinity)
+            } else {
             ScrollView {
                 VStack(spacing: 16) {
-                    if viewModel.products.isEmpty {
-                        emptyState
-                    } else {
-                        countAndSort
-                        productGrid
-                    }
+                    countAndSort
+                    productGrid
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
                 .padding(.bottom, 32)
             }
             .scrollIndicators(.hidden)
+            }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background((viewModel.products.isEmpty ? AccountEmptyState.background : EUMColor.backgroundSwiftUI).ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if viewModel.isEditing {
                 EUMButton(title: "선택 삭제 (\(viewModel.selectedCount))", size: .large) {
@@ -82,32 +82,10 @@ struct FavoritesView: View {
     }
 
     private var emptyState: some View {
-        VStack(spacing: 0) {
-            Image("FavoritesEmpty")
-                .resizable()
-                .frame(width: 28, height: 28)
-                .frame(width: 64, height: 64)
-                .background(EUMColor.surfaceSwiftUI, in: Circle())
-            Spacer().frame(height: 20)
-            Text("찜한 상품이 없습니다")
-                .font(EUMTypography.heading3)
-                .tracking(-0.27)
-                .foregroundStyle(EUMColor.text1SwiftUI)
-            Spacer().frame(height: 8)
-            Text("마음에 드는 상품을 찜하면\n이곳에서 다시 볼 수 있어요.")
-                .font(EUMTypography.bodySmall)
-                .tracking(-0.07)
-                .foregroundStyle(EUMColor.text2SwiftUI)
-                .multilineTextAlignment(.center)
-                .lineSpacing(2)
-                .fixedSize(horizontal: false, vertical: true)
-            Spacer().frame(height: 24)
-            EUMButton(title: "상품 둘러보기", size: .medium, action: onBrowseProducts)
-                .accessibilityIdentifier("favorites-browse-products")
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.top, 64)
-        .padding(.bottom, 32)
+        AccountEmptyState(
+            title: "찜한 상품이 없습니다", message: "마음에 드는 상품을 찜하면\n이곳에서 다시 볼 수 있어요.",
+            actionTitle: "상품 둘러보기", actionIdentifier: "favorites-browse-products", onAction: onBrowseProducts
+        )
     }
 
     @ViewBuilder
