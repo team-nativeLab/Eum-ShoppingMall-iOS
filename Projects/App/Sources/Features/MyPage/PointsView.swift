@@ -4,10 +4,14 @@ struct PointsView: View {
     @StateObject private var viewModel = PointsViewModel()
 
     let onBack: () -> Void
+    let onBrowseProducts: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
             topBar
+            if viewModel.history.isEmpty {
+                emptyState.padding(20).frame(maxHeight: .infinity)
+            } else {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     balanceSummary
@@ -20,8 +24,9 @@ struct PointsView: View {
                 .padding(.bottom, 32)
             }
             .scrollIndicators(.hidden)
+            }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background((viewModel.history.isEmpty ? AccountEmptyState.background : EUMColor.backgroundSwiftUI).ignoresSafeArea())
     }
 
     private var topBar: some View {
@@ -37,9 +42,11 @@ struct PointsView: View {
                         .scaledToFit()
                         .frame(width: 24, height: 24)
                         .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("마이페이지로 돌아가기")
+                .accessibilityIdentifier("points-back")
                 Spacer()
                 Color.clear.frame(width: 44, height: 44)
             }
@@ -120,8 +127,16 @@ struct PointsView: View {
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
+    private var emptyState: some View {
+        AccountEmptyState(
+            title: "적립 내역이 없습니다", message: "적립 내역은 발생 후\n이곳에서 확인할 수 있어요.",
+            actionTitle: "쇼핑하기", actionIdentifier: "points-empty-browse", onAction: onBrowseProducts
+        )
+    }
+
     private var history: some View {
         VStack(spacing: 0) {
+            if viewModel.filteredHistory.isEmpty { emptyState }
             ForEach(viewModel.filteredHistory) { item in
                 PointsHistoryRow(item: item)
             }
@@ -189,6 +204,6 @@ private struct PointsHistoryRow: View {
 
 struct PointsViewPreview: PreviewProvider {
     static var previews: some View {
-        PointsView(onBack: {})
+        PointsView(onBack: {}, onBrowseProducts: {})
     }
 }

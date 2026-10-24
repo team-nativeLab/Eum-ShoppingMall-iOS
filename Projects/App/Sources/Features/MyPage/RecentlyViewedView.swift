@@ -5,12 +5,24 @@ struct RecentlyViewedView: View {
 
     let onBack: () -> Void
     let onProductTap: (HomeProduct) -> Void
+    let onBrowseProducts: () -> Void
 
     private let columns = [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)]
 
     var body: some View {
         VStack(spacing: 0) {
             topBar
+            if viewModel.groups.isEmpty {
+                AccountEmptyState(
+                    title: "최근 본 상품이 없습니다",
+                    message: "둘러본 상품을 모아\n다시 확인할 수 있어요.",
+                    actionTitle: "상품 둘러보기",
+                    actionIdentifier: "recent-empty-browse",
+                    onAction: onBrowseProducts
+                )
+                .padding(20)
+                .frame(maxHeight: .infinity)
+            } else {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     retentionNotice
@@ -21,14 +33,16 @@ struct RecentlyViewedView: View {
                 .padding(.bottom, 32)
             }
             .scrollIndicators(.hidden)
+            }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background((viewModel.groups.isEmpty ? AccountEmptyState.background : EUMColor.backgroundSwiftUI).ignoresSafeArea())
     }
 
     private var topBar: some View {
         EUMBackTopBar(
             title: "최근 본 상품",
             backAccessibilityLabel: "마이페이지로 돌아가기",
+            backAccessibilityIdentifier: "recent-back",
             onBack: onBack
         ) {
             Button("전체 삭제", action: viewModel.removeAll)
@@ -117,6 +131,6 @@ struct RecentlyViewedView: View {
 
 struct RecentlyViewedViewPreview: PreviewProvider {
     static var previews: some View {
-        RecentlyViewedView(onBack: {}, onProductTap: { _ in })
+        RecentlyViewedView(onBack: {}, onProductTap: { _ in }, onBrowseProducts: {})
     }
 }

@@ -64,6 +64,7 @@ final class ReturnRequestViewModel: ObservableObject {
 
     init(order: OrderHistoryItem) {
         self.order = order
+        selectedKind = [.awaitingPayment, .paymentComplete, .preparing].contains(order.status) ? .cancel : .returning
     }
 
     var canSubmit: Bool { !selectedProductIDs.isEmpty }

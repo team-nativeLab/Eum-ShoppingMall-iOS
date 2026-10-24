@@ -11,6 +11,9 @@ struct QuoteHistoryView: View {
     var body: some View {
         VStack(spacing: 0) {
             topBar
+            if viewModel.inquiries.isEmpty {
+                emptyState.padding(20).frame(maxHeight: .infinity)
+            } else {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     statusFilters
@@ -21,15 +24,17 @@ struct QuoteHistoryView: View {
                 .padding(.bottom, 32)
             }
             .scrollIndicators(.hidden)
+            }
             newInquiryButton
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background((viewModel.inquiries.isEmpty ? AccountEmptyState.background : EUMColor.backgroundSwiftUI).ignoresSafeArea())
     }
 
     private var topBar: some View {
         EUMBackTopBar(
             title: "견적 문의 내역",
             backAccessibilityLabel: "이전 화면으로 돌아가기",
+            backAccessibilityIdentifier: "quote-history-back",
             onBack: onBack
         ) {
             EmptyView()
@@ -69,10 +74,7 @@ struct QuoteHistoryView: View {
     @ViewBuilder
     private var inquiryList: some View {
         if viewModel.visibleInquiries.isEmpty {
-            Text("견적 문의 내역이 없습니다.")
-                .font(EUMTypography.bodySmall)
-                .foregroundStyle(EUMColor.text3SwiftUI)
-                .frame(maxWidth: .infinity, minHeight: 220)
+            emptyState
         } else {
             VStack(spacing: 12) {
                 ForEach(viewModel.visibleInquiries) { inquiry in
@@ -80,6 +82,12 @@ struct QuoteHistoryView: View {
                 }
             }
         }
+    }
+
+    private var emptyState: some View {
+        AccountEmptyState(
+            title: "견적 문의 내역이 없습니다", message: "견적을 문의하면 진행 상태와\n답변을 확인할 수 있어요."
+        )
     }
 
     private var newInquiryButton: some View {

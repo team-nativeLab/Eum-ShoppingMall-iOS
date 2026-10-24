@@ -32,7 +32,9 @@ final class PointsViewModel: ObservableObject {
     let availablePoints = "0원"
     let expiringPoints = "0원"
 
-    let history = [
+    let history: [PointsHistoryItem]
+
+    static let samples = [
         PointsHistoryItem(
             id: "points-1", title: "주문 적립", date: "0000.00.00 · 주문번호 0000000000",
             amount: "+0원", expiration: "만료 0000.00.00", kind: .earned
@@ -58,6 +60,10 @@ final class PointsViewModel: ObservableObject {
             amount: "+0원", expiration: "만료 0000.00.00", kind: .earned
         )
     ]
+
+    init(history: [PointsHistoryItem]? = nil) {
+        self.history = history ?? (AccountSampleData.isEmpty ? [] : Self.samples)
+    }
 
     var filteredHistory: [PointsHistoryItem] {
         switch selectedFilter {

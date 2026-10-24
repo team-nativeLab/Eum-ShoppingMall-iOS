@@ -51,7 +51,7 @@ struct OrderHistoryView: View {
                 .scrollIndicators(.hidden)
             }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background((viewModel.orders.isEmpty ? AccountEmptyState.background : EUMColor.backgroundSwiftUI).ignoresSafeArea())
     }
 
     private var topBar: some View {
@@ -139,37 +139,24 @@ struct OrderHistoryView: View {
     }
 
     private var emptyState: some View {
-        VStack(spacing: 0) {
-            Image("SearchEmpty")
-                .resizable()
-                .frame(width: 28, height: 28)
-                .frame(width: 64, height: 64)
-                .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: 32))
-            Spacer().frame(height: 20)
-            Text("주문 내역이 없습니다")
-                .font(EUMTypography.heading3)
-                .tracking(-0.27)
-                .foregroundStyle(EUMColor.text1SwiftUI)
-            Spacer().frame(height: 8)
-            Text("상품을 주문하면 이곳에서\n주문·배송 상태를 확인할 수 있어요.")
-                .font(EUMTypography.bodySmall)
-                .tracking(-0.07)
-                .foregroundStyle(EUMColor.text2SwiftUI)
-                .multilineTextAlignment(.center)
-                .lineSpacing(2)
-                .fixedSize(horizontal: false, vertical: true)
-            Spacer().frame(height: 24)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.top, 64)
-        .padding(.bottom, 32)
-        .accessibilityElement(children: .contain)
+        AccountEmptyState(
+            title: "주문 내역이 없습니다", message: "상품을 주문하면 이곳에서\n주문·배송 상태를 확인할 수 있어요."
+        )
         .accessibilityIdentifier("order-history-empty-state")
     }
 
     private var browseProductsButton: some View {
-        EUMButton(title: "상품 둘러보기", size: .medium, action: onBrowseProducts)
-            .accessibilityIdentifier("order-history-browse-products")
+        Button(action: onBrowseProducts) {
+            Text("상품 둘러보기")
+                .font(.custom("NotoSansKR-Bold", size: 14))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 48)
+                .background(Color(red: 20 / 255, green: 26 / 255, blue: 23 / 255),
+                            in: RoundedRectangle(cornerRadius: 8))
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("order-history-browse-products")
     }
 }
 

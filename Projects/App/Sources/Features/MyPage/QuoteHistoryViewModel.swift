@@ -26,13 +26,19 @@ struct QuoteInquiryRecord: Identifiable, Equatable {
 final class QuoteHistoryViewModel: ObservableObject {
     @Published var selectedStatus: QuoteInquiryStatus = .all
 
-    let inquiries = [
+    let inquiries: [QuoteInquiryRecord]
+
+    static let samples = [
         record("quote-1", status: .quoteSent, showsDocument: true),
         record("quote-2", status: .consulting),
         record("quote-3", status: .received),
         record("quote-4", status: .completed),
         record("quote-5", status: .canceled)
     ]
+
+    init(inquiries: [QuoteInquiryRecord]? = nil) {
+        self.inquiries = inquiries ?? (AccountSampleData.isEmpty ? [] : Self.samples)
+    }
 
     var visibleInquiries: [QuoteInquiryRecord] {
         guard selectedStatus != .all else { return inquiries }

@@ -35,17 +35,19 @@ struct ReturnHistoryCard: View {
         VStack(alignment: .leading, spacing: 12) {
             header
             product
-            HStack {
-                Text("환불 예정 금액")
-                    .font(EUMTypography.bodySmall)
-                    .foregroundStyle(EUMColor.text2SwiftUI)
-                Spacer()
-                Text(item.refundAmount)
-                    .font(EUMTypography.labelMedium)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
+            if item.kind == .returnRequest {
+                HStack {
+                    Text("환불 예정 금액")
+                        .font(EUMTypography.bodySmall)
+                        .foregroundStyle(EUMColor.text2SwiftUI)
+                    Spacer()
+                    Text(item.refundAmount)
+                        .font(EUMTypography.labelMedium)
+                        .foregroundStyle(EUMColor.text1SwiftUI)
+                }
             }
             if item.status == .requested {
-                EUMButton(title: "신청 철회", kind: .secondary, size: .small, action: onWithdraw)
+                EUMButton(title: "신청 철회", kind: .ghost, size: .small, action: onWithdraw)
             } else if item.status == .rejected {
                 EUMButton(title: "반려 사유 보기", kind: .secondary, size: .small, action: onRejectionReason)
             }
@@ -81,6 +83,22 @@ struct ReturnHistoryCard: View {
         }
     }
 
+    private var badgeForeground: Color {
+        switch item.status {
+        case .requested, .rejected: EUMColor.dangerSwiftUI
+        case .exchangeComplete: Color(red: 30 / 255, green: 122 / 255, blue: 60 / 255)
+        case .collecting: EUMColor.text2SwiftUI
+        }
+    }
+
+    private var badgeBackground: Color {
+        switch item.status {
+        case .requested, .rejected: Color(red: 253 / 255, green: 236 / 255, blue: 234 / 255)
+        case .exchangeComplete: Color(red: 232 / 255, green: 243 / 255, blue: 236 / 255)
+        case .collecting: EUMColor.backgroundSwiftUI
+        }
+    }
+
     private var product: some View {
         HStack(alignment: .top, spacing: 12) {
             ZStack {
@@ -89,7 +107,7 @@ struct ReturnHistoryCard: View {
                     startPoint: .top,
                     endPoint: .bottom
                 )
-                Image("ProductPlaceholder")
+                Image("RequestProduct")
                     .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
@@ -101,12 +119,12 @@ struct ReturnHistoryCard: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.status.rawValue)
                     .font(EUMTypography.labelExtraSmall)
-                    .foregroundStyle(EUMColor.text2SwiftUI)
+                    .foregroundStyle(badgeForeground)
                     .padding(.horizontal, 6)
                     .frame(height: 20)
-                    .background(item.status == .collecting ? EUMColor.surfaceSecondarySwiftUI : EUMColor.backgroundSwiftUI)
+                    .background(badgeBackground)
                     .overlay {
-                        if item.status == .requested {
+                        if item.status == .collecting {
                             RoundedRectangle(cornerRadius: EUMRadius.small).stroke(EUMColor.lineStrongSwiftUI, lineWidth: 1)
                         }
                     }

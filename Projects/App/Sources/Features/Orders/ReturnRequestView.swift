@@ -23,22 +23,16 @@ struct ReturnRequestView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Color.clear.frame(height: 44)
             topBar
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
                     ReturnRequestSegmented(selectedKind: viewModel.selectedKind, onSelect: selectKind)
                     productSection
                     reasonSection
-                    if viewModel.selectedKind != .cancel {
-                        photoSection
-                        pickupSection
-                    }
-                    if viewModel.selectedKind == .exchange {
-                        exchangeOptionSection
-                    } else {
-                        refundSection
-                    }
+                    photoSection
+                    if viewModel.selectedKind == .exchange { exchangeOptionSection }
+                    if viewModel.selectedKind != .cancel { pickupSection }
+                    if viewModel.selectedKind == .exchange { exchangeCostSection } else { refundSection }
                     ReturnRequestNotice(message: noticeMessage)
                 }
                 .padding(.horizontal, 20)
@@ -47,8 +41,7 @@ struct ReturnRequestView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
-        .ignoresSafeArea(edges: .top)
+        .background(AccountEmptyState.background.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             bottomAction
         }
@@ -65,14 +58,14 @@ struct ReturnRequestView: View {
                 .foregroundStyle(EUMColor.text1SwiftUI)
             HStack {
                 Button(action: onBack) {
-                    Image("ProductDetailBack")
+                    Image("RequestBack")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 24, height: 24)
                         .frame(width: 44, height: 44)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("주문 상세로 돌아가기")
+                .accessibilityLabel("이전 화면으로 돌아가기")
                 Spacer()
                 Color.clear.frame(width: 44, height: 44)
             }
@@ -135,7 +128,7 @@ struct ReturnRequestView: View {
 
     private var pickupSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeading("회수 방법")
+            sectionHeading(viewModel.selectedKind == .exchange ? "상품 회수 안내" : "회수 방법")
             HStack(spacing: 24) {
                 ForEach(ReturnPickupMethod.allCases) { method in
                     ReturnPickupOption(method: method, isSelected: viewModel.pickupMethod == method) {
@@ -145,10 +138,10 @@ struct ReturnRequestView: View {
             }
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("홍길동 · 010-0000-0000")
+                    Text(viewModel.selectedKind == .exchange ? "주문 시 입력한 연락처" : "홍길동 · 010-0000-0000")
                         .font(EUMTypography.labelMedium)
                         .foregroundStyle(EUMColor.text1SwiftUI)
-                    Text("(00000) 주소 상세주소")
+                    Text(viewModel.selectedKind == .exchange ? "주문 시 입력한 배송지" : "(00000) 주소 상세주소")
                         .font(EUMTypography.bodySmall)
                         .foregroundStyle(EUMColor.text2SwiftUI)
                 }
@@ -157,14 +150,15 @@ struct ReturnRequestView: View {
                     .fixedSize()
             }
             .padding(16)
-            .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+            .background(.white, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
         }
     }
 
     private var refundSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             sectionHeading("환불 예정 금액")
-            ReturnRefundAmountCard()
+            ReturnRefundAmountCard(isCancellation: viewModel.selectedKind == .cancel)
         }
     }
 
@@ -198,23 +192,67 @@ struct ReturnRequestView: View {
 
     private var noticeMessage: String {
         switch viewModel.selectedKind {
-        case .cancel: "취소 가능 여부와 환불 금액은 주문 서비스 연동 후 확인할 수 있습니다."
+        case .cancel: "환불 금액은 주문 상태 및 정책 확인 후 안내됩니다."
         case .returning: "단순 변심 반품은 왕복 배송비가 차감됩니다."
-        case .exchange: "교환 옵션, 재고와 추가 비용은 주문 서비스 연동 후 확인할 수 있습니다."
+        case .exchange: "교환 비용은 주문 정보 및 운영 정책 확인 후 안내됩니다."
         }
     }
 
-    private var exchangeOptionSection: some View {
+    private var exchangeCostSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeading("교환 옵션")
-            Text("교환 가능한 옵션은 주문 서비스 연동 후 선택할 수 있습니다.")
-                .font(EUMTypography.bodySmall)
-                .foregroundStyle(EUMColor.text3SwiftUI)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(16)
-                .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+            sectionHeading("교환 비용 안내")
+            VStack(spacing: 12) {
+                detailRow("상품 금액", value: "신청 후 안내")
+                detailRow("교환 배송비", value: "정책에 따라 안내")
+                Divider()
+                HStack {
+                    Text("추가 비용").font(EUMTypography.labelLarge)
+                    Spacer()
+                    Text("신청 후 안내").font(.custom("NotoSansKR-Bold", size: 24))
+                }
+                .foregroundStyle(EUMColor.text1SwiftUI)
+                detailRow("비용 안내", value: "주문 정보 확인 후 안내")
+            }
+            .padding(16)
+            .background(.white, in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
         }
     }
+
+    private func detailRow(_ title: String, value: String) -> some View {
+        HStack(alignment: .top) {
+            Text(title).foregroundStyle(EUMColor.text2SwiftUI)
+            Spacer(minLength: 12)
+            Text(value).foregroundStyle(EUMColor.text1SwiftUI).multilineTextAlignment(.trailing)
+        }
+        .font(EUMTypography.bodySmall)
+    }
+
+    private var exchangeOptionSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("교환 상품 옵션")
+                .font(.custom("NotoSansKR-Bold", size: 14))
+                .foregroundStyle(Color(red: 26 / 255, green: 33 / 255, blue: 31 / 255))
+            optionRow("변경할 옵션", value: "상품 옵션 확인 후 선택")
+            optionRow("재고 상태", value: "선택한 주문의 상품 상태를 확인해 주세요.")
+        }
+        .padding(12)
+        .background(Color(red: 247 / 255, green: 249 / 255, blue: 247 / 255),
+                    in: RoundedRectangle(cornerRadius: 12))
+    }
+
+    private func optionRow(_ title: String, value: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Text(title).foregroundStyle(Color(red: 77 / 255, green: 87 / 255, blue: 82 / 255))
+            Spacer(minLength: 0)
+            Text(value).foregroundStyle(Color(red: 26 / 255, green: 33 / 255, blue: 31 / 255))
+                .multilineTextAlignment(.trailing)
+        }
+        .font(.custom("NotoSansKR-Regular", size: 12))
+        .frame(maxWidth: .infinity, minHeight: 24, alignment: .topLeading)
+        .background(.white)
+    }
+
 }
 
 struct ReturnRequestViewPreview: PreviewProvider {

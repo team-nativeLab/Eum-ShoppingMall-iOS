@@ -7,10 +7,14 @@ struct ReturnHistoryView: View {
     let onDetail: (ReturnHistoryItem) -> Void
     let onWithdraw: (ReturnHistoryItem) -> Void
     let onRejectionReason: (ReturnHistoryItem) -> Void
+    let onOrders: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
             topBar
+            if viewModel.items.isEmpty {
+                emptyState.padding(20).frame(maxHeight: .infinity)
+            } else {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     filters
@@ -21,8 +25,9 @@ struct ReturnHistoryView: View {
                 .padding(.bottom, 32)
             }
             .scrollIndicators(.hidden)
+            }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(AccountEmptyState.background.ignoresSafeArea())
     }
 
     private var topBar: some View {
@@ -45,13 +50,17 @@ struct ReturnHistoryView: View {
         }
     }
 
+    private var emptyState: some View {
+        AccountEmptyState(
+            title: "신청 내역이 없습니다", message: "취소·반품·교환을 신청하면\n처리 상태를 확인할 수 있어요.",
+            actionTitle: "주문/배송 조회", actionIdentifier: "return-empty-orders", onAction: onOrders
+        )
+    }
+
     @ViewBuilder
     private var itemList: some View {
         if viewModel.filteredItems.isEmpty {
-            Text("해당 신청 내역이 없습니다.")
-                .font(EUMTypography.bodySmall)
-                .foregroundStyle(EUMColor.text3SwiftUI)
-                .frame(maxWidth: .infinity, minHeight: 180)
+            emptyState
         } else {
             VStack(spacing: 12) {
                 ForEach(viewModel.filteredItems) { item in
@@ -69,6 +78,6 @@ struct ReturnHistoryView: View {
 
 struct ReturnHistoryViewPreview: PreviewProvider {
     static var previews: some View {
-        ReturnHistoryView(onBack: {}, onDetail: { _ in }, onWithdraw: { _ in }, onRejectionReason: { _ in })
+        ReturnHistoryView(onBack: {}, onDetail: { _ in }, onWithdraw: { _ in }, onRejectionReason: { _ in }, onOrders: {})
     }
 }
