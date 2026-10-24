@@ -30,6 +30,7 @@ struct ReturnRequestSegmented: View {
             }
         }
         .padding(4)
+        .background(.white, in: RoundedRectangle(cornerRadius: EUMRadius.button))
         .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).stroke(EUMColor.lineControlSwiftUI, lineWidth: 1))
     }
 }
@@ -295,14 +296,14 @@ struct ReturnPickupOption: View {
         Button(action: action) {
             HStack(spacing: 8) {
                 if isSelected {
-                    Image("ReturnRadioSelected")
+                    Image("RequestRadioSelected")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 20, height: 20)
+                        .frame(width: 14, height: 14)
                 } else {
                     Circle()
                         .fill(EUMColor.backgroundSwiftUI)
-                        .frame(width: 20, height: 20)
+                        .frame(width: 14, height: 14)
                         .overlay(Circle().stroke(EUMColor.lineControlSwiftUI, lineWidth: 1.5))
                 }
                 Text(method.rawValue)
@@ -375,6 +376,7 @@ struct ReturnRequestNotice: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .background(.white, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
 }
