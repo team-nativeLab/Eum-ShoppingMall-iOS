@@ -13,6 +13,8 @@ enum HomeModalRoute {
     case returnHub
     case returnOrderSelection
     case returnRejectionReason(ReturnHistoryItem)
+    case returnRequestComplete(ReturnHistoryItem)
+    case returnWithdrawalComplete(ReturnHistoryItem)
     case returnHistory
     case returnRequestDetail(ReturnHistoryItem)
     case returnWithdrawalConfirmation(ReturnHistoryItem)

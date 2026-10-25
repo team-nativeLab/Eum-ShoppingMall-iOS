@@ -5,6 +5,7 @@ struct HomeModalRouteHostView: View {
     @ObservedObject var addressViewModel: AddressesViewModel
     @ObservedObject var contactInquiryViewModel: ContactInquiryHistoryViewModel
     @ObservedObject var withdrawalNoticeViewModel: AccountWithdrawalNoticeViewModel
+    @ObservedObject var returnHistoryViewModel: ReturnHistoryViewModel
     let isGuestAccount: Bool
     let activeWithdrawalOrderCount: Int
     let onBack: () -> Void
@@ -15,6 +16,9 @@ struct HomeModalRouteHostView: View {
     let onBrowseProducts: () -> Void
     let onAddressChange: (OrderHistoryItem) -> Void
     let onViewContactInquiries: () -> Void
+    let onSubmitReturnRequest: (ReturnHistoryItem) -> Void
+    let onConfirmReturnWithdrawal: (ReturnHistoryItem) -> Void
+    let onViewReturnHistory: () -> Void
     let onHome: () -> Void
     let onWithdrawal: () -> Void
     let onLogout: () -> Void
@@ -42,14 +46,24 @@ struct HomeModalRouteHostView: View {
         case .orderHistory, .orderDetail, .deliveryTracking, .returnRequest, .returnHistory, .quoteDetail:
             HomeOrderRouteView(
                 route: route,
+                returnHistoryViewModel: returnHistoryViewModel,
                 onBack: onBack,
                 onRoute: onRoute,
                 onMessage: onMessage,
+                onSubmitReturnRequest: onSubmitReturnRequest,
                 onBrowseProducts: onBrowseProducts,
                 onAddressChange: onAddressChange
             )
-        case .returnHub, .returnOrderSelection, .returnRejectionReason, .returnRequestDetail, .returnWithdrawalConfirmation:
-            HomeReturnRequestRouteView(route: route, onBack: onBack, onRoute: onRoute, onMessage: onMessage)
+        case .returnHub, .returnOrderSelection, .returnRejectionReason, .returnRequestComplete, .returnWithdrawalComplete,
+             .returnRequestDetail, .returnWithdrawalConfirmation:
+            HomeReturnRequestRouteView(
+                route: route,
+                onBack: onBack,
+                onRoute: onRoute,
+                onMessage: onMessage,
+                onConfirmWithdraw: onConfirmReturnWithdrawal,
+                onViewHistory: onViewReturnHistory
+            )
         case .accountVerification, .companyIntroduction:
             HomeProfileRouteView(
                 route: route,

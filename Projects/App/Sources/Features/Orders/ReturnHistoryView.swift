@@ -1,13 +1,29 @@
 import SwiftUI
 
 struct ReturnHistoryView: View {
-    @StateObject private var viewModel = ReturnHistoryViewModel()
+    @ObservedObject var viewModel: ReturnHistoryViewModel
 
     let onBack: () -> Void
     let onDetail: (ReturnHistoryItem) -> Void
     let onWithdraw: (ReturnHistoryItem) -> Void
     let onRejectionReason: (ReturnHistoryItem) -> Void
     let onOrders: () -> Void
+
+    init(
+        viewModel: ReturnHistoryViewModel,
+        onBack: @escaping () -> Void,
+        onDetail: @escaping (ReturnHistoryItem) -> Void,
+        onWithdraw: @escaping (ReturnHistoryItem) -> Void,
+        onRejectionReason: @escaping (ReturnHistoryItem) -> Void,
+        onOrders: @escaping () -> Void
+    ) {
+        self.viewModel = viewModel
+        self.onBack = onBack
+        self.onDetail = onDetail
+        self.onWithdraw = onWithdraw
+        self.onRejectionReason = onRejectionReason
+        self.onOrders = onOrders
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -78,6 +94,13 @@ struct ReturnHistoryView: View {
 
 struct ReturnHistoryViewPreview: PreviewProvider {
     static var previews: some View {
-        ReturnHistoryView(onBack: {}, onDetail: { _ in }, onWithdraw: { _ in }, onRejectionReason: { _ in }, onOrders: {})
+        ReturnHistoryView(
+            viewModel: ReturnHistoryViewModel(),
+            onBack: {},
+            onDetail: { _ in },
+            onWithdraw: { _ in },
+            onRejectionReason: { _ in },
+            onOrders: {}
+        )
     }
 }

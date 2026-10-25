@@ -146,4 +146,29 @@ final class ReturnRequestViewModel: ObservableObject {
         case .exchange: return "교환 신청은 주문 서비스 연동 후 접수할 수 있어요."
         }
     }
+
+    func makeHistoryItem(applicationNumber: String) -> ReturnHistoryItem {
+        let selectedProducts = products.filter { isSelected($0) }
+        let firstProduct = selectedProducts.first?.name ?? "제품명"
+        let productName = selectedProducts.count > 1 ? "\(firstProduct) 외 \(selectedProducts.count - 1)건" : firstProduct
+        let kind: ReturnHistoryKind
+        switch selectedKind {
+        case .cancel: kind = .cancellation
+        case .returning: kind = .returnRequest
+        case .exchange: kind = .exchange
+        }
+
+        return ReturnHistoryItem(
+            id: "return-\(applicationNumber)",
+            kind: kind,
+            status: .requested,
+            orderDate: order.orderDate,
+            orderNumber: order.orderNumber,
+            productName: productName,
+            priceAndQuantity: order.priceAndQuantity,
+            refundAmount: "₩00,000",
+            applicationNumber: applicationNumber,
+            requestReason: selectedReason.rawValue
+        )
+    }
 }

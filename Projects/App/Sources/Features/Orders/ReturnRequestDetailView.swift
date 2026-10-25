@@ -7,61 +7,143 @@ struct ReturnRequestDetailView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            EUMBackTopBar(
-                title: "신청 상세",
-                backAccessibilityLabel: "신청 내역으로 돌아가기",
-                backAccessibilityIdentifier: "return-request-detail-back",
-                onBack: onBack
-            ) {
-                Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
+            if item.status == .withdrawn {
+                withdrawnTopBar
+            } else {
+                EUMBackTopBar(
+                    title: "신청 상세",
+                    backAccessibilityLabel: "신청 내역으로 돌아가기",
+                    backAccessibilityIdentifier: "return-request-detail-back",
+                    onBack: onBack
+                ) {
+                    Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
+                }
             }
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    statusSection
-                    section(title: "신청 상품") {
-                        HStack(alignment: .top, spacing: 12) {
-                            productImage
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(item.productName)
-                                    .font(EUMTypography.bodyMedium)
-                                    .foregroundStyle(EUMColor.text1SwiftUI)
-                                Text(item.priceAndQuantity)
-                                    .font(EUMTypography.labelMedium)
-                                    .foregroundStyle(EUMColor.text1SwiftUI)
+                if item.status == .withdrawn {
+                    withdrawnDetails
+                } else {
+                    VStack(alignment: .leading, spacing: 24) {
+                        statusSection
+                        section(title: "신청 상품") {
+                            HStack(alignment: .top, spacing: 12) {
+                                productImage
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text(item.productName)
+                                        .font(EUMTypography.bodyMedium)
+                                        .foregroundStyle(EUMColor.text1SwiftUI)
+                                    Text(item.priceAndQuantity)
+                                        .font(EUMTypography.labelMedium)
+                                        .foregroundStyle(EUMColor.text1SwiftUI)
+                                }
                             }
                         }
-                    }
-                    section(title: "신청 정보") {
-                        detailRow("신청 유형", value: item.kind.rawValue)
-                        detailRow("신청일", value: item.orderDate)
-                        detailRow("주문번호", value: item.orderNumber)
-                        detailRow("신청 상태", value: item.status.rawValue)
-                    }
-                    if item.kind != .exchange {
-                        section(title: "환불 정보") {
-                            detailRow("환불 예정 금액", value: item.refundAmount)
-                            Text("환불 금액과 처리 상태는 실제 주문 서비스 연결 후 확인할 수 있습니다.")
-                                .font(EUMTypography.captionRegular)
-                                .foregroundStyle(EUMColor.text3SwiftUI)
+                        section(title: "신청 정보") {
+                            detailRow("신청 유형", value: item.kind.rawValue)
+                            detailRow("신청일", value: item.orderDate)
+                            detailRow("주문번호", value: item.orderNumber)
+                            detailRow("신청 상태", value: item.status.rawValue)
                         }
-                    }
-                    if let rejectionReason = item.rejectionReason {
-                        section(title: "반려 사유") {
-                            Text(rejectionReason)
-                                .font(EUMTypography.bodySmall)
-                                .foregroundStyle(EUMColor.text2SwiftUI)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                        if item.kind != .exchange {
+                            section(title: "환불 정보") {
+                                detailRow("환불 예정 금액", value: item.refundAmount)
+                                Text("환불 금액과 처리 상태는 실제 주문 서비스 연결 후 확인할 수 있습니다.")
+                                    .font(EUMTypography.captionRegular)
+                                    .foregroundStyle(EUMColor.text3SwiftUI)
+                            }
                         }
-                    }
-                    if item.status == .requested {
-                        EUMButton(title: "신청 철회", kind: .secondary, action: onWithdraw)
+                        if let rejectionReason = item.rejectionReason {
+                            section(title: "반려 사유") {
+                                Text(rejectionReason)
+                                    .font(EUMTypography.bodySmall)
+                                    .foregroundStyle(EUMColor.text2SwiftUI)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                        if item.status == .requested {
+                            EUMButton(title: "신청 철회", kind: .secondary, action: onWithdraw)
+                        }
                     }
                 }
-                .padding(20)
             }
             .scrollIndicators(.hidden)
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+    }
+
+    private var withdrawnTopBar: some View {
+        HStack(spacing: 8) {
+            Button(action: onBack) {
+                Image("RequestBack")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .frame(width: 24, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("신청 내역으로 돌아가기")
+            .accessibilityIdentifier("return-request-detail-back")
+            Text("신청 상세")
+                .font(.custom("NotoSansKR-Bold", size: 18))
+                .foregroundStyle(Color(red: 31 / 255, green: 33 / 255, blue: 38 / 255))
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+        .frame(height: 56)
+        .background(AccountEmptyState.background)
+    }
+
+    private var withdrawnDetails: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("\(item.requestDate) · \(item.kind.rawValue) 신청 · 철회 완료")
+                .font(EUMTypography.captionRegular)
+                .foregroundStyle(Color(red: 102 / 255, green: 102 / 255, blue: 102 / 255))
+                .frame(height: 50, alignment: .topLeading)
+            withdrawnCard(
+                title: "진행 상태",
+                value: "철회 완료 · 신청이 정상적으로 취소됐습니다.",
+                icon: "ReturnStatusCheck"
+            )
+            withdrawnCard(
+                title: "신청 상품",
+                value: "\(item.productName) · \(item.priceAndQuantity)",
+                icon: "ReturnStatusProduct"
+            )
+            withdrawnCard(title: "신청 사유", value: item.requestReason, icon: "ReturnStatusReason")
+            withdrawnCard(title: "회수 주소", value: item.pickupAddress, icon: "ReturnStatusAddress")
+            withdrawnCard(title: "신청 번호", value: item.applicationNumber, icon: "ReturnStatusNumber")
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 18)
+        .padding(.bottom, 24)
+    }
+
+    private func withdrawnCard(title: String, value: String, icon: String) -> some View {
+        HStack(spacing: 12) {
+            Image(icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
+                .frame(width: 36, height: 36)
+                .background(Color(red: 231 / 255, green: 245 / 255, blue: 241 / 255),
+                            in: RoundedRectangle(cornerRadius: 11))
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.custom("NotoSansKR-Bold", size: 14))
+                    .foregroundStyle(Color(red: 31 / 255, green: 33 / 255, blue: 38 / 255))
+                Text(value)
+                    .font(EUMTypography.bodySmall)
+                    .foregroundStyle(Color(red: 102 / 255, green: 102 / 255, blue: 102 / 255))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, minHeight: 76, alignment: .leading)
+        .background(.white, in: RoundedRectangle(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
 
     private var statusSection: some View {

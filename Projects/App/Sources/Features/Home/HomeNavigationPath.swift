@@ -32,6 +32,11 @@ struct HomeNavigationPath {
     mutating func reset() {
         entries.removeAll()
     }
+
+    mutating func resetAndPush(_ destination: HomeDestination) {
+        reset()
+        push(destination)
+    }
 }
 
 struct HomeNavigationState {
@@ -49,6 +54,10 @@ struct HomeNavigationState {
 
     mutating func back() {
         path.back()
+    }
+
+    mutating func resetAndPush(_ destination: HomeDestination) {
+        path.resetAndPush(destination)
     }
 
     mutating func selectTab(_ tab: EUMTabBar.Tab) {

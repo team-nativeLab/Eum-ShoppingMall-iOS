@@ -142,9 +142,11 @@ struct HomeAccountCollectionRouteView: View {
 }
 struct HomeOrderRouteView: View {
     let route: HomeModalRoute
+    @ObservedObject var returnHistoryViewModel: ReturnHistoryViewModel
     let onBack: () -> Void
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
+    let onSubmitReturnRequest: (ReturnHistoryItem) -> Void
     let onBrowseProducts: () -> Void
     let onAddressChange: (OrderHistoryItem) -> Void
 
@@ -178,10 +180,12 @@ struct HomeOrderRouteView: View {
                 order: order,
                 onBack: onBack,
                 onAddressChange: { onAddressChange(order) },
-                onSubmit: onMessage
+                onSubmit: onSubmitReturnRequest,
+                onUnavailable: onMessage
             )
         case .returnHistory:
             ReturnHistoryView(
+                viewModel: returnHistoryViewModel,
                 onBack: onBack,
                 onDetail: { onRoute(.returnRequestDetail($0)) },
                 onWithdraw: { onRoute(.returnWithdrawalConfirmation($0)) },
@@ -375,21 +379,6 @@ struct HomeWithdrawalRouteView: View {
         default:
             HomeRouteRecoveryView(onBack: onBack)
         }
-    }
-}
-
-struct HomeLoadErrorView: View {
-    let onRetry: () -> Void
-
-    var body: some View {
-        VStack(spacing: 16) {
-            Text("홈 정보를 불러오지 못했어요.")
-                .font(EUMTypography.bodyMedium)
-                .foregroundStyle(EUMColor.text2SwiftUI)
-            EUMButton(title: "다시 시도", kind: .secondary, action: onRetry)
-                .frame(maxWidth: 180)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

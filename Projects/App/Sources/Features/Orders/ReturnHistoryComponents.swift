@@ -80,6 +80,7 @@ struct ReturnHistoryCard: View {
                 .fixedSize()
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("return-history-detail-\(item.id)")
         }
     }
 
@@ -87,6 +88,7 @@ struct ReturnHistoryCard: View {
         switch item.status {
         case .requested, .rejected: EUMColor.dangerSwiftUI
         case .exchangeComplete: Color(red: 30 / 255, green: 122 / 255, blue: 60 / 255)
+        case .withdrawn: Color(red: 48 / 255, green: 122 / 255, blue: 60 / 255)
         case .collecting: EUMColor.text2SwiftUI
         }
     }
@@ -95,6 +97,7 @@ struct ReturnHistoryCard: View {
         switch item.status {
         case .requested, .rejected: Color(red: 253 / 255, green: 236 / 255, blue: 234 / 255)
         case .exchangeComplete: Color(red: 232 / 255, green: 243 / 255, blue: 236 / 255)
+        case .withdrawn: Color(red: 232 / 255, green: 243 / 255, blue: 236 / 255)
         case .collecting: EUMColor.backgroundSwiftUI
         }
     }
@@ -130,6 +133,7 @@ struct ReturnHistoryCard: View {
                     }
                     .clipShape(RoundedRectangle(cornerRadius: EUMRadius.small))
                     .fixedSize()
+                    .accessibilityIdentifier("return-history-status-\(item.id)")
                 Text(item.productName)
                     .font(EUMTypography.bodyMedium)
                     .foregroundStyle(EUMColor.text1SwiftUI)
