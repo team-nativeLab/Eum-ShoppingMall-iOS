@@ -29,7 +29,9 @@ final class ReturnFlowUITests: XCTestCase {
         app.buttons["교환 신청하기"].tap()
         XCTAssertTrue(app.staticTexts["신청이 접수됐어요"].waitForExistence(timeout: 5))
         app.buttons["return-request-completion-back"].tap()
-        app.buttons["return-order-select-back"].tap()
+        app.buttons["return-order-select-back"]
+            .coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .tap()
         XCTAssertTrue(app.staticTexts["신청할 주문 선택"].waitForExistence(timeout: 5))
         app.buttons["return-select-filter-배송중"].tap()
         app.buttons["return-order-select-order-transit-1"].tap()
