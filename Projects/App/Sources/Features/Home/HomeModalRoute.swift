@@ -10,6 +10,9 @@ enum HomeModalRoute {
     case orderDetail(OrderHistoryItem)
     case deliveryTracking(OrderHistoryItem)
     case returnRequest(OrderHistoryItem)
+    case returnHub
+    case returnOrderSelection
+    case returnRejectionReason(ReturnHistoryItem)
     case returnHistory
     case returnRequestDetail(ReturnHistoryItem)
     case returnWithdrawalConfirmation(ReturnHistoryItem)

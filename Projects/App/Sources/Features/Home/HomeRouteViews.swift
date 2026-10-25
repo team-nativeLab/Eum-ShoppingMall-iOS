@@ -34,7 +34,7 @@ struct HomeAccountTabView: View {
                 onAddressesTap: { onRoute(.accountCollection(.addresses)) },
                 onQuoteHistoryTap: { onRoute(.accountCollection(.quoteHistory)) },
                 onContactHistoryTap: { onRoute(.accountCollection(.contactHistory)) },
-                onReturnsHistoryTap: { onRoute(.returnHistory) },
+                onReturnsHistoryTap: { onRoute(.returnHub) },
                 onAccountVerificationTap: { onRoute(.accountVerification) },
                 onSettingsTap: { onRoute(.settings) }
             )
@@ -155,10 +155,10 @@ struct HomeOrderRouteView: View {
             OrderHistoryView(
                 initialStatus: status,
                 onBack: onBack,
-                onCancelReturn: { onRoute(.returnHistory) },
+                onCancelReturn: { onRoute(.returnHub) },
                 onBrowseProducts: onBrowseProducts,
                 onOrderDetail: { onRoute(.orderDetail($0)) },
-                onCancelOrder: { _ in onMessage("주문 취소는 서버 연동 후 이용할 수 있어요.") },
+                onCancelOrder: { onRoute(.returnRequest($0)) },
                 onTrackDelivery: { onRoute(.deliveryTracking($0)) },
                 onReorder: { _ in onMessage("다시 담기는 장바구니 연결 후 이용할 수 있어요.") }
             )
@@ -185,7 +185,8 @@ struct HomeOrderRouteView: View {
                 onBack: onBack,
                 onDetail: { onRoute(.returnRequestDetail($0)) },
                 onWithdraw: { onRoute(.returnWithdrawalConfirmation($0)) },
-                onRejectionReason: { item in onMessage(item.rejectionReason ?? "반려 사유가 없습니다.") }
+                onRejectionReason: { onRoute(.returnRejectionReason($0)) },
+                onOrders: { onRoute(.orderHistory()) }
             )
         case let .quoteDetail(inquiry):
             QuoteDetailView(
@@ -225,11 +226,11 @@ struct AccountCollectionRouteView: View {
         case .favorites:
             FavoritesView(onBack: onBack, onProductTap: onProductTap, onBrowseProducts: onBrowseProducts)
         case .recentlyViewed:
-            RecentlyViewedView(onBack: onBack, onProductTap: onProductTap)
+            RecentlyViewedView(onBack: onBack, onProductTap: onProductTap, onBrowseProducts: onBrowseProducts)
         case .coupons:
-            CouponsView(onBack: onBack, onPointsTap: onPointsTap)
+            CouponsView(onBack: onBack, onPointsTap: onPointsTap, onBrowseProducts: onBrowseProducts)
         case .points:
-            PointsView(onBack: onBack)
+            PointsView(onBack: onBack, onBrowseProducts: onBrowseProducts)
         case .editProfile:
             ProfileEditView(onBack: onBack, onAction: onAction, onWithdrawTap: onWithdrawTap)
         case .addresses:

@@ -21,7 +21,9 @@ enum CouponListTab: String, CaseIterable, Identifiable {
 @MainActor
 final class CouponsViewModel: ObservableObject {
     @Published var selectedTab = CouponListTab.available
-    @Published private(set) var availableCoupons = [
+    @Published private(set) var availableCoupons: [Coupon]
+
+    static let samples = [
         Coupon(
             id: "coupon-1", discount: "00%", title: "쿠폰명",
             condition: "₩00,000 이상 구매 시 · 최대 ₩0,000 할인",
@@ -44,6 +46,10 @@ final class CouponsViewModel: ObservableObject {
         )
     ]
     @Published private(set) var completedCoupons: [Coupon] = []
+
+    init(availableCoupons: [Coupon]? = nil) {
+        self.availableCoupons = availableCoupons ?? (AccountSampleData.isEmpty ? [] : Self.samples)
+    }
 
     var couponsForSelectedTab: [Coupon] {
         selectedTab == .available ? availableCoupons : completedCoupons
