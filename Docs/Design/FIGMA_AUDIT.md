@@ -1,7 +1,7 @@
 # Figma Audit
 
 - Source: [06 Design — App](https://www.figma.com/design/N3Ic9TfSnUBVMgAuayBVly?node-id=178-345), read-only.
-- Audited page node: `178:345`; Figma MCP metadata contains **88 screen frames**, all 390 pt wide.
+- Audited page node: `178:345`; the original 88-frame inventory was refreshed on 2026-10-26 with newer inquiry, event, policy, request-completion and withdrawal-state frames. See `SCREEN_INVENTORY.md` for the node-by-node list.
 - Detail contexts and screenshots were obtained for A-01 Splash (`178:350`) and A-02 Home (`178:369`). The splash screenshot is the visual target; the page tree is the source for the remaining inventory.
 - Figma MCP variable-definition and Code Connect library listing were unavailable on the connected seat. Do not treat fallback colors in generated code as confirmed published variables.
 
@@ -14,6 +14,8 @@
 - No loading-state design was confirmed in inspected metadata.
 
 ## Audit limits
+
+Screen numbers are not unique across the latest page: A-43 identifies both company introduction and 1:1 inquiry; A-54 identifies both events and rejection reason. Node IDs disambiguate them. The newly inspected return states are A-50 `879:8904`, A-53 `879:44682`, A-19l after withdrawal `879:45201`, and A-51 after withdrawal `879:45279`.
 
 The component dependency graph and exhaustive variant/state values remain incomplete: Code Connect listing reports an Organization/Enterprise seat requirement. Published tokens could not be read by the variable tool. Only values present in A-01/A-02 high-fidelity context and page metadata are documented; unknown values stay uncommitted.
 

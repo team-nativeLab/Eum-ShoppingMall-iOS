@@ -13,6 +13,10 @@ Figma file: `N3Ic9TfSnUBVMgAuayBVly`. Designs and variables were inspected read-
 | A-19l return filter | 927:45597 | Requested / collecting states, refund row, withdrawal action | [Return filter](../Screenshots/A19l-return-filter.png) |
 | A-19l exchange filter | 927:45728 | Exchange complete state; no unrelated refund row | [Exchange filter](../Screenshots/A19l-exchange-filter.png) |
 | A-54 rejection reason | 927:45901 | Rejected request → reason screen → back retains history filter | [Reason](../Screenshots/A54-rejection-reason.png) |
+| A-50 request received | 879:8904 | Submit a return/cancel/exchange form → receipt number and request guidance → request history | [A-50](../Screenshots/A50-request-complete.png) |
+| A-53 withdrawal complete | 879:44682 | Confirm withdrawal → completion summary → request history | [A-53](../Screenshots/A53-withdrawal-complete.png) |
+| A-19l after withdrawal | 879:45201 | History keeps the selected filter and shows `철회완료` | [A-19l](../Screenshots/A19l-after-withdrawal.png) |
+| A-51 after withdrawal | 879:45279 | Request detail shows withdrawn status, reason, address and application number | [A-51](../Screenshots/A51-withdrawn-detail.png) |
 
 The shared empty-state correction also covers previously implemented A-16e (`927:44328`) and A-20e (`927:44560`): their icon, resolved colors, central placement and CTA are aligned with the current frames, with their existing browse/back paths preserved.
 
@@ -20,7 +24,7 @@ The shared empty-state correction also covers previously implemented A-16e (`927
 
 - Uses existing HomeNavigationPath and retained view models. The active request receives the selected order; awaiting-payment/paid orders initially open cancellation, transit/delivered orders initially open return. Tabs remain switchable in this local UI. This initial choice is not server eligibility validation.
 - Order history cancellation now opens the request form. The hub and all request/history back buttons return through the existing stack. Selection filters remain when returning from the form.
-- Product selection, quantity, reason, details, photo picker/removal, request tabs and pickup choices remain interactive. Address change opens the existing address screen. The bottom submit action retains the explicit service-unavailable alert; it does not create an order request, refund, or exchange.
+- Product selection, quantity, reason, details, photo picker/removal, request tabs and pickup choices remain interactive. Address change opens the existing address screen. In Debug, submit and withdrawal update local in-memory sample history to make the designed result routes reviewable. In Release, both actions show the explicit service-unavailable message; neither mode calls a backend or claims a server-side request/refund/exchange.
 - Request details and withdrawal continue through their existing screens. Rejection details use the selected item rather than claiming a fabricated backend result or request number.
 
 ## Visual implementation
@@ -30,7 +34,15 @@ The shared empty-state correction also covers previously implemented A-16e (`927
 - Resolved Figma variables for the selected frames include `hf/bg=#fafafa`, `hf/surface=#ffffff`, `hf/text-1=#171717`, `hf/text-2=#4a4a4a`. Empty-state colors are scoped to the implemented frames so other app screens retain their existing palette. The five account-empty captures from #252 are refreshed in this change.
 - Device status bar/home indicator and viewport height use native iOS behavior. Long Figma frames appear as scrollable content; captures document initial and lower sections separately. Filter captures may include native press feedback immediately after selection.
 
+## Figma completion and withdrawal states (#255)
+
+The refreshed Figma frames A-50 `879:8904`, A-53 `879:44682`, A-19l `879:45201`, and A-51 `879:45279` are now represented by the completion, history, and withdrawn-detail routes. A-50 and A-53 primary actions open the request history while preserving the selected filter. Withdrawal changes the local request badge and detail content. This is a Debug-only local mock; Release retains the unavailable-service message until a backend contract is available.
+
+Simulator captures are checked into `Docs/Screenshots`; they are simulator evidence, not physical-device verification.
+
 ## Verification
+
+#255 local verification on iPhone 18 Pro / iOS 27.0 Simulator: 9 request/history unit tests and 4 return-flow UI tests passed; strict SwiftLint and `git diff --check` passed. UI captures include the A-50, A-53, after-withdrawal A-19l, and A-51 states. These checks cover local Debug UI state only, not backend communication or physical-device behavior.
 
 Strict SwiftLint, diff checks, request/history ViewModel tests and account/return UI navigation tests were run. UI coverage includes all three hub routes, cancellation/exchange/return form entry, submit feedback, filtered history, rejection detail, empty history, and back-state restoration. Exact final full-suite and CI outcomes are recorded in the PR. Screenshots are simulator evidence, not physical-device verification. Server communication is outside this change.
 

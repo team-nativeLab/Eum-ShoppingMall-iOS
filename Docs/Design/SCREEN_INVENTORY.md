@@ -93,6 +93,19 @@ Page: `06 Design — App` (`178:345`). Frame bounds below come from Figma MCP me
 | 661:8268 | A-42r FAQ 검색 결과 · HF | 390 × 844 pt |
 | 661:8437 | A-42z FAQ 검색 결과 없음 · HF | 390 × 844 pt |
 | 663:8212 | A-43 회사소개 · HF | 390 × 2376 pt |
+| 879:8767 | A-43 1:1 문의 작성 | 390 × 844 pt |
+| 879:8789 | A-44 상품 문의 작성 | 390 × 844 pt |
+| 879:8811 | A-45 문의 등록 완료 | 390 × 844 pt |
+| 879:8904 | A-50 신청 접수 완료 | 390 × 844 pt |
+| 879:44641 | A-51 신청 상세 | 390 × 844 pt |
+| 879:44666 | A-52 신청 철회 확인 | 390 × 844 pt |
+| 879:44682 | A-53 신청 철회 완료 | 390 × 844 pt |
+| 879:44698 | A-54 이벤트 | 390 × 844 pt |
+| 879:44715 | A-55 이벤트 상세 | 390 × 844 pt |
+| 879:44734 | A-56 마케팅 정보 수신 동의 | 390 × 844 pt |
+| 879:44754 | A-57 오픈소스 라이선스 | 390 × 844 pt |
+| 879:45201 | A-19l 취소/반품/교환 내역 · 철회 후 | 390 × 1006 pt |
+| 879:45279 | A-51 신청 상세 · 철회 완료 | 390 × 844 pt |
 | 1101:2145 | 리뷰 등록 · HF | 390 × 844 pt |
 
 ## Navigation and scroll notes
@@ -100,7 +113,7 @@ Page: `06 Design — App` (`178:345`). Frame bounds below come from Figma MCP me
 - The page tree has no prototype interaction edges in the returned metadata, so a complete screen-to-screen navigation graph is not asserted.
 - Home (`178:369`) has a vertically extending body and horizontal product/category content rails.
 - The screen set includes state variants (e.g. no-price product/cart, sold-out/cart zero orderable, search empty, FAQ empty, notification empty, login errors, confirmation sheets/dialogs). Implement them as distinct designs only after their node contexts and transitions are audited.
-- Loading states and authentication gating are not confirmed across the listed frames. The 88-frame inventory from 2026-10-20 is still incomplete; node `1101:2145` was added on 2026-10-22, and additional newer frames remain to be reconciled.
+- Loading states and authentication gating are not confirmed across the listed frames. The Figma metadata was refreshed on 2026-10-26 and the newer inquiry, event, policy, request-completion and withdrawal-state frames are now listed. Number labels are not globally unique: A-43 is used for both company introduction and 1:1 inquiry; A-54 is used for both events and rejection reason. Node IDs are the canonical identifiers.
 
 ## Related flow documents
 

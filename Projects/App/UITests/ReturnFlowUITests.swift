@@ -15,8 +15,10 @@ final class ReturnFlowUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["취소 신청"].waitForExistence(timeout: 5))
         capture(app, name: "A19a-cancel-request")
         app.buttons["취소 신청하기"].tap()
-        XCTAssertTrue(app.staticTexts["취소 신청은 주문 서비스 연동 후 접수할 수 있어요."].waitForExistence(timeout: 5))
-        app.alerts.buttons["확인"].tap()
+        XCTAssertTrue(app.staticTexts["신청이 접수됐어요"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["A-2026-001"].exists)
+        capture(app, name: "A50-request-complete")
+        app.buttons["return-request-completion-back"].tap()
         app.buttons["return-kind-교환"].tap()
         XCTAssertTrue(app.staticTexts["교환 신청"].waitForExistence(timeout: 5))
         capture(app, name: "A19b-exchange-request")
@@ -25,9 +27,9 @@ final class ReturnFlowUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["교환 비용 안내"].waitForExistence(timeout: 5))
         capture(app, name: "A19b-exchange-cost")
         app.buttons["교환 신청하기"].tap()
-        XCTAssertTrue(app.staticTexts["교환 신청은 주문 서비스 연동 후 접수할 수 있어요."].waitForExistence(timeout: 5))
-        app.alerts.buttons["확인"].tap()
-        back(app)
+        XCTAssertTrue(app.staticTexts["신청이 접수됐어요"].waitForExistence(timeout: 5))
+        app.buttons["return-request-completion-back"].tap()
+        app.buttons["return-order-select-back"].tap()
         XCTAssertTrue(app.staticTexts["신청할 주문 선택"].waitForExistence(timeout: 5))
         app.buttons["return-select-filter-배송중"].tap()
         app.buttons["return-order-select-order-transit-1"].tap()
@@ -69,6 +71,36 @@ final class ReturnFlowUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["주문내역"].waitForExistence(timeout: 5))
         back(app)
         XCTAssertTrue(app.staticTexts["신청 내역이 없습니다"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testWithdrawalCompletionUpdatesHistoryAndDetailWithoutServer() {
+        let app = launchHub()
+        app.buttons["취소/반품 내역"].tap()
+        XCTAssertTrue(app.staticTexts["취소/반품/교환 내역"].waitForExistence(timeout: 5))
+        app.buttons["반품"].tap()
+        app.buttons["return-history-detail-return-requested"].tap()
+        XCTAssertTrue(app.buttons["신청 철회"].waitForExistence(timeout: 5))
+        app.buttons["신청 철회"].tap()
+        XCTAssertTrue(app.buttons["철회 요청"].waitForExistence(timeout: 5))
+        app.buttons["철회 요청"].tap()
+
+        XCTAssertTrue(app.staticTexts["철회가 완료됐어요"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["A-2026-001"].exists)
+        capture(app, name: "A53-withdrawal-complete")
+        app.buttons["return-withdrawal-completion-history"].tap()
+
+        let status = app.staticTexts["return-history-status-return-requested"]
+        XCTAssertTrue(status.waitForExistence(timeout: 5))
+        XCTAssertEqual(status.label, "철회완료")
+        XCTAssertTrue(app.buttons["반품"].isSelected)
+        capture(app, name: "A19l-after-withdrawal")
+        app.buttons["return-history-detail-return-requested"].tap()
+        XCTAssertTrue(app.staticTexts["철회 완료 · 신청이 정상적으로 취소됐습니다."].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["서울특별시 강남구 테헤란로 427"].exists)
+        capture(app, name: "A51-withdrawn-detail")
+        app.buttons["return-request-detail-back"].tap()
+        XCTAssertTrue(app.buttons["반품"].isSelected)
     }
 
     @MainActor

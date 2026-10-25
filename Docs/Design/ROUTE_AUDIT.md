@@ -1,7 +1,7 @@
 # 화면 이동 흐름과 연결 상태
 
-확인일: 2026-10-20. Figma 기준 페이지: `06 Design — App` (`178:345`).
-`SCREEN_INVENTORY.md`는 2026-10-20에 집계한 88개 프레임이며 오류·빈 상태·시트·변형을 포함한다. 2026-10-22에 리뷰 등록 노드 `1101:2145`를 추가했지만 최신 Figma 프레임 목록은 아직 완전히 대조되지 않았다. 완전한 프로토타입 전이 그래프도 확보되지 않았다.
+확인일: 2026-10-26. Figma 기준 페이지: `06 Design — App` (`178:345`).
+`SCREEN_INVENTORY.md`는 2026-10-26에 새 문의·이벤트·정책·신청 접수 및 철회 상태를 포함해 갱신했다. 완전한 프로토타입 전이 그래프는 제공되지 않아 사용자 경로는 코드와 화면 동작을 대조했다.
 
 ## 경로와 복귀 정책
 
@@ -130,3 +130,7 @@ A-21e / A-22e / A-22pe / A-24e / A-25e implemented. Exact nodes, screenshots, ro
 ## Latest cancel / return / exchange flow (#253)
 
 A-19c, A-19s, A-19a, A-19b, A-19le, three A-19l filters and A-54 are connected. Existing A-16e/A-20e empty screens use the same latest layout. Node IDs, captures and back routes: [RETURN_FLOW_PARITY.md](RETURN_FLOW_PARITY.md).
+
+## Request result and withdrawal states (#255)
+
+A-50 `879:8904` is reached after a locally accepted Debug request; its action opens the shared request history. A-53 `879:44682` follows local Debug withdrawal confirmation and opens that same history. The selected kind filter remains active, its item badge changes to `철회완료` (A-19l `879:45201`), and the detail route displays the withdrawn request (A-51 `879:45279`). The Release build preserves an unavailable-service message until the server API is defined. Full simulator interaction is covered by `ReturnFlowUITests`; this does not claim backend execution or physical-device validation.

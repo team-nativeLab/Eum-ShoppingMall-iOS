@@ -7,18 +7,21 @@ struct ReturnRequestView: View {
 
     let onBack: () -> Void
     let onAddressChange: () -> Void
-    let onSubmit: (String) -> Void
+    let onSubmit: (ReturnHistoryItem) -> Void
+    let onUnavailable: (String) -> Void
 
     init(
         order: OrderHistoryItem,
         onBack: @escaping () -> Void,
         onAddressChange: @escaping () -> Void,
-        onSubmit: @escaping (String) -> Void
+        onSubmit: @escaping (ReturnHistoryItem) -> Void,
+        onUnavailable: @escaping (String) -> Void
     ) {
         _viewModel = StateObject(wrappedValue: ReturnRequestViewModel(order: order))
         self.onBack = onBack
         self.onAddressChange = onAddressChange
         self.onSubmit = onSubmit
+        self.onUnavailable = onUnavailable
     }
 
     var body: some View {
@@ -168,7 +171,11 @@ struct ReturnRequestView: View {
                 .fill(EUMColor.lineSwiftUI)
                 .frame(height: 1)
             EUMButton(title: viewModel.submitTitle, size: .large) {
-                onSubmit(viewModel.submitMessage())
+                #if DEBUG
+                onSubmit(viewModel.makeHistoryItem(applicationNumber: "A-2026-001"))
+                #else
+                onUnavailable(viewModel.submitMessage())
+                #endif
             }
             .disabled(!viewModel.canSubmit)
             .padding(.horizontal, 20)
@@ -261,7 +268,8 @@ struct ReturnRequestViewPreview: PreviewProvider {
             order: OrderHistoryItem.samples[2],
             onBack: {},
             onAddressChange: {},
-            onSubmit: { _ in }
+            onSubmit: { _ in },
+            onUnavailable: { _ in }
         )
     }
 }

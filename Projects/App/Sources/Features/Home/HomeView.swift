@@ -4,6 +4,7 @@ struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @StateObject private var addressesViewModel = AddressesViewModel()
     @StateObject private var contactInquiryViewModel = ContactInquiryHistoryViewModel()
+    @StateObject private var returnHistoryViewModel = ReturnHistoryViewModel()
     @StateObject private var withdrawalNoticeViewModel = AccountWithdrawalNoticeViewModel()
     @State private var searchText = ""
     @State private var navigation = HomeNavigationState()
@@ -328,6 +329,7 @@ private extension HomeView {
             addressViewModel: addressesViewModel,
             contactInquiryViewModel: contactInquiryViewModel,
             withdrawalNoticeViewModel: withdrawalNoticeViewModel,
+            returnHistoryViewModel: returnHistoryViewModel,
             isGuestAccount: isGuestAccount,
             activeWithdrawalOrderCount: activeWithdrawalOrderCount,
             onBack: goBack,
@@ -340,6 +342,20 @@ private extension HomeView {
             },
             onAddressChange: { _ in openRoute(.accountCollection(.addresses)) },
             onViewContactInquiries: viewContactInquiries,
+            onSubmitReturnRequest: { item in
+                let submittedItem = returnHistoryViewModel.addSubmission(item)
+                openRoute(.returnRequestComplete(submittedItem))
+            },
+            onConfirmReturnWithdrawal: { item in
+                guard let updatedItem = returnHistoryViewModel.markWithdrawn(id: item.id) else {
+                    presentedMessage = "철회할 수 있는 신청 상태가 아닙니다."
+                    return
+                }
+                openRoute(.returnWithdrawalComplete(updatedItem))
+            },
+            onViewReturnHistory: {
+                navigation.resetAndPush(.screen(.returnHistory))
+            },
             onHome: returnHome,
             onWithdrawal: showWithdrawalEntry,
             onLogout: logout

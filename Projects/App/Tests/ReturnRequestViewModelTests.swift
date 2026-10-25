@@ -58,4 +58,19 @@ final class ReturnRequestViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.pageTitle, "반품 신청")
         XCTAssertEqual(viewModel.submitTitle, "반품 신청하기")
     }
+
+    @MainActor
+    func testLocalRequestRecordUsesSelectedOrderKindProductAndReason() {
+        let viewModel = ReturnRequestViewModel(order: OrderHistoryItem.samples[2])
+        viewModel.selectedKind = .exchange
+        viewModel.selectedReason = .wrongItem
+
+        let item = viewModel.makeHistoryItem(applicationNumber: "A-2026-001")
+
+        XCTAssertEqual(item.kind, .exchange)
+        XCTAssertEqual(item.status, .requested)
+        XCTAssertEqual(item.orderNumber, OrderHistoryItem.samples[2].orderNumber)
+        XCTAssertEqual(item.requestReason, "오배송")
+        XCTAssertEqual(item.applicationNumber, "A-2026-001")
+    }
 }

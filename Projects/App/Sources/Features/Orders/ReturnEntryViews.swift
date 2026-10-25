@@ -54,7 +54,12 @@ struct ReturnOrderSelectionView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            EUMBackTopBar(title: "신청할 주문 선택", backAccessibilityLabel: "이전 화면으로 돌아가기", onBack: onBack) {
+            EUMBackTopBar(
+                title: "신청할 주문 선택",
+                backAccessibilityLabel: "이전 화면으로 돌아가기",
+                backAccessibilityIdentifier: "return-order-select-back",
+                onBack: onBack
+            ) {
                 EmptyView()
             }
             ScrollView {
