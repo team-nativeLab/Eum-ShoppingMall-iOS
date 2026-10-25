@@ -42,7 +42,7 @@ Simulator captures are checked into `Docs/Screenshots`; they are simulator evide
 
 ## Verification
 
-#255 local verification on iPhone 18 Pro / iOS 27.0 Simulator: 9 request/history unit tests and 4 return-flow UI tests passed; strict SwiftLint and `git diff --check` passed. UI captures include the A-50, A-53, after-withdrawal A-19l, and A-51 states. These checks cover local Debug UI state only, not backend communication or physical-device behavior.
+#255 local verification on iPhone 18 Pro / iOS 27.0 Simulator: 10 request/history unit tests and 4 return-flow UI tests passed; strict SwiftLint and `git diff --check` passed. UI captures include the A-50, A-53, after-withdrawal A-19l, and A-51 states. These checks cover local Debug UI state only, not backend communication or physical-device behavior.
 
 Strict SwiftLint, diff checks, request/history ViewModel tests and account/return UI navigation tests were run. UI coverage includes all three hub routes, cancellation/exchange/return form entry, submit feedback, filtered history, rejection detail, empty history, and back-state restoration. Exact final full-suite and CI outcomes are recorded in the PR. Screenshots are simulator evidence, not physical-device verification. Server communication is outside this change.
 
