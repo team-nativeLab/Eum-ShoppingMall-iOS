@@ -45,8 +45,15 @@ jobs:
           mkdir -p "$RUNNER_TEMP/tuist"
           unzip -q "$RUNNER_TEMP/tuist.zip" -d "$RUNNER_TEMP/tuist"
           brew_prefix="$(brew --prefix)"
-          sudo install -d "$brew_prefix/bin" "$brew_prefix/lib" "$brew_prefix/share"
+          swift_compatibility_library="$(find /Applications -path '*/usr/lib/swift-6.2/macosx/libswiftCompatibilitySpan.dylib' -print -quit)"
+          if [ -z "$swift_compatibility_library" ]; then
+            echo 'Swift 6.2 compatibility runtime was not found in the installed Xcode toolchains.'
+            exit 1
+          fi
+          codesign --verify --strict "$swift_compatibility_library"
+          sudo install -d "$brew_prefix/bin" "$brew_prefix/bin/vendor" "$brew_prefix/lib" "$brew_prefix/share"
           sudo install -m 0755 "$RUNNER_TEMP/tuist/tuist" "$brew_prefix/bin/tuist"
+          sudo install -m 0644 "$swift_compatibility_library" "$brew_prefix/bin/vendor/libswiftCompatibilitySpan.dylib"
           sudo ditto "$RUNNER_TEMP/tuist/ProjectDescription.framework" "$brew_prefix/lib/ProjectDescription.framework"
           sudo ditto "$RUNNER_TEMP/tuist/Templates" "$brew_prefix/share/Templates"
           test "$(tuist version)" = "4.202.0"
