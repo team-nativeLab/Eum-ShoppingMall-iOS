@@ -1,8 +1,61 @@
 import Combine
+import CoreTransferable
 import Foundation
+import ImageIO
 import PhotosUI
+import UniformTypeIdentifiers
 import _PhotosUI_SwiftUI
 import UIKit
+
+enum ReturnRequestPhotoLimit {
+    static let maximumCount = 5
+
+    static func capped<Item>(_ items: [Item]) -> [Item] {
+        Array(items.prefix(maximumCount))
+    }
+}
+
+private enum ReturnRequestPhotoDecodingError: Error {
+    case invalidImage
+}
+
+enum ReturnRequestPhotoDecoder {
+    static let maximumPixelDimension = 512
+
+    static func thumbnailData(from fileURL: URL) -> Data? {
+        guard let source = CGImageSourceCreateWithURL(fileURL as CFURL, nil) else { return nil }
+        let options: [CFString: Any] = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceThumbnailMaxPixelSize: maximumPixelDimension,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceShouldCacheImmediately: true
+        ]
+        guard let thumbnail = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else {
+            return nil
+        }
+
+        let data = NSMutableData()
+        guard let destination = CGImageDestinationCreateWithData(data, UTType.jpeg.identifier as CFString, 1, nil) else {
+            return nil
+        }
+        CGImageDestinationAddImage(destination, thumbnail, nil)
+        guard CGImageDestinationFinalize(destination) else { return nil }
+        return data as Data
+    }
+}
+
+private struct ReturnRequestPhotoTransfer: Transferable {
+    let thumbnailData: Data
+
+    static var transferRepresentation: some TransferRepresentation {
+        FileRepresentation(importedContentType: .image) { received in
+            guard let thumbnailData = ReturnRequestPhotoDecoder.thumbnailData(from: received.file) else {
+                throw ReturnRequestPhotoDecodingError.invalidImage
+            }
+            return ReturnRequestPhotoTransfer(thumbnailData: thumbnailData)
+        }
+    }
+}
 
 enum ReturnRequestKind: String, CaseIterable, Identifiable {
     case cancel = "취소"
@@ -119,17 +172,26 @@ final class ReturnRequestViewModel: ObservableObject {
     }
 
     func loadSelectedPhotos(from items: [PhotosPickerItem]) async {
-        let newItems = items.dropFirst(loadedPhotoItemCount)
+        let selectedItems = ReturnRequestPhotoLimit.capped(items)
+        let startingIndex = min(loadedPhotoItemCount, selectedItems.count)
+        let newItems = selectedItems.dropFirst(startingIndex)
+        loadedPhotoItemCount = max(loadedPhotoItemCount, selectedItems.count)
+        let attachedPhotoCount = photos.filter { $0.image != nil }.count
+        let availableSlotCount = max(0, ReturnRequestPhotoLimit.maximumCount - attachedPhotoCount)
         var loadedPhotos: [ReturnRequestPhoto] = []
-        for item in newItems {
+        for item in newItems.prefix(availableSlotCount) {
             guard
-                let data = try? await item.loadTransferable(type: Data.self),
-                let image = UIImage(data: data)
+                let transferredPhoto = try? await item.loadTransferable(type: ReturnRequestPhotoTransfer.self),
+                let image = UIImage(data: transferredPhoto.thumbnailData)
             else { continue }
+            guard photos.filter({ $0.image != nil }).count + loadedPhotos.count < ReturnRequestPhotoLimit.maximumCount else {
+                break
+            }
             loadedPhotos.append(ReturnRequestPhoto(id: UUID(), image: image))
         }
-        photos.append(contentsOf: loadedPhotos)
-        loadedPhotoItemCount = items.count
+        let currentPhotoCount = photos.filter { $0.image != nil }.count
+        let remainingSlotCount = max(0, ReturnRequestPhotoLimit.maximumCount - currentPhotoCount)
+        photos.append(contentsOf: loadedPhotos.prefix(remainingSlotCount))
     }
 
     func submitMessage() -> String {
