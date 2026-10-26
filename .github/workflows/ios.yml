@@ -4,13 +4,24 @@ on:
     branches: [main, dev]
   pull_request:
     branches: [main, dev]
+permissions:
+  contents: read
 jobs:
   lint:
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
       - name: Install SwiftLint
-        run: brew install swiftlint
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 \
+            https://github.com/realm/SwiftLint/releases/download/0.65.1/SwiftLint.pkg \
+            --output "$RUNNER_TEMP/SwiftLint.pkg"
+          echo "3fb0202842701762880cc2cf04fc394398bab3f16a04dd76e000e02d07e32486  $RUNNER_TEMP/SwiftLint.pkg" | shasum --algorithm 256 --check --
+          sudo installer -pkg "$RUNNER_TEMP/SwiftLint.pkg" -target /
+          test "$(swiftlint version)" = "0.65.1"
       - name: SwiftLint
         run: |
           if find Projects -name '*.swift' -print -quit | grep -q .; then
@@ -21,9 +32,24 @@ jobs:
   tuist:
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
       - name: Install Tuist
-        run: brew install tuist
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 \
+            https://github.com/tuist/tuist/releases/download/4.202.0/tuist.zip \
+            --output "$RUNNER_TEMP/tuist.zip"
+          echo "3f73600dbc0d12077c0f61c8a472ef7ffdda54a7c44391f462d2306f34a5fab7  $RUNNER_TEMP/tuist.zip" | shasum --algorithm 256 --check --
+          mkdir -p "$RUNNER_TEMP/tuist"
+          unzip -q "$RUNNER_TEMP/tuist.zip" -d "$RUNNER_TEMP/tuist"
+          brew_prefix="$(brew --prefix)"
+          sudo install -d "$brew_prefix/bin" "$brew_prefix/lib" "$brew_prefix/share"
+          sudo install -m 0755 "$RUNNER_TEMP/tuist/tuist" "$brew_prefix/bin/tuist"
+          sudo ditto "$RUNNER_TEMP/tuist/ProjectDescription.framework" "$brew_prefix/lib/ProjectDescription.framework"
+          sudo ditto "$RUNNER_TEMP/tuist/Templates" "$brew_prefix/share/Templates"
+          test "$(tuist version)" = "4.202.0"
       - name: Initialize CoreSimulator
         shell: bash
         run: |
