@@ -112,7 +112,11 @@ struct ReturnRequestView: View {
         VStack(alignment: .leading, spacing: 12) {
             sectionHeading("사진 첨부 (선택)")
             HStack(alignment: .top, spacing: 8) {
-                PhotosPicker(selection: $viewModel.selectedPhotoItems, matching: .images) {
+                PhotosPicker(
+                    selection: $viewModel.selectedPhotoItems,
+                    maxSelectionCount: ReturnRequestPhotoLimit.maximumCount,
+                    matching: .images
+                ) {
                     ReturnRequestPhotoTile()
                 }
                 .buttonStyle(.plain)

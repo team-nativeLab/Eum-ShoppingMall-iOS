@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 @testable import EumShoppingMall
 
 final class ReturnRequestViewModelTests: XCTestCase {
@@ -72,5 +73,39 @@ final class ReturnRequestViewModelTests: XCTestCase {
         XCTAssertEqual(item.orderNumber, OrderHistoryItem.samples[2].orderNumber)
         XCTAssertEqual(item.requestReason, "오배송")
         XCTAssertEqual(item.applicationNumber, "A-2026-001")
+    }
+
+    func testPhotoDecoderDownsamplesLargeImagesToTheConfiguredMaximum() throws {
+        let sourceImage = UIGraphicsImageRenderer(size: CGSize(width: 1_024, height: 768)).image { context in
+            UIColor.blue.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 1_024, height: 768))
+        }
+        let sourceData = try XCTUnwrap(sourceImage.jpegData(compressionQuality: 1))
+        let sourceURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("jpg")
+        try sourceData.write(to: sourceURL)
+        defer { try? FileManager.default.removeItem(at: sourceURL) }
+
+        let thumbnailData = try XCTUnwrap(ReturnRequestPhotoDecoder.thumbnailData(from: sourceURL))
+        let thumbnail = try XCTUnwrap(UIImage(data: thumbnailData)?.cgImage)
+
+        XCTAssertLessThanOrEqual(thumbnail.width, ReturnRequestPhotoDecoder.maximumPixelDimension)
+        XCTAssertLessThanOrEqual(thumbnail.height, ReturnRequestPhotoDecoder.maximumPixelDimension)
+    }
+
+    func testPhotoDecoderRejectsMalformedImageFiles() throws {
+        let sourceURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("jpg")
+        try Data("not an image".utf8).write(to: sourceURL)
+        defer { try? FileManager.default.removeItem(at: sourceURL) }
+
+        XCTAssertNil(ReturnRequestPhotoDecoder.thumbnailData(from: sourceURL))
+    }
+
+    func testPhotoSelectionIsLimitedToFiveItems() {
+        XCTAssertEqual(ReturnRequestPhotoLimit.capped(Array(0..<8)).count, 5)
+        XCTAssertEqual(ReturnRequestPhotoLimit.capped(Array(0..<5)).count, 5)
     }
 }
