@@ -315,6 +315,7 @@ struct HomeSupportRouteView: View {
     let onBack: () -> Void
     let onRoute: (HomeModalRoute) -> Void
     let onMessage: (String) -> Void
+    let onBrowseProducts: () -> Void
 
     @ViewBuilder
     var body: some View {
@@ -339,7 +340,7 @@ struct HomeSupportRouteView: View {
         case .events:
             EventsView(onBack: onBack, onOpenEvent: { onRoute(.eventDetail($0)) })
         case let .eventDetail(event):
-            EventDetailView(event: event, onBack: onBack)
+            EventDetailView(event: event, onBack: onBack, onBrowseProducts: onBrowseProducts)
         default:
             HomeRouteRecoveryView(onBack: onBack)
         }
