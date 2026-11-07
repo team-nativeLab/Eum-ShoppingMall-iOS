@@ -19,7 +19,7 @@ struct HomeInquiryRouteView: View {
         case .inquiryComplete:
             InquiryCompletionView(onBack: onBack, onViewInquiries: onViewInquiries)
         case let .productReviews(product):
-            ProductReviewsView(onBack: onBack, onSearch: onSearch) {
+            ProductReviewsView(product: product, onBack: onBack, onSearch: onSearch) {
                 onRoute(.productReviewRegistration(product))
             }
         case let .productReviewRegistration(product):

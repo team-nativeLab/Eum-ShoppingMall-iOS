@@ -42,9 +42,8 @@ final class InquiryComposeViewModel: ObservableObject {
     }
 
     var canSubmit: Bool {
-        !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            && !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            && (context != .contact || !inquiryType.isEmpty)
+        !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && (context != .contact || (!title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !inquiryType.isEmpty))
     }
 
     var photoSelectionDescription: String {
@@ -59,12 +58,20 @@ final class InquiryComposeViewModel: ObservableObject {
             resolvedType = inquiryType
         }
 
+        let resolvedTitle: String
+        switch context {
+        case .contact:
+            resolvedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        case let .product(name):
+            resolvedTitle = name
+        }
+
         return ContactInquiryRecord(
             id: id,
             date: date ?? Self.currentDate,
             category: resolvedType,
             status: .pending,
-            title: title.trimmingCharacters(in: .whitespacesAndNewlines),
+            title: resolvedTitle,
             summary: String(content.trimmingCharacters(in: .whitespacesAndNewlines).prefix(80)),
             relatedOrderNumber: "0000000000",
             content: content.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -97,14 +104,12 @@ struct InquiryComposeView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            EUMBackTopBar(
+            InquiryScreenTopBar(
                 title: viewModel.context.title,
                 backAccessibilityLabel: "뒤로 가기",
                 backAccessibilityIdentifier: "inquiry-compose-back",
                 onBack: onBack
-            ) {
-                Color.clear.frame(width: 44, height: 44)
-            }
+            )
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
@@ -122,7 +127,9 @@ struct InquiryComposeView: View {
                         }
                     }
 
-                    EUMTextField(title: "제목", placeholder: "문의 제목을 입력해 주세요", text: $viewModel.title)
+                    if viewModel.context == .contact {
+                        EUMTextField(title: "제목", placeholder: "문의 제목을 입력해 주세요", text: $viewModel.title)
+                    }
                     contentField
 
                     if case .contact = viewModel.context {
@@ -137,18 +144,25 @@ struct InquiryComposeView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             VStack(spacing: 0) {
                 Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
-                EUMButton(title: "문의 등록", size: .large) {
-                    onSubmit(viewModel.makeRecord())
+                Button { onSubmit(viewModel.makeRecord()) } label: {
+                    Text("문의 등록")
+                        .font(EUMTypography.labelLarge)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 52)
+                        .background(EUMColor.text1SwiftUI, in: RoundedRectangle(cornerRadius: 10))
                 }
+                .buttonStyle(InquiryPrimaryButtonStyle())
                 .disabled(!viewModel.canSubmit)
+                .accessibilityLabel("문의 등록")
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
             }
-            .background(EUMColor.backgroundSwiftUI)
+            .background(EUMColor.backgroundSubtleSwiftUI)
         }
     }
 
@@ -180,15 +194,25 @@ struct InquiryComposeView: View {
             Text("문의 내용")
                 .font(EUMTypography.labelMedium)
                 .foregroundStyle(EUMColor.text1SwiftUI)
-            TextEditor(text: $viewModel.content)
-                .font(EUMTypography.bodyMedium)
-                .scrollContentBackground(.hidden)
-                .padding(8)
-                .frame(height: 150)
-                .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
-                .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
-                .accessibilityLabel("문의 내용")
-                .accessibilityIdentifier("inquiry-content")
+            ZStack(alignment: .topLeading) {
+                if viewModel.content.isEmpty {
+                    Text(viewModel.context == .contact ? "문의 내용을 입력해 주세요" : "상품에 대해 궁금한 점을 입력해 주세요")
+                        .font(EUMTypography.bodyMedium)
+                        .foregroundStyle(EUMColor.text3SwiftUI)
+                        .padding(.horizontal, 13)
+                        .padding(.top, 16)
+                        .allowsHitTesting(false)
+                }
+                TextEditor(text: $viewModel.content)
+                    .font(EUMTypography.bodyMedium)
+                    .scrollContentBackground(.hidden)
+                    .padding(8)
+                    .accessibilityLabel("문의 내용")
+                    .accessibilityIdentifier("inquiry-content")
+            }
+            .frame(height: 150)
+            .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
+            .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
         }
     }
 
@@ -207,13 +231,28 @@ struct InquiryComposeView: View {
     }
 
     private var privacySetting: some View {
-        Toggle("비밀글로 문의하기", isOn: $viewModel.isPrivate)
-            .font(EUMTypography.bodySmall)
-            .tint(EUMColor.text1SwiftUI)
-            .padding(.horizontal, 12)
+        VStack(alignment: .leading, spacing: 8) {
+            Text("공개 설정")
+                .font(EUMTypography.labelMedium)
+                .foregroundStyle(EUMColor.text1SwiftUI)
+            Button {
+                viewModel.isPrivate.toggle()
+            } label: {
+                Text("비밀글로 문의하기")
+                    .font(EUMTypography.bodySmall)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("비밀글로 문의하기")
+            .accessibilityValue(viewModel.isPrivate ? "켜짐" : "꺼짐")
+            .accessibilityAddTraits(viewModel.isPrivate ? .isSelected : [])
+            .padding(.horizontal, 13)
             .frame(height: 50)
             .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
             .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
+        }
     }
 
     private func labeledField<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
@@ -237,14 +276,12 @@ struct InquiryCompletionView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            EUMBackTopBar(
+            InquiryScreenTopBar(
                 title: "문의가 등록됐어요",
                 backAccessibilityLabel: "뒤로 가기",
                 backAccessibilityIdentifier: "inquiry-complete-back",
                 onBack: onBack
-            ) {
-                Color.clear.frame(width: 44, height: 44)
-            }
+            )
 
             VStack(alignment: .leading, spacing: 20) {
                 Text("문의 내역에서 답변 상태를 확인할 수 있습니다.")
@@ -258,12 +295,21 @@ struct InquiryCompletionView: View {
             .padding(.top, 20)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            EUMButton(title: "문의 내역 보기", size: .large, action: onViewInquiries)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(EUMColor.backgroundSwiftUI)
+            Button(action: onViewInquiries) {
+                Text("문의 내역 보기")
+                    .font(EUMTypography.labelLarge)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 52)
+                    .background(EUMColor.text1SwiftUI, in: RoundedRectangle(cornerRadius: 10))
+            }
+            .buttonStyle(InquiryPrimaryButtonStyle())
+            .accessibilityLabel("문의 내역 보기")
+            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
+            .background(EUMColor.backgroundSubtleSwiftUI)
         }
     }
 
@@ -283,86 +329,42 @@ struct InquiryCompletionView: View {
     }
 }
 
-struct ProductReviewsView: View {
+private struct InquiryScreenTopBar: View {
+    let title: String
+    let backAccessibilityLabel: String
+    let backAccessibilityIdentifier: String
     let onBack: () -> Void
-    let onSearch: () -> Void
-    let onWriteReview: () -> Void
-
-    private let reviews = [
-        "튼튼하고 착용감이 편해요. 배송도 빨랐습니다.",
-        "현장 작업에 잘 맞고 마감이 좋습니다."
-    ]
 
     var body: some View {
-        VStack(spacing: 0) {
-            EUMBackTopBar(
-                title: "상품 리뷰",
-                backAccessibilityLabel: "상품 상세로 돌아가기",
-                backAccessibilityIdentifier: "product-reviews-back",
-                onBack: onBack
-            ) {
-                Button(action: onSearch) {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 20))
-                        .foregroundStyle(EUMColor.text1SwiftUI)
-                        .frame(width: 44, height: 44)
-                }
-                .accessibilityLabel("검색")
-                .accessibilityIdentifier("product-reviews-search")
+        HStack(spacing: 12) {
+            Button(action: onBack) {
+                Image("ProductDetailBack")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .frame(width: 32, height: 44)
+                    .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel(backAccessibilityLabel)
+            .accessibilityIdentifier(backAccessibilityIdentifier)
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("평점 4.8 · 리뷰 128개")
-                        .font(EUMTypography.bodySmall)
-                        .foregroundStyle(EUMColor.text3SwiftUI)
-                    EUMButton(title: "리뷰 작성", kind: .secondary, size: .medium, action: onWriteReview)
-                        .accessibilityIdentifier("product-reviews-write")
-                    VStack(alignment: .leading, spacing: 8) {
-                        sectionTitle("별점")
-                        HStack(spacing: 8) {
-                            HStack(spacing: 7) {
-                                ForEach(0..<5, id: \.self) { _ in
-                                    Image("ProductReviewStar")
-                                        .resizable()
-                                        .frame(width: 22, height: 22)
-                                }
-                            }
-                            Text("4.8")
-                                .font(EUMTypography.bodySmall)
-                                .foregroundStyle(EUMColor.text3SwiftUI)
-                        }
-                        .padding(.horizontal, 13)
-                        .frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
-                        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
-                        .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
-                    }
-
-                    ForEach(Array(reviews.enumerated()), id: \.offset) { _, review in
-                        VStack(alignment: .leading, spacing: 8) {
-                            sectionTitle("리뷰")
-                            Text(review)
-                                .font(EUMTypography.bodyMedium)
-                                .foregroundStyle(EUMColor.text1SwiftUI)
-                                .frame(maxWidth: .infinity, minHeight: 100, alignment: .topLeading)
-                                .padding(13)
-                                .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
-                                .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 20)
-                .padding(.bottom, 24)
-            }
-            .scrollIndicators(.hidden)
+            Text(title)
+                .font(EUMTypography.labelLarge)
+                .foregroundStyle(EUMColor.text1SwiftUI)
+            Spacer(minLength: 0)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .padding(.horizontal, 20)
+        .frame(height: 56)
+        .background(EUMColor.backgroundSubtleSwiftUI)
+        .overlay(alignment: .bottom) {
+            Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
+        }
     }
+}
 
-    private func sectionTitle(_ title: String) -> some View {
-        Text(title)
-            .font(EUMTypography.labelMedium)
-            .foregroundStyle(EUMColor.text1SwiftUI)
+private struct InquiryPrimaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label.opacity(configuration.isPressed ? 0.88 : 1)
     }
 }
