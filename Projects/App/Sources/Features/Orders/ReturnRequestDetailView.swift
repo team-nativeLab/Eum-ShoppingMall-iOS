@@ -22,6 +22,8 @@ struct ReturnRequestDetailView: View {
             ScrollView {
                 if item.status == .withdrawn {
                     withdrawnDetails
+                } else if item.status == .requested && item.kind == .returnRequest {
+                    ReturnRequestedDetailContentView(item: item)
                 } else {
                     VStack(alignment: .leading, spacing: 24) {
                         statusSection
@@ -60,13 +62,17 @@ struct ReturnRequestDetailView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
-                        if item.status == .requested {
-                            EUMButton(title: "신청 철회", kind: .secondary, action: onWithdraw)
-                        }
                     }
                 }
             }
             .scrollIndicators(.hidden)
+            if item.status == .requested && item.kind == .returnRequest {
+                ReturnWithdrawalActionButton(title: "신청 철회", isDestructive: false, action: onWithdraw)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 12)
+                    .padding(.bottom, 16)
+                    .background(EUMColor.backgroundSwiftUI)
+            }
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
     }
@@ -211,40 +217,93 @@ struct ReturnWithdrawalConfirmationView: View {
     var body: some View {
         VStack(spacing: 0) {
             EUMBackTopBar(
-                title: "신청 철회",
+                title: "신청 철회 확인",
                 backAccessibilityLabel: "신청 내역으로 돌아가기",
                 backAccessibilityIdentifier: "return-withdrawal-cancel",
                 onBack: onCancel
             ) {
                 Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
             }
-            Spacer(minLength: 0)
-            VStack(spacing: 16) {
-                Image(systemName: "questionmark.circle")
-                    .font(.system(size: 40, weight: .regular))
-                    .foregroundStyle(EUMColor.text2SwiftUI)
-                    .accessibilityHidden(true)
-                Text("신청을 철회할까요?")
-                    .font(EUMTypography.heading3)
-                    .foregroundStyle(EUMColor.text1SwiftUI)
-                Text("\(item.kind.rawValue) 신청 · \(item.productName)")
-                    .font(EUMTypography.bodySmall)
-                    .foregroundStyle(EUMColor.text2SwiftUI)
-                    .multilineTextAlignment(.center)
-                Text("현재 화면은 샘플 상태입니다. 확인해도 실제 신청은 철회되지 않습니다.")
-                    .font(EUMTypography.captionRegular)
-                    .foregroundStyle(EUMColor.text3SwiftUI)
-                    .multilineTextAlignment(.center)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("신청을 철회할까요?")
+                            .font(EUMTypography.heading3)
+                            .foregroundStyle(EUMColor.dangerSwiftUI)
+                        Text("철회하면 신청이 취소돼요. 다시 필요하면 새로 신청해 주세요.")
+                            .font(EUMTypography.bodySmall)
+                            .foregroundStyle(EUMColor.text2SwiftUI)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(16)
+                    .background(EUMColor.dangerBackgroundSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+                    .accessibilityIdentifier("return-withdrawal-warning")
+
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("철회할 신청")
+                            .font(EUMTypography.labelLarge)
+                            .foregroundStyle(EUMColor.text1SwiftUI)
+                        withdrawalRow("신청 유형", value: "\(item.kind.rawValue) 신청")
+                        withdrawalRow("신청 상품", value: "\(item.productName) · \(item.priceAndQuantity)")
+                        withdrawalRow("신청 번호", value: item.applicationNumber)
+                        withdrawalRow("신청일", value: item.requestDate)
+                    }
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(.white, in: RoundedRectangle(cornerRadius: 12))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
+                }
+                .padding(20)
             }
-            .padding(.horizontal, 32)
             Spacer(minLength: 0)
-            VStack(spacing: 8) {
-                EUMButton(title: "철회 요청", kind: .danger, action: onConfirm)
-                EUMButton(title: "취소", kind: .secondary, action: onCancel)
+            HStack(spacing: 12) {
+                ReturnWithdrawalActionButton(title: "취소", isDestructive: false, action: onCancel)
+                    .accessibilityIdentifier("return-withdrawal-cancel-button")
+                ReturnWithdrawalActionButton(title: "철회하기", isDestructive: true, action: onConfirm)
+                    .accessibilityIdentifier("return-withdrawal-confirm")
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            .padding(.top, 12)
+            .padding(.bottom, 16)
+            .background(EUMColor.backgroundSwiftUI)
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+    }
+
+    private func withdrawalRow(_ title: String, value: String) -> some View {
+        HStack(alignment: .top) {
+            Text(title).foregroundStyle(EUMColor.text3SwiftUI)
+            Spacer(minLength: 12)
+            Text(value).foregroundStyle(EUMColor.text1SwiftUI).multilineTextAlignment(.trailing)
+        }
+        .font(EUMTypography.bodySmall)
+    }
+
+}
+
+private struct ReturnWithdrawalActionButton: View {
+    let title: String
+    let isDestructive: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(EUMTypography.labelLarge)
+                .foregroundStyle(isDestructive ? EUMColor.inverseSwiftUI : EUMColor.text1SwiftUI)
+                .frame(maxWidth: .infinity)
+                .frame(height: 52)
+                .background(
+                    isDestructive ? EUMColor.dangerSwiftUI : EUMColor.backgroundSwiftUI,
+                    in: RoundedRectangle(cornerRadius: 10)
+                )
+                .overlay {
+                    if !isDestructive {
+                        RoundedRectangle(cornerRadius: 10).stroke(EUMColor.lineStrongSwiftUI, lineWidth: 1)
+                    }
+                }
+        }
+        .buttonStyle(.plain)
     }
 }

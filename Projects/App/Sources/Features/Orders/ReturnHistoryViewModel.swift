@@ -46,10 +46,10 @@ struct ReturnHistoryItem: Identifiable, Equatable {
             id: "return-requested",
             kind: .returnRequest,
             status: .requested,
-            orderDate: "0000.00.00",
+            orderDate: "2026.10.19",
             orderNumber: "0000000000",
-            productName: "제품명",
-            priceAndQuantity: "₩00,000 · 1개",
+            productName: "경량 안전모 · 블랙",
+            priceAndQuantity: "1개",
             refundAmount: "₩00,000"
         ),
         ReturnHistoryItem(

@@ -9,12 +9,15 @@ Figma file: `N3Ic9TfSnUBVMgAuayBVly`. Designs and variables were inspected read-
 | A-19a cancellation | 879:44844 | Shared request form: cancellation tab, products, reason, photos, refund notice | [Cancel](../Screenshots/A19a-cancel-request.png) |
 | A-19b exchange | 879:44922 | Shared form: photos, option/stock notice, pickup, exchange costs | [Exchange](../Screenshots/A19b-exchange-request.png), [Costs](../Screenshots/A19b-exchange-cost.png) |
 | A-19le empty history | 927:44448 | Empty history → orders → back restores empty state | [Empty](../Screenshots/A19le-return-empty.png) |
+| A-19l default history | 879:45202 | Default `전체` filter with cancel, return and exchange request cards | [Default history](../Screenshots/A19l-history-default-ios27.png) |
 | A-19l cancellation filter | 927:45466 | Cancellation badge and rejection reason action | [Cancel filter](../Screenshots/A19l-cancel-filter.png) |
 | A-19l return filter | 927:45597 | Requested / collecting states, refund row, withdrawal action | [Return filter](../Screenshots/A19l-return-filter.png) |
 | A-19l exchange filter | 927:45728 | Exchange complete state; no unrelated refund row | [Exchange filter](../Screenshots/A19l-exchange-filter.png) |
 | A-54 rejection reason | 927:45901 | Rejected request → reason screen → back retains history filter | [Reason](../Screenshots/A54-rejection-reason.png) |
 | A-50 request received | 879:8904 | Submit a return/cancel/exchange form → receipt number and request guidance → request history | [A-50](../Screenshots/A50-request-complete.png) |
 | A-53 withdrawal complete | 879:44682 | Confirm withdrawal → completion summary → request history | [A-53](../Screenshots/A53-withdrawal-complete.png) |
+| A-51 request detail | 879:44641 | Request status, product, reason, pickup address, application number, fixed withdrawal action | [A-51](../Screenshots/A51-request-detail-ios27.png) |
+| A-52 withdrawal confirmation | 879:44666 | Cancellation warning, request summary, side-by-side cancel/withdraw actions | [A-52](../Screenshots/A52-withdrawal-confirmation-ios27.png) |
 | A-19l after withdrawal | 879:45201 | History keeps the selected filter and shows `철회완료` | [A-19l](../Screenshots/A19l-after-withdrawal.png) |
 | A-51 after withdrawal | 879:45279 | Request detail shows withdrawn status, reason, address and application number | [A-51](../Screenshots/A51-withdrawn-detail.png) |
 
@@ -37,6 +40,8 @@ The shared empty-state correction also covers previously implemented A-16e (`927
 ## Figma completion and withdrawal states (#255)
 
 The refreshed Figma frames A-50 `879:8904`, A-53 `879:44682`, A-19l `879:45201`, and A-51 `879:45279` are now represented by the completion, history, and withdrawn-detail routes. A-50 and A-53 primary actions open the request history while preserving the selected filter. Withdrawal changes the local request badge and detail content. This is a Debug-only local mock; Release retains the unavailable-service message until a backend contract is available.
+
+The current A-51 `879:44641` request detail and A-52 `879:44666` confirmation screens are also aligned to their Figma structure. The detail uses the sample request record and keeps its withdrawal action fixed at the bottom. The confirmation shows the cancellation warning and request summary before the existing Debug-only local withdrawal action. Both states have iPhone 18 Pro / iOS 27 simulator captures.
 
 Simulator captures are checked into `Docs/Screenshots`; they are simulator evidence, not physical-device verification.
 
