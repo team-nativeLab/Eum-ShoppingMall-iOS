@@ -1,0 +1,10 @@
+.DS_Store
+.build/
+Derived/
+.tuist-bin/
+.tuist-cache/
+.swiftpm/
+xcuserdata/
+*.xcuserstate
+EumShoppingMall.xcodeproj/
+EumShoppingMall.xcworkspace/

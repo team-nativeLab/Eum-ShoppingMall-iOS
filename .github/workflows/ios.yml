@@ -1,0 +1,116 @@
+name: iOS checks
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+permissions:
+  contents: read
+jobs:
+  lint:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Install SwiftLint
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 \
+            https://github.com/realm/SwiftLint/releases/download/0.65.1/SwiftLint.pkg \
+            --output "$RUNNER_TEMP/SwiftLint.pkg"
+          echo "3fb0202842701762880cc2cf04fc394398bab3f16a04dd76e000e02d07e32486  $RUNNER_TEMP/SwiftLint.pkg" | shasum --algorithm 256 --check --
+          sudo installer -pkg "$RUNNER_TEMP/SwiftLint.pkg" -target /
+          test "$(swiftlint version)" = "0.65.1"
+      - name: SwiftLint
+        run: |
+          if find Projects -name '*.swift' -print -quit | grep -q .; then
+            swiftlint lint --strict
+          else
+            echo 'No Swift sources yet; skipping SwiftLint.'
+          fi
+  tuist:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Install Tuist
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 \
+            https://github.com/tuist/tuist/releases/download/4.202.0/tuist.zip \
+            --output "$RUNNER_TEMP/tuist.zip"
+          echo "3f73600dbc0d12077c0f61c8a472ef7ffdda54a7c44391f462d2306f34a5fab7  $RUNNER_TEMP/tuist.zip" | shasum --algorithm 256 --check --
+          mkdir -p "$RUNNER_TEMP/tuist"
+          unzip -q "$RUNNER_TEMP/tuist.zip" -d "$RUNNER_TEMP/tuist"
+          brew_prefix="$(brew --prefix)"
+          swift_compatibility_library="$(find /Applications -path '*/usr/lib/swift-6.2/macosx/libswiftCompatibilitySpan.dylib' -print -quit)"
+          if [ -z "$swift_compatibility_library" ]; then
+            echo 'Swift 6.2 compatibility runtime was not found in the installed Xcode toolchains.'
+            exit 1
+          fi
+          codesign --verify --strict "$swift_compatibility_library"
+          sudo install -d "$brew_prefix/bin" "$brew_prefix/bin/vendor" "$brew_prefix/lib" "$brew_prefix/share"
+          sudo install -m 0755 "$RUNNER_TEMP/tuist/tuist" "$brew_prefix/bin/tuist"
+          sudo install -m 0644 "$swift_compatibility_library" "$brew_prefix/bin/vendor/libswiftCompatibilitySpan.dylib"
+          sudo ditto "$RUNNER_TEMP/tuist/ProjectDescription.framework" "$brew_prefix/lib/ProjectDescription.framework"
+          sudo ditto "$RUNNER_TEMP/tuist/Templates" "$brew_prefix/share/Templates"
+          test "$(tuist version)" = "4.202.0"
+      - name: Initialize CoreSimulator
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            if xcrun simctl list devices available -j > /tmp/available-simulators.json; then
+              cat /tmp/available-simulators.json
+              exit 0
+            fi
+            echo "CoreSimulator is not ready (attempt $attempt/3)."
+            sleep $((attempt * 10))
+          done
+          xcodebuild -version
+          xcrun simctl list runtimes || true
+          exit 1
+      - name: Install iOS simulator runtime
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            if xcodebuild -downloadPlatform iOS; then
+              exit 0
+            fi
+            echo "iOS simulator runtime installation failed (attempt $attempt/3)."
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 15))
+            fi
+          done
+          xcodebuild -version
+          xcrun simctl list runtimes || true
+          exit 1
+      - name: Select available iPhone simulator
+        id: simulator
+        shell: bash
+        run: |
+          xcrun simctl list devices available -j > /tmp/available-simulators.json
+          simulator_id="$(/usr/bin/python3 -c '
+          import json
+          with open("/tmp/available-simulators.json") as f:
+              data = json.load(f)
+          for runtime, devices in data["devices"].items():
+              for device in devices:
+                  if device.get("isAvailable") and device.get("name", "").startswith("iPhone"):
+                      print(device["udid"])
+                      raise SystemExit(0)
+          raise SystemExit("No available iPhone simulator found after installing the iOS runtime")
+          ')"
+          echo "id=$simulator_id" >> "$GITHUB_OUTPUT"
+          echo "Selected iPhone simulator: $simulator_id"
+      - name: Generate project
+        run: tuist generate --no-open
+      - name: Run unit and UI tests
+        run: >-
+          xcodebuild test
+          -workspace EumShoppingMall.xcworkspace
+          -scheme EumShoppingMall
+          -destination 'platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}'
+          -parallel-testing-enabled NO
+          CODE_SIGNING_ALLOWED=NO

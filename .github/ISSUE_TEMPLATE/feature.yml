@@ -1,0 +1,12 @@
+name: 기능 요청
+description: 새로운 기능을 제안합니다.
+title: "feat: "
+labels: [feature]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: 목표
+      description: 구현할 기능과 사용자 가치를 작성해 주세요.
+    validations:
+      required: true
