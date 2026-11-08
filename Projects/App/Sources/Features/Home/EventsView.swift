@@ -1,22 +1,38 @@
 import SwiftUI
 
 struct EventItem: Identifiable, Equatable {
-    enum Status: String, CaseIterable, Identifiable {
-        case ongoing = "진행중"
-        case ended = "종료"
-
-        var id: String { rawValue }
-    }
-
     let id: String
+    let status: String
     let title: String
     let period: String
-    let status: Status
+    let iconName: String
+    let isFeatured: Bool
 
     static let samples = [
-        EventItem(id: "event-ongoing-1", title: "이벤트 제목이 들어갑니다", period: "0000.00.00 - 0000.00.00", status: .ongoing),
-        EventItem(id: "event-ongoing-2", title: "이벤트 제목이 들어갑니다", period: "0000.00.00 - 0000.00.00", status: .ongoing),
-        EventItem(id: "event-ended-1", title: "이벤트 제목이 들어갑니다", period: "0000.00.00 - 0000.00.00", status: .ended)
+        EventItem(
+            id: "event-ongoing-1",
+            status: "진행 중",
+            title: "현장 안전용품 특별 기획전",
+            period: "10.01–10.31",
+            iconName: "gift",
+            isFeatured: true
+        ),
+        EventItem(
+            id: "event-ongoing-2",
+            status: "진행 중",
+            title: "가을맞이 안전장비 할인",
+            period: "10.10–10.31",
+            iconName: "calendar",
+            isFeatured: false
+        ),
+        EventItem(
+            id: "event-ended-1",
+            status: "종료",
+            title: "신규 회원 웰컴 혜택",
+            period: "09.01–09.30",
+            iconName: "clock",
+            isFeatured: false
+        )
     ]
 }
 
@@ -24,8 +40,6 @@ struct EventsView: View {
     let onBack: () -> Void
     let onOpenEvent: (EventItem) -> Void
     private let items: [EventItem]
-
-    @State private var selectedStatus = EventItem.Status.ongoing
 
     init(
         items: [EventItem] = EventItem.samples,
@@ -35,10 +49,6 @@ struct EventsView: View {
         self.items = items
         self.onBack = onBack
         self.onOpenEvent = onOpenEvent
-    }
-
-    private var events: [EventItem] {
-        items.filter { $0.status == selectedStatus }
     }
 
     var body: some View {
@@ -51,91 +61,52 @@ struct EventsView: View {
             ) {
                 Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
             }
-            statusPicker
-            if events.isEmpty {
+
+            if items.isEmpty {
                 emptyState
             } else {
                 ScrollView {
-                    LazyVStack(spacing: 0) {
-                        ForEach(events) { event in
-                            eventRow(event)
+                    VStack(alignment: .leading, spacing: 40) {
+                        Text("진행 중인 이벤트와 지난 혜택을 확인해 보세요.")
+                            .font(EUMTypography.bodySmall)
+                            .foregroundStyle(EUMColor.text3SwiftUI)
+
+                        LazyVStack(spacing: 12) {
+                            ForEach(items) { event in
+                                eventRow(event)
+                            }
                         }
                     }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 20)
+                    .padding(.bottom, 24)
                 }
                 .scrollIndicators(.hidden)
             }
-            Spacer(minLength: 0)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
-    }
-
-    private var statusPicker: some View {
-        HStack(spacing: 24) {
-            ForEach(EventItem.Status.allCases) { status in
-                Button {
-                    selectedStatus = status
-                } label: {
-                    VStack(spacing: 10) {
-                        Text(status.rawValue)
-                            .font(EUMTypography.labelMedium)
-                            .foregroundStyle(selectedStatus == status ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI)
-                        Rectangle()
-                            .fill(selectedStatus == status ? EUMColor.text1SwiftUI : .clear)
-                            .frame(height: 2)
-                    }
-                    .fixedSize(horizontal: true, vertical: false)
-                }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(selectedStatus == status ? .isSelected : [])
-                .accessibilityIdentifier("events-status-\(status.id)")
-            }
-            Spacer()
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 10)
-        .overlay(alignment: .bottom) { EUMColor.lineSwiftUI.frame(height: 1) }
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     @ViewBuilder
     private func eventRow(_ event: EventItem) -> some View {
-        Button {
-            onOpenEvent(event)
-        } label: {
-            VStack(alignment: .leading, spacing: 12) {
-                ZStack {
-                    LinearGradient(
-                        colors: [EUMColor.imagePlaceholderTopSwiftUI, EUMColor.imagePlaceholderBottomSwiftUI],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    Image("ProductPlaceholder")
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 32, height: 32)
-                        .accessibilityHidden(true)
-                }
-                .frame(maxWidth: .infinity)
-                .aspectRatio(350.0 / 180.0, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 6))
+        let card = EventInfoCard(
+            title: event.status,
+            detail: "\(event.title) · \(event.period)",
+            iconName: event.iconName,
+            showsChevron: event.isFeatured
+        )
 
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(event.title)
-                        .font(EUMTypography.bodyMedium)
-                        .foregroundStyle(EUMColor.text1SwiftUI)
-                        .lineLimit(1)
-                    Text(event.period)
-                        .font(EUMTypography.captionRegular)
-                        .foregroundStyle(EUMColor.text3SwiftUI)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
+        if event.isFeatured {
+            Button {
+                onOpenEvent(event)
+            } label: {
+                card
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 16)
-            .contentShape(Rectangle())
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("event-open-\(event.id)")
+        } else {
+            card
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel("\(event.title), \(event.period), 상세 보기")
     }
 
     private var emptyState: some View {
@@ -152,7 +123,7 @@ struct EventsView: View {
                 .foregroundStyle(EUMColor.text1SwiftUI)
                 .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.top, 120)
     }
 }
@@ -160,45 +131,98 @@ struct EventsView: View {
 struct EventDetailView: View {
     let event: EventItem
     let onBack: () -> Void
+    let onBrowseProducts: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
             EUMBackTopBar(
-                title: "이벤트",
+                title: event.title,
                 backAccessibilityLabel: "이벤트 목록으로 돌아가기",
                 backAccessibilityIdentifier: "event-detail-back",
                 onBack: onBack
             ) {
                 Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
             }
+
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(event.status.rawValue)
-                            .font(EUMTypography.captionMedium)
-                            .foregroundStyle(EUMColor.text2SwiftUI)
-                        Text(event.title)
-                            .font(EUMTypography.heading3)
-                            .foregroundStyle(EUMColor.text1SwiftUI)
-                            .fixedSize(horizontal: false, vertical: true)
-                        Text(event.period)
-                            .font(EUMTypography.captionRegular)
-                            .foregroundStyle(EUMColor.text3SwiftUI)
-                    }
-                    Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
-                    Text("이벤트 내용이 들어갑니다.")
-                        .font(EUMTypography.bodyMedium)
-                        .foregroundStyle(EUMColor.text2SwiftUI)
-                    Text("이벤트 상품과 참여 방법은 운영 정보를 연결한 뒤 확인할 수 있습니다.")
+                VStack(alignment: .leading, spacing: 40) {
+                    Text("이벤트 기간 · 2026.\(event.period)")
                         .font(EUMTypography.bodySmall)
                         .foregroundStyle(EUMColor.text3SwiftUI)
+
+                    VStack(spacing: 12) {
+                        EventInfoCard(
+                            title: "혜택 안내",
+                            detail: "안전용품을 한곳에서 확인하세요.",
+                            iconName: "gift"
+                        )
+                        EventInfoCard(
+                            title: "참여 방법",
+                            detail: "기획전 상품을 확인하고 주문을 진행해 주세요.",
+                            iconName: "info.circle"
+                        )
+                        EventInfoCard(
+                            title: "유의 사항",
+                            detail: "혜택과 적용 조건은 상품 상세에서 확인해 주세요.",
+                            iconName: "exclamationmark.circle",
+                            showsChevron: true
+                        )
+                    }
                 }
-                .padding(20)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
+                .padding(.bottom, 24)
             }
             .scrollIndicators(.hidden)
-            Spacer(minLength: 0)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            EUMButton(title: "상품 보러 가기", size: .large, action: onBrowseProducts)
+                .accessibilityIdentifier("event-browse-products")
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(EUMColor.backgroundSwiftUI)
+        }
+    }
+}
+
+private struct EventInfoCard: View {
+    let title: String
+    let detail: String
+    let iconName: String
+    var showsChevron = false
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: iconName)
+                .font(.system(size: 18, weight: .regular))
+                .foregroundStyle(Color(red: 10 / 255, green: 110 / 255, blue: 87 / 255))
+                .frame(width: 36, height: 36)
+                .background(Color(red: 231 / 255, green: 245 / 255, blue: 241 / 255), in: RoundedRectangle(cornerRadius: 11))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(EUMTypography.labelMedium)
+                    .foregroundStyle(EUMColor.text1SwiftUI)
+                Text(detail)
+                    .font(EUMTypography.captionRegular)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
+                    .lineLimit(2)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            if showsChevron {
+                Image("SectionChevron")
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
+            }
+        }
+        .padding(.horizontal, 13)
+        .frame(height: 80)
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
 }

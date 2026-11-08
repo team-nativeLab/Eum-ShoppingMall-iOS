@@ -72,7 +72,13 @@ struct HomeModalRouteHostView: View {
                 onMessage: onMessage
             )
         case .customerCenter, .announcements, .announcementDetail, .events, .eventDetail:
-            HomeSupportRouteView(route: route, onBack: onBack, onRoute: onRoute, onMessage: onMessage)
+            HomeSupportRouteView(
+                route: route,
+                onBack: onBack,
+                onRoute: onRoute,
+                onMessage: onMessage,
+                onBrowseProducts: onBrowseProducts
+            )
         case .inquiryCompose, .inquiryComplete, .productReviews, .productReviewRegistration:
             HomeInquiryRouteView(
                 route: route,

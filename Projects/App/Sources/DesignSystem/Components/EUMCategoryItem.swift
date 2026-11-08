@@ -49,6 +49,11 @@ struct EUMCategoryItem: View {
             categoryIcon
                 .frame(width: 44, height: 44)
                 .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+                .overlay(
+                    RoundedRectangle(cornerRadius: EUMRadius.large)
+                        .stroke(Color(red: 215 / 255, green: 222 / 255, blue: 217 / 255), lineWidth: 1)
+                )
+                .shadow(color: EUMColor.text1SwiftUI.opacity(0.08), radius: 8, x: 0, y: 4)
 
             Text(title)
                 .font(EUMTypography.labelLarge)
@@ -69,13 +74,30 @@ struct EUMCategoryItem: View {
     }
 
     private var categoryIcon: some View {
-        Image(iconName)
-            .renderingMode(.template)
-            .resizable()
-            .scaledToFit()
-            .frame(width: 24, height: 24)
-            .foregroundStyle(EUMColor.text1SwiftUI)
-            .accessibilityHidden(true)
+        Group {
+            if let symbolName = categorySymbolName {
+                Image(systemName: symbolName)
+                    .font(.system(size: 21, weight: .regular))
+            } else {
+                Image(iconName)
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+            }
+        }
+        .frame(width: 24, height: 24)
+        .foregroundStyle(EUMColor.text1SwiftUI)
+        .accessibilityHidden(true)
+    }
+
+    private var categorySymbolName: String? {
+        switch iconName {
+        case "CategoryRoad": "cone.fill"
+        case "CategoryFire": "flame"
+        case "CategoryIndustry": "wrench.and.screwdriver"
+        case "CategorySecurity": "video"
+        default: nil
+        }
     }
 }
 

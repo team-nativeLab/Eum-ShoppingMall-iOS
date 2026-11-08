@@ -1,6 +1,7 @@
 # A-06 Search Screen Parity
 
 - Figma frame: [A-06 검색 · HF](https://www.figma.com/design/N3Ic9TfSnUBVMgAuayBVly?node-id=180-1374), 390 × 844 pt.
+- Figma node ID: `180:1374`.
 - Simulator: iPhone 18 Pro, iOS 27.0, 402 × 874 pt.
 - Capture: [A06-search.png](../Screenshots/A06-search.png).
 - The capture build selected the Search tab as its initial tab using a temporary compile condition. That condition was removed after capture; the committed app opens on Home and reaches Search through its tab or Category search button.

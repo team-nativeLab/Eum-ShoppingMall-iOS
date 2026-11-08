@@ -1,6 +1,7 @@
 # A-06z Search Empty State Parity
 
 - Figma frame: [A-06z 검색 결과 없음 · HF](https://www.figma.com/design/N3Ic9TfSnUBVMgAuayBVly?node-id=180-1681), 390 × 844 pt.
+- Figma node ID: `180:1681`.
 - Simulator: iPhone 18 Pro, iOS 27.0, 402 × 874 pt (1206 × 2622 px capture).
 - Capture: [A06z-search-empty.png](../Screenshots/A06z-search-empty.png).
 - Mock empty query: `방폭 헬멧`. Submitting it from A-06 or A-06b displays this state. A temporary launch argument selected this same state for capture and was removed before commit.

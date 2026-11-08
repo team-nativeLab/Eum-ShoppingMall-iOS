@@ -1,7 +1,7 @@
 # Figma Audit
 
 - Source: [06 Design — App](https://www.figma.com/design/N3Ic9TfSnUBVMgAuayBVly?node-id=178-345), read-only.
-- Audited page node: `178:345`; the original 88-frame inventory was refreshed on 2026-10-26 with newer inquiry, event, policy, request-completion and withdrawal-state frames. See `SCREEN_INVENTORY.md` for the node-by-node list.
+- Audited page node: `178:345`; the inventory was refreshed from Figma metadata on 2026-11-08 and now lists 120 top-level screen frames, including newer inquiry, event, policy, request-completion and withdrawal-state frames. See `SCREEN_INVENTORY.md` for the node-by-node list.
 - Detail contexts and screenshots were obtained for A-01 Splash (`178:350`) and A-02 Home (`178:369`). The splash screenshot is the visual target; the page tree is the source for the remaining inventory.
 - Figma MCP variable-definition and Code Connect library listing were unavailable on the connected seat. Do not treat fallback colors in generated code as confirmed published variables.
 

@@ -170,7 +170,8 @@ struct CategoryView: View {
             modeButton(title: "브랜드", mode: .brands)
         }
         .padding(4)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 8))
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(EUMColor.text1SwiftUI, lineWidth: 1))
         .padding(.horizontal, EUMSpacing.homeContentInset)
         .padding(.vertical, 12)
     }
@@ -184,14 +185,13 @@ struct CategoryView: View {
             Text(title)
                 .font(EUMTypography.labelMedium)
                 .tracking(-0.07)
-                .foregroundStyle(isSelected ? EUMColor.text1SwiftUI : EUMColor.text2SwiftUI)
+                .foregroundStyle(isSelected ? EUMColor.inverseSwiftUI : Color(red: 72 / 255, green: 83 / 255, blue: 77 / 255))
                 .frame(maxWidth: .infinity)
                 .frame(height: 36)
                 .background {
                     if isSelected {
                         RoundedRectangle(cornerRadius: EUMRadius.medium)
-                            .fill(EUMColor.backgroundSwiftUI)
-                            .shadow(color: EUMColor.text1SwiftUI.opacity(0.06), radius: 3, x: 0, y: 1)
+                            .fill(EUMColor.text1SwiftUI)
                     }
                 }
                 .contentShape(Rectangle())

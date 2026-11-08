@@ -285,8 +285,6 @@ struct ProductDetailView: View {
             .padding(.top, 12)
             .padding(.bottom, 12)
             .overlay(alignment: .top) { EUMColor.lineSwiftUI.frame(height: 1) }
-
-            Color.clear.frame(height: 34)
         }
         .background(EUMColor.backgroundSwiftUI.ignoresSafeArea(edges: .bottom))
     }
