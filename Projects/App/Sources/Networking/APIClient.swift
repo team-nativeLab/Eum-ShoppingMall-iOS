@@ -78,19 +78,22 @@ struct APIRequest<Payload: Decodable> {
     let queryItems: [URLQueryItem]
     let body: Data?
     let accessToken: String?
+    let idempotencyKey: String?
 
     init(
         path: String,
         method: HTTPMethod = .get,
         queryItems: [URLQueryItem] = [],
         body: Data? = nil,
-        accessToken: String? = nil
+        accessToken: String? = nil,
+        idempotencyKey: String? = nil
     ) {
         self.path = path
         self.method = method
         self.queryItems = queryItems
         self.body = body
         self.accessToken = accessToken
+        self.idempotencyKey = idempotencyKey
     }
 
     static func json<Body: Encodable>(
@@ -98,14 +101,16 @@ struct APIRequest<Payload: Decodable> {
         method: HTTPMethod,
         queryItems: [URLQueryItem] = [],
         body: Body,
-        accessToken: String? = nil
+        accessToken: String? = nil,
+        idempotencyKey: String? = nil
     ) throws -> Self {
         Self(
             path: path,
             method: method,
             queryItems: queryItems,
             body: try JSONEncoder().encode(body),
-            accessToken: accessToken
+            accessToken: accessToken,
+            idempotencyKey: idempotencyKey
         )
     }
 }
@@ -138,6 +143,12 @@ struct APIClient {
         if let accessToken = apiRequest.accessToken,
            !accessToken.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        }
+        if let idempotencyKey = apiRequest.idempotencyKey {
+            let trimmedKey = idempotencyKey.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmedKey.isEmpty {
+                request.setValue(trimmedKey, forHTTPHeaderField: "Idempotency-Key")
+            }
         }
 
         let (data, response) = try await session.data(for: request)
