@@ -16,3 +16,9 @@ extension APIEnvelope {
         return data
     }
 }
+
+extension APIClient {
+    func sendData<Payload: Decodable>(_ request: APIRequest<Payload>) async throws -> Payload {
+        try await send(request).requireData()
+    }
+}
