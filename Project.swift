@@ -14,6 +14,7 @@ let project = Project(
             infoPlist: .extendingDefault(with: [
                 "UILaunchScreen": [:],
                 "UIAppFonts": ["NotoSansKR-Variable.ttf"],
+                "EUM_API_BASE_URL": "$(EUM_API_BASE_URL)",
                 "UIApplicationSceneManifest": [
                     "UIApplicationSupportsMultipleScenes": false,
                     "UISceneConfigurations": [
@@ -28,7 +29,8 @@ let project = Project(
             buildableFolders: ["Projects/App/Sources"],
             settings: .settings(base: [
                 "CODE_SIGNING_ALLOWED": "NO",
-                "ASSETCATALOG_COMPILER_APPICON_NAME": ""
+                "ASSETCATALOG_COMPILER_APPICON_NAME": "",
+                "EUM_API_BASE_URL": ""
             ])
         ),
         .target(
