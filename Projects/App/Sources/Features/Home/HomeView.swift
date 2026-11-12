@@ -150,7 +150,7 @@ struct HomeView: View {
     private func homeView(_ content: HomeContent) -> some View {
         VStack(spacing: 0) {
             EUMTopBar(
-                title: "이음산업건설",
+                title: "안전맛집",
                 onMenuTap: { withAnimation(.easeOut(duration: 0.2)) { isShowingDrawer = true } },
                 onNotificationTap: { openRoute(.accountCollection(.notifications)) }
             )

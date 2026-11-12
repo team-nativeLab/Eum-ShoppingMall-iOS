@@ -108,7 +108,7 @@ struct LoginView: View {
 
     private var brandSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("이음산업건설")
+            Text("안전맛집")
                 .font(.custom("NotoSansKR-Bold", size: 26))
                 .tracking(-0.65)
                 .foregroundStyle(EUMColor.text1SwiftUI)
