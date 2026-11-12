@@ -1,6 +1,6 @@
-# Eum ShoppingMall iOS
+# 안전맛집 iOS
 
-이음산업건설 쇼핑몰 iOS 앱입니다. Swift, UIKit, SwiftUI, MVVM, Tuist를 기반으로 구성합니다.
+안전맛집 iOS 앱입니다. Swift, UIKit, SwiftUI, MVVM, Tuist를 기반으로 구성합니다.
 
 ## 시작하기
 
