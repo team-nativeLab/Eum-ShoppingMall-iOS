@@ -14,6 +14,8 @@ let project = Project(
             infoPlist: .extendingDefault(with: [
                 "UILaunchScreen": [:],
                 "UIAppFonts": ["NotoSansKR-Variable.ttf"],
+                "CFBundleDisplayName": "안전맛집",
+                "CFBundleName": "안전맛집",
                 "UIApplicationSceneManifest": [
                     "UIApplicationSupportsMultipleScenes": false,
                     "UISceneConfigurations": [

@@ -5,7 +5,7 @@ final class InquiryParityUITests: XCTestCase {
     func testContactInquiryMatchesFigmaAndOpensReceipt() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-마이"].tap()
         let customerCenter = app.buttons["고객센터"]
         if !customerCenter.isHittable { app.swipeUp() }
@@ -38,7 +38,7 @@ final class InquiryParityUITests: XCTestCase {
     func testProductInquiryMatchesFigmaAndReachesReceipt() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-카테고리"].tap()
         app.buttons["개인보호장비"].tap()
         app.staticTexts["세이프가드 ABS 안전모"].firstMatch.tap()

@@ -5,7 +5,7 @@ final class CategoryParityUITests: XCTestCase {
     func testCategoryDirectoryMatchesFigmaAndOpensCategoryProducts() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-카테고리"].tap()
 
         XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
