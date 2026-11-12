@@ -6,7 +6,7 @@ final class EventNavigationUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["전체 메뉴"].tap()
         app.buttons["이벤트"].tap()
 
