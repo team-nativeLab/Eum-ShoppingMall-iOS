@@ -14,13 +14,13 @@ final class ProductListNavigationUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["제품 둘러보기"].tap()
 
         XCTAssertTrue(app.staticTexts["전체 제품"].waitForExistence(timeout: 5))
         app.buttons["product-list-back"].tap()
 
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["home-tab-홈"].exists)
     }
 
@@ -29,7 +29,7 @@ final class ProductListNavigationUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-카테고리"].tap()
         XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
 
@@ -46,7 +46,7 @@ final class ProductListNavigationUITests: XCTestCase {
     func testContextualSearchBackReturnsToCategory() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         app.buttons["home-tab-카테고리"].tap()
         XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
@@ -63,7 +63,7 @@ final class ProductListNavigationUITests: XCTestCase {
     func testProductListSearchBackPreservesProductList() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
@@ -79,7 +79,7 @@ final class ProductListNavigationUITests: XCTestCase {
     func testSearchTabBackReturnsToCategoryTab() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         app.buttons["home-tab-카테고리"].tap()
         XCTAssertTrue(app.staticTexts["카테고리"].waitForExistence(timeout: 5))
@@ -95,7 +95,7 @@ final class ProductListNavigationUITests: XCTestCase {
     func testProductDetailBackReturnsThroughListToCategory() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
@@ -139,7 +139,7 @@ final class ProductListNavigationUITests: XCTestCase {
     func testHiddenPriceProductShowsBothBuyActions() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
@@ -177,7 +177,7 @@ final class ProductListNavigationUITests: XCTestCase {
     func testProductReviewAndInquiryActionsOpenTheirScreensAndReturnToDetail() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
@@ -242,7 +242,7 @@ final class ProductListNavigationUITests: XCTestCase {
     func testShippingDetailsOpenAndReturnToTheSameProductDetail() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
@@ -270,7 +270,7 @@ final class ProductListNavigationUITests: XCTestCase {
     func testRelatedProductFavoriteButtonTogglesItsState() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
@@ -293,7 +293,7 @@ final class ProductListNavigationUITests: XCTestCase {
     func testChangingTabFromProductListClearsNestedRoute() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.staticTexts["개인보호장비"].waitForExistence(timeout: 5))
@@ -308,7 +308,7 @@ final class ProductListNavigationUITests: XCTestCase {
     func testProductListFilterAppliesToResultsAndReturnsToList() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
         XCTAssertTrue(app.buttons["product-list-filter"].waitForExistence(timeout: 5))
@@ -327,7 +327,7 @@ final class ProductListNavigationUITests: XCTestCase {
     func testAddressEditorCanSearchAddressAndChooseDeliveryRequest() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         app.buttons["home-tab-마이"].tap()
         app.buttons["배송지 관리"].tap()

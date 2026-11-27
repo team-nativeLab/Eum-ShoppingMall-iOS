@@ -6,7 +6,7 @@ final class AppDrawerViewModelTests: XCTestCase {
     func testDrawerBrandAndMemberSummaryMatchFigma() {
         let viewModel = AppDrawerViewModel()
 
-        XCTAssertEqual(viewModel.brandTitle, "이음산업건설")
+        XCTAssertEqual(viewModel.brandTitle, "안전맛집")
         XCTAssertEqual(viewModel.tagline, "사람이 있는 곳에, 더 안전한 내일을.")
         XCTAssertEqual(viewModel.memberName, "홍길동님")
     }
