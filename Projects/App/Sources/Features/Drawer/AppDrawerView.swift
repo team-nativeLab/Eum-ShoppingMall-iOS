@@ -114,7 +114,7 @@ struct AppDrawerView: View {
                     }
                     .padding(16)
                     .frame(height: 56)
-                    .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+                    .eumCardBackground()
                     .contentShape(RoundedRectangle(cornerRadius: EUMRadius.large))
                 }
                 .buttonStyle(.plain)

@@ -40,7 +40,7 @@ struct EUMCategoryItem: View {
         .padding(.horizontal, 4)
         .padding(.vertical, 8)
         .frame(width: 76, height: 84)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
         .contentShape(RoundedRectangle(cornerRadius: EUMRadius.large))
     }
 

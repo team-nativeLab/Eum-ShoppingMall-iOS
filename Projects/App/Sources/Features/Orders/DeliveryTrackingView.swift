@@ -135,7 +135,7 @@ struct DeliveryTrackingView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
     }
 }
 

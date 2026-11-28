@@ -121,7 +121,7 @@ struct AccountWithdrawalCompleteView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+        .eumCardBackground(cornerRadius: 12)
     }
 
     private var homeAction: some View {

@@ -131,7 +131,7 @@ struct EmailLookupResultView: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+        .eumCardBackground(cornerRadius: 12)
     }
 
     private var bottomActions: some View {

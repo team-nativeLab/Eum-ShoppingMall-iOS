@@ -84,7 +84,7 @@ struct QuoteInquiryFieldsView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
     }
 
     private var deliveryDateField: some View {

@@ -144,7 +144,7 @@ struct BusinessSignUpInformationView: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
         .accessibilityElement(children: .combine)
     }
 

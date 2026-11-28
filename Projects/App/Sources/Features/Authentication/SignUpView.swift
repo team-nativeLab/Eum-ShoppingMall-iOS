@@ -98,7 +98,7 @@ struct SignUpView: View {
             memberTypeButton("사업자 회원", isSelected: viewModel.isBusinessMember)
         }
         .padding(4)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
     }
 
     private func memberTypeButton(_ title: String, isSelected: Bool) -> some View {

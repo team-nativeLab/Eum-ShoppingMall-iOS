@@ -189,7 +189,7 @@ struct CheckoutCompleteView: View {
         .foregroundStyle(EUMColor.text2SwiftUI)
         .padding(.horizontal, 14)
         .frame(height: 44)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
         .padding(.horizontal, EUMSpacing.homeContentInset)
     }
 

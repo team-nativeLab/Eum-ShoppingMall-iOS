@@ -210,7 +210,7 @@ struct CompanyIntroductionView: View {
                             .foregroundStyle(EUMColor.text3SwiftUI)
                             .frame(maxWidth: .infinity)
                             .frame(height: 56)
-                            .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
+                            .eumCardBackground(cornerRadius: EUMRadius.button)
                     }
                 }
                 .accessibilityLabel("파트너 로고 임시 표시")
@@ -363,7 +363,7 @@ private struct CompanyIntroductionBusinessCard: View {
         }
         .frame(maxWidth: .infinity, minHeight: 108, alignment: .leading)
         .padding(16)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
         .accessibilityElement(children: .combine)
     }
 }

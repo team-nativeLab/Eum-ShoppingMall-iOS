@@ -131,7 +131,7 @@ struct CouponsView: View {
             }
         }
         .padding(4)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
+        .eumCardBackground(cornerRadius: EUMRadius.button)
     }
 
     @ViewBuilder
