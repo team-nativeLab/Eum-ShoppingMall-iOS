@@ -67,7 +67,8 @@ struct EUMProductCard: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 20, height: 20)
-                                    .foregroundStyle(EUMColor.text1SwiftUI)
+                                    // Figma hf/heart-active (#E5484D) / hf/heart-idle (#666666).
+                                    .foregroundStyle(isFavorite ? EUMColor.heartActiveSwiftUI : EUMColor.text3SwiftUI)
                                     .frame(width: 44, height: 44)
                                     .contentShape(Rectangle())
                             }
