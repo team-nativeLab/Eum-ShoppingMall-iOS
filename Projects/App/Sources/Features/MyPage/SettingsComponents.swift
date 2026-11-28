@@ -97,7 +97,7 @@ struct SettingsToggleRow: View {
         Toggle(isOn: $isOn) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.custom("NotoSansKR-Regular", size: 16, relativeTo: .body))
+                    .font(.custom(EUMFontName.regular, size: 16, relativeTo: .body))
                     .tracking(-0.16)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -197,7 +197,7 @@ struct SettingsNavigationRow: View {
         Button(action: action) {
             HStack(spacing: 12) {
                 Text(title)
-                    .font(.custom("NotoSansKR-Regular", size: 16, relativeTo: .body))
+                    .font(.custom(EUMFontName.regular, size: 16, relativeTo: .body))
                     .tracking(-0.16)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                     .frame(maxWidth: .infinity, alignment: .leading)

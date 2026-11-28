@@ -158,7 +158,7 @@ struct TermsView: View {
                     (
                         Text(noticePrefix)
                         + Text(noticeLinkLabel)
-                            .font(.custom("NotoSansKR-Medium", size: 14, relativeTo: .callout))
+                            .font(.custom(EUMFontName.medium, size: 14, relativeTo: .callout))
                             .underline()
                     )
                     .font(EUMTypography.bodySmall)

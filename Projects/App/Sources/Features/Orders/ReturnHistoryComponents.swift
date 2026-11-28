@@ -139,7 +139,7 @@ struct ReturnHistoryCard: View {
                     .foregroundStyle(EUMColor.text1SwiftUI)
                     .lineLimit(1)
                 Text(item.priceAndQuantity)
-                    .font(.custom("NotoSansKR-Bold", size: 16, relativeTo: .body))
+                    .font(.custom(EUMFontName.bold, size: 16, relativeTo: .body))
                     .foregroundStyle(EUMColor.text1SwiftUI)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

@@ -112,7 +112,7 @@ private extension BrandDetailView {
                     .background(EUMColor.inverseSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
                 VStack(alignment: .leading, spacing: 4) {
                     Text(viewModel.brandName)
-                        .font(.custom("NotoSansKR-Bold", size: 26, relativeTo: .title))
+                        .font(.custom(EUMFontName.bold, size: 26, relativeTo: .title))
                         .foregroundStyle(EUMColor.inverseSwiftUI)
                     Text("BRAND \(viewModel.brandID.last.map(String.init) ?? "A") · 개인보호장비")
                         .font(EUMTypography.captionMedium)

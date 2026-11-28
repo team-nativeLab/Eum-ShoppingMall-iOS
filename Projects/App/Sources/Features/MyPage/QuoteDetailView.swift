@@ -73,7 +73,7 @@ struct QuoteDetailView: View {
     private var titleGroup: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(viewModel.inquiry.status.rawValue)
-                .font(.custom("NotoSansKR-Medium", size: 11))
+                .font(.custom(EUMFontName.medium, size: 11))
                 .foregroundStyle(EUMColor.text2SwiftUI)
                 .padding(.horizontal, 6)
                 .frame(height: 20)
@@ -139,7 +139,7 @@ struct QuoteDetailView: View {
             }
             .frame(width: 20, height: 20)
             Text(title)
-                .font(.custom("NotoSansKR-Medium", size: 11))
+                .font(.custom(EUMFontName.medium, size: 11))
                 .foregroundStyle(index <= viewModel.currentStepIndex ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
@@ -166,7 +166,7 @@ struct QuoteDetailView: View {
                 Spacer(minLength: 8)
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(viewModel.amount)
-                        .font(.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
+                        .font(.custom(EUMFontName.bold, size: 24, relativeTo: .title))
                         .foregroundStyle(EUMColor.text1SwiftUI)
                     Text("VAT 별도")
                         .font(EUMTypography.captionRegular)

@@ -238,7 +238,7 @@ struct CheckoutAddressView: View {
                 .foregroundStyle(EUMColor.text1SwiftUI)
             Spacer()
             Text("₩00,000")
-                .font(.custom("NotoSansKR-Bold", size: 16))
+                .font(.custom(EUMFontName.bold, size: 16))
                 .tracking(-0.08)
                 .foregroundStyle(EUMColor.text1SwiftUI)
         }

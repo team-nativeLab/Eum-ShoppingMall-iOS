@@ -148,7 +148,7 @@ struct OrderHistoryView: View {
     private var browseProductsButton: some View {
         Button(action: onBrowseProducts) {
             Text("상품 둘러보기")
-                .font(.custom("NotoSansKR-Bold", size: 14))
+                .font(.custom(EUMFontName.bold, size: 14))
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)

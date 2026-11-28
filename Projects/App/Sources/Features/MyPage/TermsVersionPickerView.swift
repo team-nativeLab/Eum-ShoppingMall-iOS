@@ -120,7 +120,7 @@ struct TermsVersionPickerView: View {
 
             Text(option.title)
                 .font(.custom(
-                    option.isSelected(for: selectedVersion) ? "NotoSansKR-Medium" : "NotoSansKR-Regular",
+                    option.isSelected(for: selectedVersion) ? EUMFontName.medium : EUMFontName.regular,
                     size: 16,
                     relativeTo: .body
                 ))

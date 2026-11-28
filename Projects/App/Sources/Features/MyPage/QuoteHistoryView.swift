@@ -175,7 +175,7 @@ private struct QuoteInquiryCard: View {
     private var statusBadge: some View {
         let status = inquiry.status
         return Text(status.rawValue)
-            .font(.custom("NotoSansKR-Medium", size: 11))
+            .font(.custom(EUMFontName.medium, size: 11))
             .foregroundStyle(statusForeground(status))
             .padding(.horizontal, 6)
             .frame(height: 20)

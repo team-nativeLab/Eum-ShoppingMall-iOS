@@ -103,9 +103,9 @@ struct EUMProductCard: View {
 
                                 HStack(spacing: 2) {
                                     Text("\(discountPercentage)%")
-                                        .font(Font.custom("NotoSansKR-Bold", size: 12, relativeTo: .caption))
+                                        .font(Font.custom(EUMFontName.bold, size: 12, relativeTo: .caption))
                                     Text(price)
-                                        .font(Font.custom("NotoSansKR-Bold", size: 16, relativeTo: .body))
+                                        .font(Font.custom(EUMFontName.bold, size: 16, relativeTo: .body))
                                 }
                                 .tracking(-0.08)
                                 .foregroundStyle(isSoldOut ? EUMColor.text3SwiftUI : Color(red: 219 / 255, green: 33 / 255, blue: 41 / 255))
@@ -113,7 +113,7 @@ struct EUMProductCard: View {
                             }
                         } else {
                             Text(price)
-                                .font(Font.custom("NotoSansKR-Bold", size: 16, relativeTo: .body))
+                                .font(Font.custom(EUMFontName.bold, size: 16, relativeTo: .body))
                                 .tracking(-0.08)
                                 .foregroundStyle(isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
                         }

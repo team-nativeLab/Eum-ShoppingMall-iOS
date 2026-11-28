@@ -145,7 +145,7 @@ struct NotificationsView: View {
 
     private func notificationRow(_ notification: AppNotification) -> some View {
         let titleFont = notification.isUnread
-            ? Font.custom("NotoSansKR-Bold", size: 14, relativeTo: .callout)
+            ? Font.custom(EUMFontName.bold, size: 14, relativeTo: .callout)
             : EUMTypography.bodySmall
         return Button {
             viewModel.markRead(notification.id)
