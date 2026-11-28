@@ -154,17 +154,17 @@ struct EventDetailView: View {
                         EventInfoCard(
                             title: "혜택 안내",
                             detail: "안전용품을 한곳에서 확인하세요.",
-                            iconName: "gift"
+                            iconAssetName: "EventBenefitGift"
                         )
                         EventInfoCard(
                             title: "참여 방법",
                             detail: "기획전 상품을 확인하고 주문을 진행해 주세요.",
-                            iconName: "info.circle"
+                            iconAssetName: "EventParticipationCheck"
                         )
                         EventInfoCard(
                             title: "유의 사항",
                             detail: "혜택과 적용 조건은 상품 상세에서 확인해 주세요.",
-                            iconName: "exclamationmark.circle",
+                            iconAssetName: "EventCautionInfo",
                             showsChevron: true
                         )
                     }
@@ -189,16 +189,26 @@ struct EventDetailView: View {
 private struct EventInfoCard: View {
     let title: String
     let detail: String
-    let iconName: String
+    var iconName: String? = nil
+    var iconAssetName: String? = nil
     var showsChevron = false
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: iconName)
-                .font(.system(size: 18, weight: .regular))
-                .foregroundStyle(Color(red: 10 / 255, green: 110 / 255, blue: 87 / 255))
-                .frame(width: 36, height: 36)
-                .background(Color(red: 231 / 255, green: 245 / 255, blue: 241 / 255), in: RoundedRectangle(cornerRadius: 11))
+            Group {
+                if let iconAssetName {
+                    Image(iconAssetName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                } else if let iconName {
+                    Image(systemName: iconName)
+                        .font(.system(size: 18, weight: .regular))
+                        .foregroundStyle(Color(red: 10 / 255, green: 110 / 255, blue: 87 / 255))
+                }
+            }
+            .frame(width: 36, height: 36)
+            .background(Color(red: 231 / 255, green: 245 / 255, blue: 241 / 255), in: RoundedRectangle(cornerRadius: 11))
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
