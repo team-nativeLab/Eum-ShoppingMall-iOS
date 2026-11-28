@@ -31,7 +31,11 @@ struct BusinessSignUpInformationView: View {
                 Text("사업자등록번호 *")
                     .font(EUMTypography.labelMedium)
                     .foregroundStyle(EUMColor.text1SwiftUI)
-                TextField("000-00-00000", text: $viewModel.businessRegistrationNumber)
+                TextField(
+                    "000-00-00000",
+                    text: $viewModel.businessRegistrationNumber,
+                    prompt: Text("000-00-00000").foregroundColor(EUMColor.text3SwiftUI)
+                )
                     .font(EUMTypography.bodyMedium)
                     .keyboardType(.numberPad)
                     .padding(.horizontal, 14)

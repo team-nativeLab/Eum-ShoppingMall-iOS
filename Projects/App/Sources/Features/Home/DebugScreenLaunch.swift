@@ -29,7 +29,8 @@ enum DebugScreenLaunch {
         "A-26", "A-26b", "A-26r", "A-26d", "A-31", "A-32", "A-35", "A-36", "A-37", "A-38",
         "A-42", "A-40", "A-41", "A-43-company", "A-45", "A-54-events", "A-55", "A-57",
         "A-31d", "A-43-inquiry", "A-44", "A-50", "A-51", "A-51-withdrawn", "A-52", "A-53", "A-54-reject",
-        "reviews", "review-write"
+        "reviews", "review-write",
+        "A-14", "A-27", "A-27r", "A-27z", "A-28", "A-28n", "A-28d"
     ]
 
     static func perform(
@@ -77,7 +78,7 @@ enum DebugScreenLaunch {
         case "A-11": return [.tab(.account)]
         case "A-11g": return [.guestTab(.account)]
         case "A-12": return [.drawer]
-        case "A-13": return [.route(.authentication)]
+        case "A-13", "A-14", "A-27", "A-27r", "A-27z", "A-28", "A-28n", "A-28d": return [.route(.authentication)]
         case "A-15": return [.route(.quoteInquiry(nil))]
         case "A-16": return [.route(.orderHistory())]
         case "A-17": return order.map { [.route(.orderDetail($0))] }

@@ -143,7 +143,7 @@ struct SearchResultsView: View {
                     .frame(width: 20, height: 20)
                     .accessibilityHidden(true)
 
-                TextField("검색어", text: $searchText)
+                TextField("검색어", text: $searchText, prompt: Text("검색어").foregroundColor(EUMColor.text3SwiftUI))
                     .font(EUMTypography.bodyMedium)
                     .tracking(-0.075)
                     .foregroundStyle(EUMColor.text1SwiftUI)
