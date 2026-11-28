@@ -189,8 +189,8 @@ struct EventDetailView: View {
 private struct EventInfoCard: View {
     let title: String
     let detail: String
-    var iconName: String? = nil
-    var iconAssetName: String? = nil
+    var iconName: String?
+    var iconAssetName: String?
     var showsChevron = false
 
     var body: some View {
