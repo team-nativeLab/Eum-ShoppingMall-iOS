@@ -12,7 +12,8 @@
 - Added a red 1.5 pt password-field border, visibility toggle, and inline mismatch message with the Figma `0/5회` count.
 - The regular login flow starts with empty fields. Submitting non-empty credentials displays the designed error state; no authentication backend is called.
 - Seeded the SwiftUI preview with the Figma sample email and password so the error state is reviewable.
-- Reused existing `LoginInfo`, close icon, and shared color/type/button tokens. The alert and eye glyphs use SF Symbols because no matching local alert/visibility assets were present.
+- Reused existing `LoginInfo`, close icon, and shared color/type/button tokens.
+- The 14 pt helper `circle-alert` (`LoginErrorAlert`) and the 20 pt password `trailing-icon` (`LoginPasswordHidden`, eye-off) use the Figma source SVGs (#276). The visible-password state keeps the SF Symbol `eye` because Figma does not define that state.
 
 ## Validation
 
