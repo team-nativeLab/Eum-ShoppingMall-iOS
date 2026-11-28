@@ -154,7 +154,7 @@ A-43/A-44 compose and A-45 receipt screens were visually checked against Figma a
 
 ## Category directory (#260)
 
-A-03 `178:722` is captured and the segment and icon tile styling are aligned. The six icon rows include four semantic SF Symbol substitutes because their local SVG assets contain clipped partial paths; the remaining icon-vector gap is documented in [A03_CATEGORY_PARITY.md](A03_CATEGORY_PARITY.md).
+A-03 `178:722` uses all eight original Figma category vectors. The icon rows, segment styling, tile dimensions and navigation were captured and verified in [A03_CATEGORY_PARITY.md](A03_CATEGORY_PARITY.md).
 
 ## Additional focused screen captures (#260)
 

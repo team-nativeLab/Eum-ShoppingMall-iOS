@@ -7,22 +7,22 @@ struct MarketingConsentInfoView: View {
         ConsentInfoItem(
             title: "수집·이용 목적",
             detail: "할인, 이벤트 및 신규 상품 안내",
-            iconName: "megaphone"
+            iconAssetName: "MarketingConsentPurpose"
         ),
         ConsentInfoItem(
             title: "수신 채널",
             detail: "앱 푸시, 문자, 이메일",
-            iconName: "bubble.left.and.bubble.right"
+            iconAssetName: "MarketingConsentChannel"
         ),
         ConsentInfoItem(
             title: "보유 기간",
             detail: "동의 철회 또는 회원 탈퇴 시까지",
-            iconName: "clock"
+            iconAssetName: "MarketingConsentRetention"
         ),
         ConsentInfoItem(
             title: "동의 거부",
             detail: "동의하지 않아도 기본 서비스 이용이 가능합니다.",
-            iconName: "checkmark.shield"
+            iconAssetName: "MarketingConsentRefusal"
         )
     ]
 
@@ -30,7 +30,7 @@ struct MarketingConsentInfoView: View {
         VStack(spacing: 0) {
             topBar
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: 40) {
                     Text("수신 동의 항목과 안내 내용을 확인한 후 선택해 주세요.")
                         .font(EUMTypography.bodySmall)
                         .foregroundStyle(EUMColor.text3SwiftUI)
@@ -66,7 +66,7 @@ struct MarketingConsentInfoView: View {
 private struct ConsentInfoItem: Identifiable {
     let title: String
     let detail: String
-    let iconName: String
+    let iconAssetName: String
 
     var id: String { title }
 }
@@ -76,9 +76,10 @@ private struct ConsentInfoCard: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: item.iconName)
-                .font(.system(size: 17, weight: .regular))
-                .foregroundStyle(Color(red: 10 / 255, green: 110 / 255, blue: 87 / 255))
+            Image(item.iconAssetName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
                 .frame(width: 36, height: 36)
                 .background(Color(red: 231 / 255, green: 245 / 255, blue: 241 / 255), in: RoundedRectangle(cornerRadius: 11))
 
@@ -94,7 +95,7 @@ private struct ConsentInfoCard: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, 13)
-        .frame(minHeight: 64)
+        .frame(height: 80)
         .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 14))
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
