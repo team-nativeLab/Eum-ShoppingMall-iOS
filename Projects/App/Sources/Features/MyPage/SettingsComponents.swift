@@ -185,6 +185,10 @@ struct SettingsDeviceNotificationNotice: View {
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(EUMColor.dangerBackgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .overlay(
+            RoundedRectangle(cornerRadius: EUMRadius.large)
+                .stroke(Color(red: 229 / 255, green: 229 / 255, blue: 229 / 255), lineWidth: 1)
+        )
     }
 }
 
