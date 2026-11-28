@@ -4,6 +4,7 @@ on:
     branches: [main, dev]
   pull_request:
     branches: [main, dev]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -106,11 +107,23 @@ jobs:
           echo "Selected iPhone simulator: $simulator_id"
       - name: Generate project
         run: tuist generate --no-open
-      - name: Run unit and UI tests
-        run: >-
-          xcodebuild test
-          -workspace EumShoppingMall.xcworkspace
-          -scheme EumShoppingMall
-          -destination 'platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}'
-          -parallel-testing-enabled NO
-          CODE_SIGNING_ALLOWED=NO
+      # Pull requests build every target (UI tests included) but run only unit tests to keep
+      # the required check fast. Pushes to main/dev and manual runs execute the full UI suite.
+      - name: Run tests
+        shell: bash
+        env:
+          SIMULATOR_ID: ${{ steps.simulator.outputs.id }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          test_scope=()
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            test_scope=(-only-testing:EumShoppingMallTests)
+            echo 'Pull request: running unit tests only. UI tests run after merge.'
+          fi
+          xcodebuild test \
+            -workspace EumShoppingMall.xcworkspace \
+            -scheme EumShoppingMall \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
+            -parallel-testing-enabled NO \
+            "${test_scope[@]}" \
+            CODE_SIGNING_ALLOWED=NO
