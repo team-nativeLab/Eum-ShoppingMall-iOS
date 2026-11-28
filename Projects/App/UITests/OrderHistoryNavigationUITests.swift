@@ -4,7 +4,7 @@ final class OrderHistoryNavigationUITests: XCTestCase {
     @MainActor
     func testEmptyOrderStateBrowsesProductsAndReturnsToHistory() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
 
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-마이"].tap()

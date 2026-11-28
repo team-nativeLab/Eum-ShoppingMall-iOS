@@ -12,7 +12,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testHomeProductListBackReturnsToHome() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
 
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["제품 둘러보기"].tap()
@@ -27,7 +27,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testCategoryProductListBackReturnsToCategory() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
 
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-카테고리"].tap()
@@ -45,7 +45,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testContextualSearchBackReturnsToCategory() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         app.buttons["home-tab-카테고리"].tap()
@@ -62,7 +62,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testProductListSearchBackPreservesProductList() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
@@ -78,7 +78,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testSearchTabBackReturnsToCategoryTab() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         app.buttons["home-tab-카테고리"].tap()
@@ -94,7 +94,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testProductDetailBackReturnsThroughListToCategory() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
@@ -138,7 +138,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testHiddenPriceProductShowsBothBuyActions() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
@@ -177,7 +177,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testProductReviewAndInquiryActionsOpenTheirScreensAndReturnToDetail() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
@@ -242,7 +242,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testShippingDetailsOpenAndReturnToTheSameProductDetail() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
@@ -270,7 +270,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testRelatedProductFavoriteButtonTogglesItsState() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
@@ -293,7 +293,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testChangingTabFromProductListClearsNestedRoute() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
@@ -308,7 +308,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testProductListFilterAppliesToResultsAndReturnsToList() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         openProductsFromCategoryTab(app)
@@ -327,7 +327,7 @@ final class ProductListNavigationUITests: XCTestCase {
     @MainActor
     func testAddressEditorCanSearchAddressAndChooseDeliveryRequest() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
 
         app.buttons["home-tab-마이"].tap()

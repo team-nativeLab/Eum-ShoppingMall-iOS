@@ -8,7 +8,7 @@ struct CategoryView: View {
 
     var onSearchTap: () -> Void
     var onAllProductsTap: () -> Void
-    var onCategoryTap: (String) -> Void
+    var onCategoryTap: (HomeCategory) -> Void
     var onProductTap: (HomeProduct) -> Void
     var onFavoriteTap: (String) -> Void
     var onSelectTab: (EUMTabBar.Tab) -> Void
@@ -16,8 +16,13 @@ struct CategoryView: View {
 
     @State private var contentMode: ContentMode = .products
     @State private var selectedBrandID: String?
+    @State private var serverCategories: [HomeCategory]?
+    @State private var categoryLoadFailed = false
 
-    private let categories: [HomeCategory] = [
+    private let repository = CatalogRepository()
+
+    /// Local Figma samples, used by UI tests and Figma capture runs (`CatalogRepository.usesLocalSamples`).
+    private let sampleCategories: [HomeCategory] = [
         HomeCategory(id: "ppe", title: "개인보호장비", iconName: "CategoryHardHat"),
         HomeCategory(id: "uniform", title: "작업복/유니폼", iconName: "CategoryClothing"),
         HomeCategory(id: "road", title: "교통·도로 안전", iconName: "CategoryRoad"),
@@ -48,6 +53,44 @@ struct CategoryView: View {
             )
         } else {
             categoryDirectory
+                .task {
+                    if serverCategories == nil { await loadCategories() }
+                }
+        }
+    }
+
+    private var displayedCategories: [HomeCategory] {
+        CatalogRepository.usesLocalSamples ? sampleCategories : (serverCategories ?? [])
+    }
+
+    @ViewBuilder
+    private var categoryLoadState: some View {
+        if categoryLoadFailed {
+            VStack(spacing: 12) {
+                Text("카테고리를 불러오지 못했어요.")
+                    .font(EUMTypography.bodySmall)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
+                EUMButton(title: "다시 시도", kind: .secondary, size: .small) {
+                    Task { await loadCategories() }
+                }
+                .fixedSize()
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 24)
+        } else {
+            ProgressView()
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 24)
+        }
+    }
+
+    private func loadCategories() async {
+        guard !CatalogRepository.usesLocalSamples else { return }
+        categoryLoadFailed = false
+        do {
+            serverCategories = try await repository.categories()
+        } catch {
+            categoryLoadFailed = true
         }
     }
 
@@ -116,13 +159,16 @@ struct CategoryView: View {
                 .padding(.horizontal, EUMSpacing.homeContentInset)
 
             VStack(spacing: 0) {
-                ForEach(categories) { category in
+                if !CatalogRepository.usesLocalSamples && serverCategories == nil {
+                    categoryLoadState
+                }
+                ForEach(displayedCategories) { category in
                     EUMCategoryItem(
                         title: category.title,
                         iconName: category.iconName,
                         layout: .row
                     ) {
-                        onCategoryTap(category.id)
+                        onCategoryTap(category)
                     }
                     .padding(.horizontal, EUMSpacing.homeContentInset)
                 }
