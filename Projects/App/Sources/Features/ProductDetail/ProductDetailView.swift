@@ -98,7 +98,7 @@ struct ProductDetailView: View {
 
             buyBar
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .alert("장바구니에 담았습니다.", isPresented: $viewModel.showCartConfirmation) {
             Button("확인", role: .cancel) {}
         }
@@ -159,7 +159,7 @@ struct ProductDetailView: View {
         }
         .padding(.horizontal, 8)
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
     }
 
     private var gallery: some View {

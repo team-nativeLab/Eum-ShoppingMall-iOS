@@ -50,7 +50,7 @@ struct BrandDetailView: View {
             }
             EUMTabBar(selectedTab: .category, cartCount: cartCount, onSelect: onSelectTab)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .alert("안내", isPresented: Binding(
             get: { presentedMessage != nil },
             set: { if !$0 { presentedMessage = nil } }
@@ -94,7 +94,7 @@ private extension BrandDetailView {
             .padding(.horizontal, 8)
         }
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
     }
 
     private func hero(proxy: ScrollViewProxy) -> some View {

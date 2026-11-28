@@ -39,7 +39,7 @@ struct CheckoutPaymentView: View {
                 .frame(height: 1)
             paymentContent
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             bottomAction
         }

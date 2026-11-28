@@ -47,7 +47,7 @@ struct ProductShippingPolicyView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     private func policyRow(title: String, value: String) -> some View {

@@ -74,7 +74,7 @@ struct ReturnRequestDetailView: View {
                     .background(EUMColor.backgroundSwiftUI)
             }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     private var withdrawnTopBar: some View {
@@ -268,7 +268,7 @@ struct ReturnWithdrawalConfirmationView: View {
             .padding(.bottom, 16)
             .background(EUMColor.backgroundSwiftUI)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     private func withdrawalRow(_ title: String, value: String) -> some View {

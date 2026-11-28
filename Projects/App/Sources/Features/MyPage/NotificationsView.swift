@@ -45,7 +45,7 @@ struct NotificationsView: View {
                 retentionNotice
             }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     private var emptyState: some View {

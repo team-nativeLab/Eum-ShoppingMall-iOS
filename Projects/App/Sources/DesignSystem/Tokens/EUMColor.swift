@@ -7,7 +7,7 @@ enum EUMColor {
     static let text3 = UIColor(red: 112 / 255, green: 112 / 255, blue: 112 / 255, alpha: 1)
     static let background = UIColor.white
     static let backgroundSubtle = UIColor(red: 250 / 255, green: 250 / 255, blue: 250 / 255, alpha: 1)
-    static let surface = UIColor(red: 245 / 255, green: 245 / 255, blue: 245 / 255, alpha: 1)
+    static let surface = UIColor.white
     static let surfaceSecondary = UIColor(red: 235 / 255, green: 235 / 255, blue: 235 / 255, alpha: 1)
     static let imagePlaceholderTop = UIColor(red: 242 / 255, green: 242 / 255, blue: 242 / 255, alpha: 1)
     static let imagePlaceholderBottom = UIColor(red: 232 / 255, green: 232 / 255, blue: 232 / 255, alpha: 1)

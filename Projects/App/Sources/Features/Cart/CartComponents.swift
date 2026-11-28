@@ -21,7 +21,7 @@ struct CartItemRow: View {
 
             ZStack {
                 LinearGradient(
-                    colors: [EUMColor.surfaceSwiftUI, Color(red: 232 / 255, green: 232 / 255, blue: 232 / 255)],
+                    colors: [EUMColor.imagePlaceholderTopSwiftUI, EUMColor.imagePlaceholderBottomSwiftUI],
                     startPoint: .top,
                     endPoint: .bottom
                 )
@@ -141,7 +141,7 @@ struct CartCheckbox: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: EUMRadius.small)
-                .fill(isDisabled ? EUMColor.surfaceSwiftUI : isSelected ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI)
+                .fill(isDisabled ? EUMColor.surfaceSecondarySwiftUI : isSelected ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI)
             if !isDisabled && isSelected {
                 Image(systemName: "checkmark")
                     .font(.system(size: 12, weight: .bold))

@@ -38,7 +38,7 @@ struct PrivacyConsentView: View {
             .scrollIndicators(.hidden)
             bottomAction
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .accessibilityAddTraits(.isModal)
     }
 
@@ -64,7 +64,7 @@ struct PrivacyConsentView: View {
             .padding(.horizontal, 8)
         }
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
     }
 
     private func detailCard(title: String, value: String) -> some View {

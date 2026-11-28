@@ -36,7 +36,7 @@ struct SettingsView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .task {
             guard !isGuestAccount else { return }
             await viewModel.refreshDeviceNotificationAuthorization()
@@ -218,7 +218,7 @@ struct SettingsView: View {
             .padding(.horizontal, 8)
         }
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
     }
 
     private func openDeviceSettings() {
