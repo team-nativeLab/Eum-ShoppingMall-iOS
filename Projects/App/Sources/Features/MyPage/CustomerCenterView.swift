@@ -47,7 +47,7 @@ struct CustomerCenterView: View {
                 }
             }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     private var topBar: some View {

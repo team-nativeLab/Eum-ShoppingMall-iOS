@@ -120,7 +120,7 @@ struct SearchResultsView: View {
             resultsBody
             EUMTabBar(selectedTab: .search, cartCount: cartCount, onSelect: onSelectTab)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     private var topBar: some View {
@@ -181,7 +181,7 @@ struct SearchResultsView: View {
         .padding(.leading, 8)
         .padding(.trailing, 12)
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
     }
 
     @ViewBuilder

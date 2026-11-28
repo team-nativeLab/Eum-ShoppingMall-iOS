@@ -59,7 +59,7 @@ struct QuoteInquiryView: View {
                 }
             }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .overlay {
             if isShowingPrivacyConsent {
                 PrivacyConsentView(

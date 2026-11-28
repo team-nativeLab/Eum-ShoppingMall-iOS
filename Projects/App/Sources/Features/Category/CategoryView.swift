@@ -83,7 +83,7 @@ struct CategoryView: View {
                 onSelect: onSelectTab
             )
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     private var productCategories: some View {
@@ -161,7 +161,7 @@ struct CategoryView: View {
         }
         .padding(.horizontal, 8)
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
     }
 
     private var contentModeSelector: some View {

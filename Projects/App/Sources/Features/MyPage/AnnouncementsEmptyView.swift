@@ -9,7 +9,7 @@ struct AnnouncementsEmptyView: View {
             emptyState
             Spacer(minLength: 0)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     private var topBar: some View {
