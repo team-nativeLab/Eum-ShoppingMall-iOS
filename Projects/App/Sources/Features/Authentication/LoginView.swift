@@ -147,7 +147,7 @@ struct LoginView: View {
 
     private var passwordPrompt: Text {
         Text("비밀번호를 입력해 주세요")
-            .tracking(-0.5)
+            .tracking(-0.075)
             .foregroundColor(EUMColor.text3SwiftUI)
     }
 
@@ -177,7 +177,7 @@ struct LoginView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("비밀번호")
                 .font(EUMTypography.labelMedium)
-                .tracking(-0.5)
+                .tracking(-0.07)
                 .foregroundStyle(EUMColor.text1SwiftUI)
 
             HStack(spacing: 8) {

@@ -12,13 +12,13 @@ struct EUMTextField: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(EUMTypography.labelMedium)
-                .tracking(-0.5)
+                .tracking(-0.07)
                 .foregroundStyle(EUMColor.text1SwiftUI)
 
             HStack(spacing: 8) {
                 field
                     .font(EUMTypography.bodyMedium)
-                    .tracking(-0.5)
+                    .tracking(-0.075)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                     .disabled(isDisabled)
 
