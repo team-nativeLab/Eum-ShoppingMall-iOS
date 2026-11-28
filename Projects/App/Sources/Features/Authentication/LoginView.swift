@@ -184,10 +184,19 @@ struct LoginView: View {
                 Button {
                     isPasswordVisible.toggle()
                 } label: {
-                    Image(systemName: isPasswordVisible ? "eye" : "eye.slash")
-                        .font(.system(size: 18, weight: .regular))
-                        .foregroundStyle(EUMColor.text3SwiftUI)
-                        .frame(width: 24, height: 24)
+                    Group {
+                        if isPasswordVisible {
+                            Image(systemName: "eye")
+                                .font(.system(size: 18, weight: .regular))
+                                .foregroundStyle(EUMColor.text3SwiftUI)
+                        } else {
+                            Image("LoginPasswordHidden")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                        }
+                    }
+                    .frame(width: 24, height: 24)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(isPasswordVisible ? "비밀번호 숨기기" : "비밀번호 표시")
@@ -205,8 +214,10 @@ struct LoginView: View {
 
             if viewModel.showsLoginError {
                 HStack(spacing: 4) {
-                    Image(systemName: "exclamationmark.circle")
-                        .font(.system(size: 14, weight: .medium))
+                    Image("LoginErrorAlert")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 14, height: 14)
                         .accessibilityHidden(true)
                     Text("이메일 또는 비밀번호가 일치하지 않습니다. (0/5회)")
                         .font(EUMTypography.captionMedium)
