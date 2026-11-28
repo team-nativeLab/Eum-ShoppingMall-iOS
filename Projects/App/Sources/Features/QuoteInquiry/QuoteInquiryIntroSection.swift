@@ -9,7 +9,7 @@ struct QuoteInquiryIntroSection: View {
                     .tracking(1.76)
                     .foregroundStyle(EUMColor.text3SwiftUI)
                 Text("현장을 위한\n맞춤 안전 솔루션")
-                    .font(.custom("NotoSansKR-Bold", size: 26, relativeTo: .title))
+                    .font(.custom(EUMFontName.bold, size: 26, relativeTo: .title))
                     .tracking(-0.65)
                     .lineSpacing(0)
                     .foregroundStyle(EUMColor.text1SwiftUI)

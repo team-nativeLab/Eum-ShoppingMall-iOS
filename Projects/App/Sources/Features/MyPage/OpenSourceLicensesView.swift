@@ -59,9 +59,10 @@ private struct LicenseCard: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: "shippingbox")
-                .font(.system(size: 17, weight: .regular))
-                .foregroundStyle(Color(red: 10 / 255, green: 110 / 255, blue: 87 / 255))
+            Image("OpenSourcePackage")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
                 .frame(width: 36, height: 36)
                 .background(Color(red: 231 / 255, green: 245 / 255, blue: 241 / 255), in: RoundedRectangle(cornerRadius: 11))
 
@@ -76,7 +77,7 @@ private struct LicenseCard: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, 13)
-        .frame(minHeight: 56)
+        .frame(height: 72)
         .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 14))
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }

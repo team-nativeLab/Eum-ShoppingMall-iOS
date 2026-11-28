@@ -196,7 +196,7 @@ private struct CouponTicketView: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text(coupon.discount)
-                    .font(Font.custom("NotoSansKR-Bold", size: 22, relativeTo: .title2))
+                    .font(Font.custom(EUMFontName.bold, size: 22, relativeTo: .title2))
                     .tracking(-0.44)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                 Spacer(minLength: 4)

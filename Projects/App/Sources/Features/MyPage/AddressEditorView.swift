@@ -47,7 +47,7 @@ struct AddressEditorView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             saveAction
         }
@@ -216,7 +216,7 @@ private struct AddressEditorField: View {
                 .foregroundStyle(isDisabled ? EUMColor.textDisabledSwiftUI : EUMColor.text1SwiftUI)
                 .padding(.horizontal, 14)
                 .frame(height: 48)
-                .background(isDisabled ? EUMColor.surfaceSwiftUI : EUMColor.backgroundSwiftUI)
+                .background(isDisabled ? EUMColor.surfaceSecondarySwiftUI : EUMColor.backgroundSwiftUI)
                 .clipShape(RoundedRectangle(cornerRadius: EUMRadius.button))
                 .overlay {
                     RoundedRectangle(cornerRadius: EUMRadius.button)

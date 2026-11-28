@@ -36,7 +36,7 @@ struct AnnouncementsView: View {
                     }
                     .scrollIndicators(.hidden)
                 }
-                .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+                .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
             }
         }
     }

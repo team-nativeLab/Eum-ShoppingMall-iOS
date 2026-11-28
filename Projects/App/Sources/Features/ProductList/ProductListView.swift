@@ -129,7 +129,7 @@ struct ProductListView: View {
             )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .fullScreenCover(isPresented: $isShowingFilter) {
             ProductFilterView(filter: viewModel.filter, brands: viewModel.availableBrands) {
                 viewModel.applyFilter($0)
@@ -174,7 +174,7 @@ struct ProductListView: View {
         }
         .padding(.horizontal, 8)
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
     }
 
     private var categorySelector: some View {

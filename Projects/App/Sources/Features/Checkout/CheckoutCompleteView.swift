@@ -64,7 +64,7 @@ struct CheckoutCompleteView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             bottomActions
         }
@@ -120,7 +120,7 @@ struct CheckoutCompleteView: View {
 
                 VStack(spacing: 8) {
                     Text("주문이 완료되었습니다")
-                        .font(.custom("NotoSansKR-Bold", size: 22))
+                        .font(.custom(EUMFontName.bold, size: 22))
                         .tracking(-0.44)
                         .foregroundStyle(EUMColor.text1SwiftUI)
                         .accessibilityAddTraits(.isHeader)
@@ -226,7 +226,7 @@ struct CheckoutCompleteView: View {
                 .foregroundStyle(EUMColor.text3SwiftUI)
                 .frame(width: 72, alignment: .leading)
             Text(value)
-                .font(emphasized ? .custom("NotoSansKR-Bold", size: 16) : EUMTypography.bodySmall)
+                .font(emphasized ? .custom(EUMFontName.bold, size: 16) : EUMTypography.bodySmall)
                 .tracking(-0.07)
                 .foregroundStyle(EUMColor.text1SwiftUI)
                 .lineLimit(1)
@@ -248,7 +248,7 @@ struct CheckoutCompleteView: View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             virtualSummaryLabel(title)
             Text(value)
-                .font(emphasized ? .custom("NotoSansKR-Bold", size: 16) : EUMTypography.bodySmall)
+                .font(emphasized ? .custom(EUMFontName.bold, size: 16) : EUMTypography.bodySmall)
                 .tracking(-0.07)
                 .foregroundStyle(EUMColor.text1SwiftUI)
                 .lineLimit(1)

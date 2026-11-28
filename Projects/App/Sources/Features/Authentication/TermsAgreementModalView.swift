@@ -34,7 +34,7 @@ struct TermsAgreementModalView: View {
             .scrollIndicators(.hidden)
             bottomAction
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .accessibilityAddTraits(.isModal)
     }
 
@@ -59,7 +59,7 @@ struct TermsAgreementModalView: View {
             .padding(.horizontal, 8)
         }
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
     }
 
     private func articleView(_ article: TermsArticle) -> some View {

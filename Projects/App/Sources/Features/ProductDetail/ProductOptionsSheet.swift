@@ -174,7 +174,7 @@ struct ProductOptionsSheet: View {
                 Spacer()
                 if !isPriceHidden {
                     Text("₩00,000")
-                        .font(Font.custom("NotoSansKR-Bold", size: 16, relativeTo: .body))
+                        .font(Font.custom(EUMFontName.bold, size: 16, relativeTo: .body))
                         .tracking(-0.08)
                         .foregroundStyle(EUMColor.text1SwiftUI)
                 }
@@ -244,12 +244,12 @@ struct ProductOptionsSheet: View {
 
                 if isPriceHidden {
                     Text("\(viewModel.totalCount)개")
-                        .font(Font.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
+                        .font(Font.custom(EUMFontName.bold, size: 24, relativeTo: .title))
                         .tracking(-0.36)
                         .foregroundStyle(EUMColor.text1SwiftUI)
                 } else {
                     Text("₩00,000")
-                        .font(Font.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
+                        .font(Font.custom(EUMFontName.bold, size: 24, relativeTo: .title))
                         .tracking(-0.36)
                         .foregroundStyle(EUMColor.text1SwiftUI)
                 }

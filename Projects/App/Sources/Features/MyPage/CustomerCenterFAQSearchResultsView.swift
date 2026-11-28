@@ -41,7 +41,7 @@ struct CustomerCenterFAQSearchResultsView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     private var topBar: some View {
@@ -179,7 +179,7 @@ struct CustomerCenterFAQSearchResultsView: View {
 
         if let match = question.range(of: query, options: .caseInsensitive),
            let attributedRange = Range(match, in: attributedQuestion) {
-            attributedQuestion[attributedRange].font = .custom("NotoSansKR-Bold", size: 16, relativeTo: .headline)
+            attributedQuestion[attributedRange].font = .custom(EUMFontName.bold, size: 16, relativeTo: .headline)
         }
 
         return Text(attributedQuestion).tracking(-0.16).lineSpacing(2)

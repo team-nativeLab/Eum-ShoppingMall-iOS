@@ -45,7 +45,7 @@ struct CheckoutAddressView: View {
             checkoutContent
             bottomAction
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .alert("안내", isPresented: Binding(
             get: { presentedMessage != nil },
             set: { if !$0 { presentedMessage = nil } }
@@ -238,7 +238,7 @@ struct CheckoutAddressView: View {
                 .foregroundStyle(EUMColor.text1SwiftUI)
             Spacer()
             Text("₩00,000")
-                .font(.custom("NotoSansKR-Bold", size: 16))
+                .font(.custom(EUMFontName.bold, size: 16))
                 .tracking(-0.08)
                 .foregroundStyle(EUMColor.text1SwiftUI)
         }
@@ -330,7 +330,7 @@ private struct CheckoutOrderItemRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             RoundedRectangle(cornerRadius: EUMRadius.medium)
-                .fill(EUMColor.surfaceSwiftUI)
+                .fill(EUMColor.surfaceSecondarySwiftUI)
                 .frame(width: 56, height: 56)
                 .accessibilityHidden(true)
 
