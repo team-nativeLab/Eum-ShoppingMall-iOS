@@ -107,7 +107,7 @@ struct CustomerCenterFAQSearchResultsView: View {
                 .foregroundStyle(EUMColor.text3SwiftUI)
                 .accessibilityHidden(true)
 
-            TextField("검색어", text: $searchQuery)
+            TextField("검색어", text: $searchQuery, prompt: Text("검색어").foregroundColor(EUMColor.text3SwiftUI))
                 .font(EUMTypography.bodyMedium)
                 .tracking(-0.075)
                 .foregroundStyle(EUMColor.text1SwiftUI)

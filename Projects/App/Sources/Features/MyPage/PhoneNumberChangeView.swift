@@ -125,7 +125,7 @@ struct PhoneNumberChangeView: View {
             }
             HStack(alignment: .top, spacing: 8) {
                 VStack(alignment: .leading, spacing: 8) {
-                    TextField("인증번호 6자리", text: verificationCodeBinding)
+                    TextField("인증번호 6자리", text: verificationCodeBinding, prompt: Text("인증번호 6자리").foregroundColor(EUMColor.text3SwiftUI))
                         .keyboardType(.numberPad)
                         .font(EUMTypography.bodyMedium)
                         .tracking(-0.075)

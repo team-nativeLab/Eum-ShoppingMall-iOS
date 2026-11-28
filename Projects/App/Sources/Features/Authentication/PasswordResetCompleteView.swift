@@ -65,7 +65,7 @@ struct PasswordResetCompleteView: View {
                 .scaledToFit()
                 .frame(width: 32, height: 32)
                 .frame(width: 64, height: 64)
-                .background(EUMColor.text1SwiftUI, in: Circle())
+                .background(EUMColor.accentPressedSwiftUI, in: Circle())
                 .accessibilityHidden(true)
             VStack(spacing: 8) {
                 Text(viewModel.title)

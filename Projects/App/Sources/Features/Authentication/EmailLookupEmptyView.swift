@@ -23,8 +23,8 @@ struct EmailLookupEmptyView: View {
                 .font(EUMTypography.labelLarge)
                 .tracking(-0.16)
                 .foregroundStyle(EUMColor.text1SwiftUI)
+            // Figma A-27r/A-27z place the close button on the leading edge.
             HStack {
-                Spacer()
                 Button(action: onClose) {
                     Image("ProductOptionClose")
                         .resizable()
@@ -34,6 +34,7 @@ struct EmailLookupEmptyView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("계정 찾기 닫기")
+                Spacer()
             }
             .padding(.horizontal, 8)
         }
