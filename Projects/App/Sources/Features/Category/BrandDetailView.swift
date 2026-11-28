@@ -50,7 +50,7 @@ struct BrandDetailView: View {
             }
             EUMTabBar(selectedTab: .category, cartCount: cartCount, onSelect: onSelectTab)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .alert("안내", isPresented: Binding(
             get: { presentedMessage != nil },
             set: { if !$0 { presentedMessage = nil } }
@@ -94,7 +94,7 @@ private extension BrandDetailView {
             .padding(.horizontal, 8)
         }
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
     }
 
     private func hero(proxy: ScrollViewProxy) -> some View {
@@ -112,7 +112,7 @@ private extension BrandDetailView {
                     .background(EUMColor.inverseSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
                 VStack(alignment: .leading, spacing: 4) {
                     Text(viewModel.brandName)
-                        .font(.custom("NotoSansKR-Bold", size: 26, relativeTo: .title))
+                        .font(.custom(EUMFontName.bold, size: 26, relativeTo: .title))
                         .foregroundStyle(EUMColor.inverseSwiftUI)
                     Text("BRAND \(viewModel.brandID.last.map(String.init) ?? "A") · 개인보호장비")
                         .font(EUMTypography.captionMedium)

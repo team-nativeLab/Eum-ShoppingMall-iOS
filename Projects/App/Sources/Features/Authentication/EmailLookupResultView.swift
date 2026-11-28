@@ -32,7 +32,7 @@ struct EmailLookupResultView: View {
             .padding(.top, 48)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             bottomActions
         }

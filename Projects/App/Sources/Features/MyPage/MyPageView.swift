@@ -88,7 +88,7 @@ struct MyPageView: View {
             .scrollIndicators(.hidden)
             EUMTabBar(selectedTab: .account, cartCount: cartCount, onSelect: onSelectTab)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .alert("안내", isPresented: Binding(
             get: { presentedMessage != nil },
             set: { if !$0 { presentedMessage = nil } }
@@ -246,7 +246,7 @@ struct MyPageView: View {
                                 .tracking(-0.27)
                                 .foregroundStyle(EUMColor.text3SwiftUI)
                             Text(status.title)
-                                .font(.custom("NotoSansKR-Regular", size: 12))
+                                .font(.custom(EUMFontName.regular, size: 12))
                                 .foregroundStyle(EUMColor.text2SwiftUI)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.8)
@@ -292,7 +292,7 @@ struct MyPageView: View {
                             .scaledToFit()
                             .frame(width: 20, height: 20)
                         Text(item.title)
-                            .font(.custom("NotoSansKR-Regular", size: 16))
+                            .font(.custom(EUMFontName.regular, size: 16))
                             .tracking(-0.16)
                             .foregroundStyle(EUMColor.text1SwiftUI)
                             .frame(maxWidth: .infinity, alignment: .leading)

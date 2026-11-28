@@ -74,7 +74,7 @@ struct ReturnRequestDetailView: View {
                     .background(EUMColor.backgroundSwiftUI)
             }
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     private var withdrawnTopBar: some View {
@@ -91,7 +91,7 @@ struct ReturnRequestDetailView: View {
             .accessibilityLabel("신청 내역으로 돌아가기")
             .accessibilityIdentifier("return-request-detail-back")
             Text("신청 상세")
-                .font(.custom("NotoSansKR-Bold", size: 18))
+                .font(.custom(EUMFontName.bold, size: 18))
                 .foregroundStyle(Color(red: 31 / 255, green: 33 / 255, blue: 38 / 255))
             Spacer()
         }
@@ -137,7 +137,7 @@ struct ReturnRequestDetailView: View {
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.custom("NotoSansKR-Bold", size: 14))
+                    .font(.custom(EUMFontName.bold, size: 14))
                     .foregroundStyle(Color(red: 31 / 255, green: 33 / 255, blue: 38 / 255))
                 Text(value)
                     .font(EUMTypography.bodySmall)
@@ -268,7 +268,7 @@ struct ReturnWithdrawalConfirmationView: View {
             .padding(.bottom, 16)
             .background(EUMColor.backgroundSwiftUI)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
     private func withdrawalRow(_ title: String, value: String) -> some View {

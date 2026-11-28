@@ -40,7 +40,7 @@ struct AccountEmptyState: View {
             if let actionTitle {
                 Button(action: onAction) {
                     Text(actionTitle)
-                        .font(.custom("NotoSansKR-Bold", size: 14))
+                        .font(.custom(EUMFontName.bold, size: 14))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 48)

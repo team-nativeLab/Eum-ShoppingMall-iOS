@@ -29,7 +29,7 @@ struct DeliveryTrackingView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .ignoresSafeArea(edges: .top)
     }
 

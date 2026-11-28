@@ -21,7 +21,7 @@ struct CartItemRow: View {
 
             ZStack {
                 LinearGradient(
-                    colors: [EUMColor.surfaceSwiftUI, Color(red: 232 / 255, green: 232 / 255, blue: 232 / 255)],
+                    colors: [EUMColor.imagePlaceholderTopSwiftUI, EUMColor.imagePlaceholderBottomSwiftUI],
                     startPoint: .top,
                     endPoint: .bottom
                 )
@@ -79,7 +79,7 @@ struct CartItemRow: View {
 
                 HStack {
                     Text(item.isQuoteProduct ? "가격 문의" : "₩00,000")
-                        .font(.custom("NotoSansKR-Bold", size: 16))
+                        .font(.custom(EUMFontName.bold, size: 16))
                         .tracking(-0.08)
                         .foregroundStyle(item.isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
                         .padding(.top, 8)
@@ -141,7 +141,7 @@ struct CartCheckbox: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: EUMRadius.small)
-                .fill(isDisabled ? EUMColor.surfaceSwiftUI : isSelected ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI)
+                .fill(isDisabled ? EUMColor.surfaceSecondarySwiftUI : isSelected ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI)
             if !isDisabled && isSelected {
                 Image(systemName: "checkmark")
                     .font(.system(size: 12, weight: .bold))

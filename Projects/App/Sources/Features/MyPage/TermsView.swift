@@ -34,7 +34,7 @@ struct TermsView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .overlay {
             if isShowingVersionPicker {
                 ZStack(alignment: .bottom) {
@@ -97,7 +97,7 @@ struct TermsView: View {
             .padding(.horizontal, 8)
         }
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
     }
 
     private var documentHeader: some View {
@@ -158,7 +158,7 @@ struct TermsView: View {
                     (
                         Text(noticePrefix)
                         + Text(noticeLinkLabel)
-                            .font(.custom("NotoSansKR-Medium", size: 14, relativeTo: .callout))
+                            .font(.custom(EUMFontName.medium, size: 14, relativeTo: .callout))
                             .underline()
                     )
                     .font(EUMTypography.bodySmall)

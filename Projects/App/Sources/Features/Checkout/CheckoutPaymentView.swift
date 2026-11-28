@@ -39,7 +39,7 @@ struct CheckoutPaymentView: View {
                 .frame(height: 1)
             paymentContent
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             bottomAction
         }
@@ -204,7 +204,7 @@ struct CheckoutPaymentView: View {
                         .foregroundStyle(EUMColor.text1SwiftUI)
                     Spacer()
                     Text("₩00,000")
-                        .font(.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
+                        .font(.custom(EUMFontName.bold, size: 24, relativeTo: .title))
                         .tracking(-0.6)
                         .foregroundStyle(EUMColor.text1SwiftUI)
                 }

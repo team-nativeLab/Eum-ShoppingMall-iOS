@@ -79,7 +79,7 @@ struct OrderDetailProductSection: View {
                     .font(EUMTypography.captionRegular)
                     .foregroundStyle(EUMColor.text3SwiftUI)
                 Text(product.priceAndQuantity)
-                    .font(.custom("NotoSansKR-Bold", size: 16, relativeTo: .body))
+                    .font(.custom(EUMFontName.bold, size: 16, relativeTo: .body))
                     .tracking(-0.08)
                     .foregroundStyle(EUMColor.text1SwiftUI)
             }
@@ -146,7 +146,7 @@ struct OrderDetailMenuRow: View {
                     .frame(width: 20, height: 20)
                     .accessibilityHidden(true)
                 Text(title)
-                    .font(.custom("NotoSansKR-Regular", size: 16, relativeTo: .body))
+                    .font(.custom(EUMFontName.regular, size: 16, relativeTo: .body))
                     .tracking(-0.16)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                     .frame(maxWidth: .infinity, alignment: .leading)

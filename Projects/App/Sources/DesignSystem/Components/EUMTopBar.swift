@@ -44,6 +44,6 @@ struct EUMTopBar: View {
         }
         .padding(.horizontal, 8)
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
     }
 }

@@ -46,7 +46,7 @@ struct ProfileEditView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             saveAction
         }
@@ -108,7 +108,7 @@ struct ProfileEditView: View {
                     .scaledToFit()
                     .frame(width: 20, height: 20)
                 Text("비밀번호 변경")
-                    .font(Font.custom("NotoSansKR-Regular", size: 16, relativeTo: .body))
+                    .font(Font.custom(EUMFontName.regular, size: 16, relativeTo: .body))
                     .tracking(-0.16)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                 Spacer()
@@ -254,7 +254,7 @@ private struct ProfileEditField: View {
                 .foregroundStyle(isDisabled ? EUMColor.textDisabledSwiftUI : EUMColor.text1SwiftUI)
                 .padding(.horizontal, 14)
                 .frame(height: 48)
-                .background(isDisabled ? EUMColor.surfaceSwiftUI : EUMColor.backgroundSwiftUI)
+                .background(isDisabled ? EUMColor.surfaceSecondarySwiftUI : EUMColor.backgroundSwiftUI)
                 .clipShape(RoundedRectangle(cornerRadius: EUMRadius.button))
                 .overlay {
                     RoundedRectangle(cornerRadius: EUMRadius.button)

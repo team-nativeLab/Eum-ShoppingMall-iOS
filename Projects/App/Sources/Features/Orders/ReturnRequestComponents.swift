@@ -333,7 +333,7 @@ struct ReturnRefundAmountCard: View {
                     .tracking(-0.08)
                 Spacer()
                 Text(isCancellation ? "신청 후 안내" : "₩00,000")
-                    .font(.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
+                    .font(.custom(EUMFontName.bold, size: 24, relativeTo: .title))
                     .tracking(-0.36)
             }
             .foregroundStyle(EUMColor.text1SwiftUI)

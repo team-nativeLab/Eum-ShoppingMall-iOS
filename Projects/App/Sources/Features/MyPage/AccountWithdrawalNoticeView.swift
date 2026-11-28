@@ -22,7 +22,7 @@ struct AccountWithdrawalNoticeView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
             bottomAction
         }
@@ -97,7 +97,7 @@ struct AccountWithdrawalNoticeView: View {
                 .font(EUMTypography.captionRegular)
                 .foregroundStyle(EUMColor.text2SwiftUI)
             Text(value)
-                .font(.custom("NotoSansKR-Bold", size: 24))
+                .font(.custom(EUMFontName.bold, size: 24))
                 .tracking(-0.36)
                 .foregroundStyle(EUMColor.text1SwiftUI)
         }

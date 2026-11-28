@@ -59,7 +59,7 @@ struct GuestMyPageView: View {
             .scrollIndicators(.hidden)
             EUMTabBar(selectedTab: .account, cartCount: cartCount, onSelect: onSelectTab)
         }
-        .background(EUMColor.backgroundSwiftUI.ignoresSafeArea())
+        .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .alert("안내", isPresented: Binding(
             get: { presentedMessage != nil },
             set: { if !$0 { presentedMessage = nil } }
@@ -166,7 +166,7 @@ struct GuestMyPageView: View {
                             .scaledToFit()
                             .frame(width: 20, height: 20)
                         Text(item.title)
-                            .font(.custom("NotoSansKR-Regular", size: 16))
+                            .font(.custom(EUMFontName.regular, size: 16))
                             .tracking(-0.16)
                             .foregroundStyle(EUMColor.text1SwiftUI)
                             .frame(maxWidth: .infinity, alignment: .leading)

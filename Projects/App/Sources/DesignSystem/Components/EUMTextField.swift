@@ -12,13 +12,13 @@ struct EUMTextField: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(EUMTypography.labelMedium)
-                .tracking(-0.5)
+                .tracking(-0.07)
                 .foregroundStyle(EUMColor.text1SwiftUI)
 
             HStack(spacing: 8) {
                 field
                     .font(EUMTypography.bodyMedium)
-                    .tracking(-0.5)
+                    .tracking(-0.075)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                     .disabled(isDisabled)
 
@@ -28,7 +28,8 @@ struct EUMTextField: View {
                         .accessibilityHidden(true)
                 }
             }
-            .padding(.horizontal, 14)
+            // HF/TextField uses border-box sizing: 1 pt border + 14 pt padding.
+            .padding(.horizontal, 15)
             .frame(height: 48)
             .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
             .overlay {
@@ -41,11 +42,13 @@ struct EUMTextField: View {
 
     @ViewBuilder
     private var field: some View {
+        // HF/TextField placeholders use text-3 rather than the system placeholder color.
+        let prompt = Text(placeholder).foregroundColor(EUMColor.text3SwiftUI)
         if isSecure {
-            SecureField(placeholder, text: $text)
+            SecureField(placeholder, text: $text, prompt: prompt)
                 .accessibilityLabel(title)
         } else {
-            TextField(placeholder, text: $text)
+            TextField(placeholder, text: $text, prompt: prompt)
                 .accessibilityLabel(title)
         }
     }

@@ -94,7 +94,7 @@ struct DeliveryRequestView: View {
             .padding(.horizontal, 8)
         }
         .frame(height: 56)
-        .background(EUMColor.backgroundSwiftUI)
+        .background(EUMColor.backgroundSubtleSwiftUI)
         .overlay(alignment: .bottom) { EUMColor.lineSwiftUI.frame(height: 1) }
     }
 
