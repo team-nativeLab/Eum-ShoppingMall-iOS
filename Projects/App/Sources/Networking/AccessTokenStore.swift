@@ -1,12 +1,26 @@
 import Foundation
 import Security
 
-struct AccessTokenStore {
-    private let service: String
-    private let account = "member-access-token"
+/// Abstraction over token persistence so tests and unsigned simulator builds can avoid the Keychain.
+protocol TokenStoring: Sendable {
+    func save(_ token: String) throws
+    func load() throws -> String?
+    func remove() throws
+}
 
-    init(service: String = Bundle.main.bundleIdentifier ?? "EumShoppingMall") {
+struct AccessTokenStore: TokenStoring {
+    static let accessTokenAccount = "member-access-token"
+    static let refreshTokenAccount = "member-refresh-token"
+
+    private let service: String
+    private let account: String
+
+    init(
+        service: String = Bundle.main.bundleIdentifier ?? "EumShoppingMall",
+        account: String = AccessTokenStore.accessTokenAccount
+    ) {
         self.service = service
+        self.account = account
     }
 
     func save(_ token: String) throws {
@@ -61,4 +75,62 @@ struct AccessTokenStore {
 
 enum AccessTokenStoreError: Error {
     case keychainStatus(OSStatus)
+}
+
+/// Process-lifetime token storage used by tests and as a fallback when the Keychain is unavailable.
+final class InMemoryTokenStore: TokenStoring, @unchecked Sendable {
+    private let lock = NSLock()
+    private var token: String?
+
+    init(token: String? = nil) {
+        self.token = token
+    }
+
+    func save(_ token: String) throws {
+        lock.withLock { self.token = token }
+    }
+
+    func load() throws -> String? {
+        lock.withLock { token }
+    }
+
+    func remove() throws {
+        lock.withLock { token = nil }
+    }
+}
+
+/// Uses the Keychain, falling back to memory when the build has no Keychain entitlement
+/// (`errSecMissingEntitlement`, e.g. unsigned simulator builds with CODE_SIGNING_ALLOWED=NO).
+struct KeychainFallbackTokenStore: TokenStoring {
+    private let keychain: AccessTokenStore
+    private let memory = InMemoryTokenStore()
+
+    init(account: String) {
+        keychain = AccessTokenStore(account: account)
+    }
+
+    func save(_ token: String) throws {
+        do {
+            try keychain.save(token)
+        } catch AccessTokenStoreError.keychainStatus(errSecMissingEntitlement) {
+            try memory.save(token)
+        }
+    }
+
+    func load() throws -> String? {
+        do {
+            return try keychain.load()
+        } catch AccessTokenStoreError.keychainStatus(errSecMissingEntitlement) {
+            return try memory.load()
+        }
+    }
+
+    func remove() throws {
+        do {
+            try keychain.remove()
+        } catch AccessTokenStoreError.keychainStatus(errSecMissingEntitlement) {
+            try memory.remove()
+        }
+        try memory.remove()
+    }
 }

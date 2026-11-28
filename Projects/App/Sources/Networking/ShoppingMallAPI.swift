@@ -4,6 +4,7 @@ struct ShoppingMallAPI {
     let storefront: StorefrontAPI
     let catalog: CatalogAPI
     let authentication: AuthenticationAPI
+    let appAuthentication: AppAuthenticationAPI
     let member: MemberAPI
     let cart: CartAPI
     let orders: OrdersAPI
@@ -15,6 +16,7 @@ struct ShoppingMallAPI {
         storefront = StorefrontAPI(client: client)
         catalog = CatalogAPI(client: client)
         authentication = AuthenticationAPI(client: client)
+        appAuthentication = AppAuthenticationAPI(client: client)
         member = MemberAPI(client: client)
         cart = CartAPI(client: client)
         orders = OrdersAPI(client: client)
