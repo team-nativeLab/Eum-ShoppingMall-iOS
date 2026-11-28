@@ -77,7 +77,7 @@ private struct LicenseCard: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, 13)
-        .frame(minHeight: 56)
+        .frame(height: 72)
         .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 14))
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
