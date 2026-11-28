@@ -29,6 +29,7 @@ enum EUMColor {
     static let success = UIColor(red: 30 / 255, green: 122 / 255, blue: 60 / 255, alpha: 1)
     static let successTint = UIColor(red: 232 / 255, green: 243 / 255, blue: 236 / 255, alpha: 1)
     static let heartActive = UIColor(red: 229 / 255, green: 72 / 255, blue: 77 / 255, alpha: 1)
+    static let accentPressed = UIColor(red: 11 / 255, green: 94 / 255, blue: 75 / 255, alpha: 1)
 
     static let text1SwiftUI = Color(uiColor: text1)
     static let text2SwiftUI = Color(uiColor: text2)
@@ -57,4 +58,5 @@ enum EUMColor {
     static let successSwiftUI = Color(uiColor: success)
     static let successTintSwiftUI = Color(uiColor: successTint)
     static let heartActiveSwiftUI = Color(uiColor: heartActive)
+    static let accentPressedSwiftUI = Color(uiColor: accentPressed)
 }

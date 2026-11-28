@@ -54,7 +54,11 @@ struct BrandDirectoryView: View {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(EUMColor.text3SwiftUI)
                     .accessibilityHidden(true)
-                TextField("어떤 브랜드를 찾고 계신가요?", text: $viewModel.searchText)
+                TextField(
+                    "어떤 브랜드를 찾고 계신가요?",
+                    text: $viewModel.searchText,
+                    prompt: Text("어떤 브랜드를 찾고 계신가요?").foregroundColor(EUMColor.text3SwiftUI)
+                )
                     .font(EUMTypography.bodySmall)
                     .textInputAutocapitalization(.never)
                     .accessibilityLabel("브랜드 검색")

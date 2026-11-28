@@ -12,10 +12,28 @@ struct AuthenticationFlowView: View {
         case passwordResetComplete
     }
 
-    @State private var screen = Screen.login
+    @State private var screen = Self.initialScreen
     @State private var passwordLookupOrigin = Screen.login
     @State private var presentedMessage: String?
     let onClose: () -> Void
+
+    /// Debug builds can open a specific auth screen with `-debug-screen <Figma code>`.
+    private static var initialScreen: Screen {
+        #if DEBUG
+        switch DebugScreenLaunch.requestedCode() {
+        case "A-14": return .signUp
+        case "A-27": return .emailLookup
+        case "A-27r": return .emailLookupResult("exam***@email.com")
+        case "A-27z": return .emailLookupEmpty
+        case "A-28": return .passwordLookup
+        case "A-28n": return .passwordReset
+        case "A-28d": return .passwordResetComplete
+        default: return .login
+        }
+        #else
+        return .login
+        #endif
+    }
 
     var body: some View {
         Group {

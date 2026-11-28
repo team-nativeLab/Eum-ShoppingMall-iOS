@@ -68,8 +68,7 @@ struct EmailLookupView: View {
             tabButton(title: "이메일 찾기", isSelected: true) {}
             tabButton(title: "비밀번호 찾기", isSelected: false, action: onPasswordLookup)
         }
-        .padding(4)
-        .eumCardBackground(cornerRadius: 8)
+        .eumSegmentTrack()
     }
 
     private func tabButton(title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
@@ -77,19 +76,13 @@ struct EmailLookupView: View {
             Text(title)
                 .font(EUMTypography.labelMedium)
                 .tracking(-0.07)
-                .foregroundStyle(isSelected ? EUMColor.text1SwiftUI : EUMColor.text2SwiftUI)
+                .foregroundStyle(isSelected ? EUMColor.inverseSwiftUI : EUMColor.text2SwiftUI)
                 .frame(maxWidth: .infinity)
                 .frame(height: 36)
-                .background {
-                    if isSelected {
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(EUMColor.backgroundSwiftUI)
-                            .shadow(color: EUMColor.text1SwiftUI.opacity(0.06), radius: 3, x: 0, y: 1)
-                    }
-                }
+                .eumSegmentTabBackground(isSelected: isSelected)
         }
         .buttonStyle(.plain)
-        .disabled(isSelected)
+        .allowsHitTesting(!isSelected)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
@@ -150,7 +143,7 @@ struct EmailLookupView: View {
                 .disabled(!viewModel.canResendCode)
             }
             HStack(alignment: .top, spacing: 8) {
-                TextField("인증번호 6자리", text: verificationCodeBinding)
+                TextField("인증번호 6자리", text: verificationCodeBinding, prompt: Text("인증번호 6자리").foregroundColor(EUMColor.text3SwiftUI))
                     .keyboardType(.numberPad)
                     .font(EUMTypography.bodyMedium)
                     .tracking(-0.075)

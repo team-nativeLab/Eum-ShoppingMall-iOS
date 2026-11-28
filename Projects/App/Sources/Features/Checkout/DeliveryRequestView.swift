@@ -137,7 +137,7 @@ struct DeliveryRequestView: View {
             Text("직접 입력")
                 .font(EUMTypography.labelMedium)
                 .foregroundStyle(EUMColor.text1SwiftUI)
-            TextField("요청사항을 입력해 주세요", text: $viewModel.customText)
+            TextField("요청사항을 입력해 주세요", text: $viewModel.customText, prompt: Text("요청사항을 입력해 주세요").foregroundColor(EUMColor.text3SwiftUI))
                 .font(EUMTypography.bodyMedium)
                 .foregroundStyle(EUMColor.text1SwiftUI)
                 .padding(.horizontal, 13)

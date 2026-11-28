@@ -204,23 +204,16 @@ struct CheckoutCashReceiptPanel: View {
                         Text(purpose.rawValue)
                             .font(EUMTypography.labelMedium)
                             .tracking(-0.07)
-                            .foregroundStyle(viewModel.cashReceiptPurpose == purpose ? EUMColor.text1SwiftUI : EUMColor.text2SwiftUI)
+                            .foregroundStyle(viewModel.cashReceiptPurpose == purpose ? EUMColor.inverseSwiftUI : EUMColor.text2SwiftUI)
                             .frame(maxWidth: .infinity)
                             .frame(height: 36)
-                            .background {
-                                if viewModel.cashReceiptPurpose == purpose {
-                                    RoundedRectangle(cornerRadius: EUMRadius.small)
-                                        .fill(EUMColor.backgroundSwiftUI)
-                                        .shadow(color: EUMColor.text1SwiftUI.opacity(0.06), radius: 3, x: 0, y: 1)
-                                }
-                            }
+                            .eumSegmentTabBackground(isSelected: viewModel.cashReceiptPurpose == purpose)
                     }
                     .buttonStyle(.plain)
                     .accessibilityAddTraits(viewModel.cashReceiptPurpose == purpose ? .isSelected : [])
                 }
             }
-            .padding(4)
-            .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
+            .eumSegmentTrack()
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(isIncomeDeduction ? "휴대폰 번호 *" : "사업자등록번호 *")

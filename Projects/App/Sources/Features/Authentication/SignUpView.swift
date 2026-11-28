@@ -97,8 +97,7 @@ struct SignUpView: View {
             memberTypeButton("개인 회원", isSelected: !viewModel.isBusinessMember)
             memberTypeButton("사업자 회원", isSelected: viewModel.isBusinessMember)
         }
-        .padding(4)
-        .eumCardBackground()
+        .eumSegmentTrack()
     }
 
     private func memberTypeButton(_ title: String, isSelected: Bool) -> some View {
@@ -108,16 +107,10 @@ struct SignUpView: View {
             Text(title)
                 .font(EUMTypography.labelMedium)
                 .tracking(-0.07)
-                .foregroundStyle(isSelected ? EUMColor.text1SwiftUI : EUMColor.text2SwiftUI)
+                .foregroundStyle(isSelected ? EUMColor.inverseSwiftUI : EUMColor.text2SwiftUI)
                 .frame(maxWidth: .infinity)
                 .frame(height: 36)
-                .background {
-                    if isSelected {
-                        RoundedRectangle(cornerRadius: EUMRadius.medium)
-                            .fill(EUMColor.backgroundSwiftUI)
-                            .shadow(color: EUMColor.text1SwiftUI.opacity(0.06), radius: 3, y: 1)
-                    }
-                }
+                .eumSegmentTabBackground(isSelected: isSelected)
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
@@ -179,7 +172,7 @@ struct SignUpView: View {
                 .frame(width: 73)
             }
             HStack(spacing: 8) {
-                TextField("인증번호 6자리", text: $viewModel.verificationCode)
+                TextField("인증번호 6자리", text: $viewModel.verificationCode, prompt: Text("인증번호 6자리").foregroundColor(EUMColor.text3SwiftUI))
                     .font(EUMTypography.bodyMedium)
                     .keyboardType(.numberPad)
                     .padding(.horizontal, 14)

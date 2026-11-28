@@ -123,7 +123,7 @@ struct AddressSearchView: View {
             Text("주소 검색")
                 .font(EUMTypography.labelMedium)
                 .foregroundStyle(EUMColor.text1SwiftUI)
-            TextField("예: 테헤란로 427", text: $viewModel.query)
+            TextField("예: 테헤란로 427", text: $viewModel.query, prompt: Text("예: 테헤란로 427").foregroundColor(EUMColor.text3SwiftUI))
                 .font(EUMTypography.bodyMedium)
                 .foregroundStyle(EUMColor.text1SwiftUI)
                 .padding(.horizontal, 13)
