@@ -5,7 +5,7 @@ struct EventItem: Identifiable, Equatable {
     let status: String
     let title: String
     let period: String
-    let iconName: String
+    let iconAssetName: String
     let isFeatured: Bool
 
     static let samples = [
@@ -14,7 +14,7 @@ struct EventItem: Identifiable, Equatable {
             status: "진행 중",
             title: "현장 안전용품 특별 기획전",
             period: "10.01–10.31",
-            iconName: "gift",
+            iconAssetName: "EventCalendarDays",
             isFeatured: true
         ),
         EventItem(
@@ -22,7 +22,7 @@ struct EventItem: Identifiable, Equatable {
             status: "진행 중",
             title: "가을맞이 안전장비 할인",
             period: "10.10–10.31",
-            iconName: "calendar",
+            iconAssetName: "EventCalendar",
             isFeatured: false
         ),
         EventItem(
@@ -30,7 +30,7 @@ struct EventItem: Identifiable, Equatable {
             status: "종료",
             title: "신규 회원 웰컴 혜택",
             period: "09.01–09.30",
-            iconName: "clock",
+            iconAssetName: "EventClock",
             isFeatured: false
         )
     ]
@@ -92,7 +92,7 @@ struct EventsView: View {
         let card = EventInfoCard(
             title: event.status,
             detail: "\(event.title) · \(event.period)",
-            iconName: event.iconName,
+            iconAssetName: event.iconAssetName,
             showsChevron: event.isFeatured
         )
 
