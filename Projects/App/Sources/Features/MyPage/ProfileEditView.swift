@@ -252,9 +252,9 @@ private struct ProfileEditField: View {
                 .font(EUMTypography.bodyMedium)
                 .tracking(-0.075)
                 .foregroundStyle(isDisabled ? EUMColor.textDisabledSwiftUI : EUMColor.text1SwiftUI)
-                .padding(.horizontal, 14)
+                .padding(.horizontal, 15)
                 .frame(height: 48)
-                .background(isDisabled ? EUMColor.surfaceSecondarySwiftUI : EUMColor.backgroundSwiftUI)
+                .background(EUMColor.backgroundSwiftUI)
                 .clipShape(RoundedRectangle(cornerRadius: EUMRadius.button))
                 .overlay {
                     RoundedRectangle(cornerRadius: EUMRadius.button)

@@ -300,6 +300,6 @@ struct AccountWithdrawalReasonView: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 8))
+        .eumCardBackground(cornerRadius: 8)
     }
 }

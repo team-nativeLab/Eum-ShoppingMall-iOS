@@ -88,7 +88,7 @@ struct DeliveryTrackingView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
     }
 
     private var orderProductSummary: some View {

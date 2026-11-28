@@ -27,7 +27,7 @@ struct QuoteInquiryIntroSection: View {
             }
             .padding(.horizontal, 14)
             .frame(maxWidth: .infinity, minHeight: 40, alignment: .leading)
-            .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+            .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
             .overlay(RoundedRectangle(cornerRadius: EUMRadius.large).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
         }
     }
@@ -99,7 +99,7 @@ struct QuoteInquiryProductsSection: View {
             }
         }
         .padding(16)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
         .overlay(RoundedRectangle(cornerRadius: EUMRadius.large).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
 }

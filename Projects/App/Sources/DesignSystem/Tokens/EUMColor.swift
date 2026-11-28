@@ -24,6 +24,10 @@ enum EUMColor {
     static let textDisabled = UIColor(red: 112 / 255, green: 112 / 255, blue: 112 / 255, alpha: 1)
     static let danger = UIColor(red: 197 / 255, green: 34 / 255, blue: 31 / 255, alpha: 1)
     static let dangerBackground = UIColor(red: 255 / 255, green: 233 / 255, blue: 233 / 255, alpha: 1)
+    static let warning = UIColor(red: 138 / 255, green: 90 / 255, blue: 0 / 255, alpha: 1)
+    static let warningTint = UIColor(red: 255 / 255, green: 244 / 255, blue: 224 / 255, alpha: 1)
+    static let success = UIColor(red: 30 / 255, green: 122 / 255, blue: 60 / 255, alpha: 1)
+    static let successTint = UIColor(red: 232 / 255, green: 243 / 255, blue: 236 / 255, alpha: 1)
 
     static let text1SwiftUI = Color(uiColor: text1)
     static let text2SwiftUI = Color(uiColor: text2)
@@ -47,4 +51,8 @@ enum EUMColor {
     static let textDisabledSwiftUI = Color(uiColor: textDisabled)
     static let dangerSwiftUI = Color(uiColor: danger)
     static let dangerBackgroundSwiftUI = Color(uiColor: dangerBackground)
+    static let warningSwiftUI = Color(uiColor: warning)
+    static let warningTintSwiftUI = Color(uiColor: warningTint)
+    static let successSwiftUI = Color(uiColor: success)
+    static let successTintSwiftUI = Color(uiColor: successTint)
 }

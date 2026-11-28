@@ -216,12 +216,10 @@ struct TermsView: View {
                 .font(EUMTypography.labelMedium)
                 .tracking(-0.07)
                 .foregroundStyle(EUMColor.text1SwiftUI)
-
-            Spacer(minLength: 0)
-
             Text("\(TermsDocument.articleCount)개 조항")
                 .font(EUMTypography.captionRegular)
                 .foregroundStyle(EUMColor.text3SwiftUI)
+            Spacer(minLength: 0)
 
             Image("TermsContentsChevron")
                 .accessibilityHidden(true)

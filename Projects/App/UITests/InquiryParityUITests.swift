@@ -30,7 +30,10 @@ final class InquiryParityUITests: XCTestCase {
         let content = app.textViews["inquiry-content"]
         content.tap()
         content.typeText("배송 일정을 확인하고 싶습니다.")
-        app.buttons["문의 등록"].tap()
+        app.swipeDown()
+        let submit = app.buttons["문의 등록"]
+        for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
+        submit.tap()
         XCTAssertTrue(app.staticTexts["문의가 등록됐어요"].waitForExistence(timeout: 5))
     }
 
@@ -58,8 +61,12 @@ final class InquiryParityUITests: XCTestCase {
         let content = app.textViews["inquiry-content"]
         content.tap()
         content.typeText("블랙 색상 재고를 문의합니다.")
+        // Smaller CI simulators can cover the submit button with the keyboard; scroll it away first.
+        app.swipeDown()
         app.buttons["비밀글로 문의하기"].tap()
-        app.buttons["문의 등록"].tap()
+        let submit = app.buttons["문의 등록"]
+        for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
+        submit.tap()
 
         XCTAssertTrue(app.staticTexts["문의가 등록됐어요"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["답변 대기"].exists)

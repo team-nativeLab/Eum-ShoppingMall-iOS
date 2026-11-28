@@ -319,7 +319,7 @@ struct CartView: View {
             .foregroundStyle(EUMColor.text1SwiftUI)
         }
         .padding(20)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
         .overlay(RoundedRectangle(cornerRadius: EUMRadius.large).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
         .padding(.horizontal, EUMSpacing.homeContentInset)
     }

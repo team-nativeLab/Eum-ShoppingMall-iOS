@@ -176,11 +176,11 @@ private struct QuoteInquiryCard: View {
         let status = inquiry.status
         return Text(status.rawValue)
             .font(.custom(EUMFontName.medium, size: 11))
-            .foregroundStyle(statusForeground(status))
+            .foregroundStyle(status.badgeForeground)
             .padding(.horizontal, 6)
             .frame(height: 20)
-            .background(statusBackground(status), in: RoundedRectangle(cornerRadius: 4))
-            .overlay(RoundedRectangle(cornerRadius: 4).stroke(status == .received ? EUMColor.lineStrongSwiftUI : .clear, lineWidth: 1))
+            .background(status.badgeBackground, in: RoundedRectangle(cornerRadius: 4))
+            .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(status.badgeBorder, lineWidth: 1))
     }
 
     private var documentNotice: some View {
@@ -209,22 +209,7 @@ private struct QuoteInquiryCard: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 8))
+        .eumCardBackground(cornerRadius: 8)
     }
 
-    private func statusForeground(_ status: QuoteInquiryStatus) -> Color {
-        switch status {
-        case .completed: EUMColor.inverseSwiftUI
-        case .canceled: EUMColor.text3SwiftUI
-        default: EUMColor.text2SwiftUI
-        }
-    }
-
-    private func statusBackground(_ status: QuoteInquiryStatus) -> Color {
-        switch status {
-        case .quoteSent, .consulting: EUMColor.surfaceSecondarySwiftUI
-        case .completed: EUMColor.text1SwiftUI
-        default: EUMColor.backgroundSwiftUI
-        }
-    }
 }

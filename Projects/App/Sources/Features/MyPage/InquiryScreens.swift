@@ -104,7 +104,7 @@ struct InquiryComposeView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            InquiryScreenTopBar(
+            EUMLeadingTitleTopBar(
                 title: viewModel.context.title,
                 backAccessibilityLabel: "뒤로 가기",
                 backAccessibilityIdentifier: "inquiry-compose-back",
@@ -143,6 +143,7 @@ struct InquiryComposeView: View {
                 .padding(.bottom, 28)
             }
             .scrollIndicators(.hidden)
+            .scrollDismissesKeyboard(.interactively)
         }
         .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -276,7 +277,7 @@ struct InquiryCompletionView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            InquiryScreenTopBar(
+            EUMLeadingTitleTopBar(
                 title: "문의가 등록됐어요",
                 backAccessibilityLabel: "뒤로 가기",
                 backAccessibilityIdentifier: "inquiry-complete-back",
@@ -313,53 +314,20 @@ struct InquiryCompletionView: View {
         }
     }
 
+    /// Figma A-45: the label sits above a 50 pt bordered value box.
     private func informationCard(title: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(EUMTypography.labelMedium)
                 .foregroundStyle(EUMColor.text1SwiftUI)
             Text(value)
                 .font(EUMTypography.bodySmall)
-                .foregroundStyle(EUMColor.text2SwiftUI)
-        }
-        .padding(13)
-        .frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
-        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
-        .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
-    }
-}
-
-private struct InquiryScreenTopBar: View {
-    let title: String
-    let backAccessibilityLabel: String
-    let backAccessibilityIdentifier: String
-    let onBack: () -> Void
-
-    var body: some View {
-        HStack(spacing: 12) {
-            Button(action: onBack) {
-                Image("ProductDetailBack")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 24, height: 24)
-                    .frame(width: 32, height: 44)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(backAccessibilityLabel)
-            .accessibilityIdentifier(backAccessibilityIdentifier)
-
-            Text(title)
-                .font(EUMTypography.labelLarge)
                 .foregroundStyle(EUMColor.text1SwiftUI)
-            Spacer(minLength: 0)
+                .padding(.horizontal, 14)
+                .frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
+                .eumCardBackground(cornerRadius: EUMRadius.button)
         }
-        .padding(.horizontal, 20)
-        .frame(height: 56)
-        .background(EUMColor.backgroundSubtleSwiftUI)
-        .overlay(alignment: .bottom) {
-            Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
-        }
+        .accessibilityElement(children: .combine)
     }
 }
 

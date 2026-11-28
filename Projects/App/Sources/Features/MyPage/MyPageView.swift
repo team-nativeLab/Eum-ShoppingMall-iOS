@@ -36,15 +36,24 @@ struct MyPageMenuItem: Identifiable, Equatable {
 
     var id: String { title }
 
-    static let all = [
-        MyPageMenuItem(title: "내 정보 관리", iconName: "MyPageInformation"),
-        MyPageMenuItem(title: "배송지 관리", iconName: "MyPageAddress"),
-        MyPageMenuItem(title: "취소·반품·교환 내역", iconName: "MyPageReturns"),
-        MyPageMenuItem(title: "견적 문의 내역", iconName: "MyPageQuoteInquiries"),
-        MyPageMenuItem(title: "1:1 문의 내역", iconName: "MyPageContactInquiries"),
-        MyPageMenuItem(title: "고객센터", iconName: "MyPageSupport"),
-        MyPageMenuItem(title: "공지사항", iconName: "MyPageNotices")
+    /// Figma A-11 menu sections, each rendered as a titled bordered card.
+    static let groups: [(title: String, items: [MyPageMenuItem])] = [
+        ("내 정보", [
+            MyPageMenuItem(title: "내 정보 관리", iconName: "MyPageInformation"),
+            MyPageMenuItem(title: "배송지 관리", iconName: "MyPageAddress")
+        ]),
+        ("주문·견적 관리", [
+            MyPageMenuItem(title: "취소·반품·교환 내역", iconName: "MyPageReturns"),
+            MyPageMenuItem(title: "견적 문의 내역", iconName: "MyPageQuoteInquiries")
+        ]),
+        ("문의·고객지원", [
+            MyPageMenuItem(title: "1:1 문의 내역", iconName: "MyPageContactInquiries"),
+            MyPageMenuItem(title: "고객센터", iconName: "MyPageSupport"),
+            MyPageMenuItem(title: "공지사항", iconName: "MyPageNotices")
+        ])
     ]
+
+    static let all = groups.flatMap(\.items)
 }
 
 @MainActor
@@ -258,15 +267,31 @@ struct MyPageView: View {
                     .accessibilityLabel("\(status.title) 주문 보기")
                 }
             }
-            .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+            .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
             .overlay(RoundedRectangle(cornerRadius: EUMRadius.large).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
             .padding(.horizontal, EUMSpacing.homeContentInset)
         }
     }
 
     private var menuCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            ForEach(MyPageMenuItem.groups, id: \.title) { group in
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(group.title)
+                        .font(EUMTypography.labelLarge)
+                        .tracking(-0.16)
+                        .foregroundStyle(EUMColor.text1SwiftUI)
+                        .accessibilityAddTraits(.isHeader)
+                    menuGroupCard(group.items)
+                }
+            }
+        }
+        .padding(.horizontal, EUMSpacing.homeContentInset)
+    }
+
+    private func menuGroupCard(_ items: [MyPageMenuItem]) -> some View {
         VStack(spacing: 0) {
-            ForEach(Array(viewModel.menuItems.enumerated()), id: \.element.id) { index, item in
+            ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                 Button {
                     if item.title == "내 정보 관리" {
                         onAccountVerificationTap()
@@ -305,7 +330,7 @@ struct MyPageView: View {
                     .frame(height: 56)
                     .contentShape(Rectangle())
                     .overlay(alignment: .bottom) {
-                        if index < viewModel.menuItems.count - 1 {
+                        if index < items.count - 1 {
                             Rectangle()
                                 .fill(EUMColor.lineSwiftUI)
                                 .frame(height: 1)
@@ -317,10 +342,8 @@ struct MyPageView: View {
                 .accessibilityLabel(item.title)
             }
         }
-        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
-        .overlay(RoundedRectangle(cornerRadius: EUMRadius.large).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
+        .eumCardBackground()
         .clipShape(RoundedRectangle(cornerRadius: EUMRadius.large))
-        .padding(.horizontal, EUMSpacing.homeContentInset)
     }
 
     private func showUnavailable(_ destination: String) {

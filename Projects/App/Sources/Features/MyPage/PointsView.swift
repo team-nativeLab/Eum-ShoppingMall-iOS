@@ -87,7 +87,7 @@ struct PointsView: View {
             }
         }
         .padding(20)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
     }
 
     private var filters: some View {

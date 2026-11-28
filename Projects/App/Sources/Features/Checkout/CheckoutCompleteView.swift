@@ -99,9 +99,12 @@ struct CheckoutCompleteView: View {
             completionHeader
 
             if viewModel.order.paymentMethod == .virtualAccount {
-                virtualAccountDetails
-                depositWarning
-                virtualOrderSummary
+                // Figma A-10v stacks the account card, warning and summary 12 pt apart.
+                VStack(spacing: 12) {
+                    virtualAccountDetails
+                    depositWarning
+                    virtualOrderSummary
+                }
             } else {
                 orderSummary
             }
@@ -119,7 +122,7 @@ struct CheckoutCompleteView: View {
                     .accessibilityHidden(true)
 
                 VStack(spacing: 8) {
-                    Text("주문이 완료되었습니다")
+                    Text(viewModel.order.paymentMethod == .virtualAccount ? "주문이 접수되었습니다" : "주문이 완료되었습니다")
                         .font(.custom(EUMFontName.bold, size: 22))
                         .tracking(-0.44)
                         .foregroundStyle(EUMColor.text1SwiftUI)
@@ -169,15 +172,17 @@ struct CheckoutCompleteView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
         .overlay(RoundedRectangle(cornerRadius: EUMRadius.large).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
         .padding(.horizontal, EUMSpacing.homeContentInset)
     }
 
     private var depositWarning: some View {
         HStack(spacing: 8) {
-            Image(systemName: "info.circle")
-                .font(.system(size: 14))
+            Image("LoginErrorAlert")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 16, height: 16)
                 .accessibilityHidden(true)
             Text("입금 기한이 지나면 주문이 자동으로 취소됩니다.")
                 .font(EUMTypography.bodySmall)
@@ -186,10 +191,11 @@ struct CheckoutCompleteView: View {
                 .minimumScaleFactor(0.85)
             Spacer(minLength: 0)
         }
-        .foregroundStyle(EUMColor.text2SwiftUI)
+        .foregroundStyle(EUMColor.dangerSwiftUI)
         .padding(.horizontal, 14)
         .frame(height: 44)
-        .eumCardBackground()
+        .background(EUMColor.dangerBackgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .overlay(RoundedRectangle(cornerRadius: EUMRadius.large).strokeBorder(EUMColor.lineSwiftUI, lineWidth: 1))
         .padding(.horizontal, EUMSpacing.homeContentInset)
     }
 
@@ -200,7 +206,7 @@ struct CheckoutCompleteView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
         .overlay(RoundedRectangle(cornerRadius: EUMRadius.large).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
         .padding(.horizontal, EUMSpacing.homeContentInset)
     }
@@ -213,7 +219,7 @@ struct CheckoutCompleteView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
         .overlay(RoundedRectangle(cornerRadius: EUMRadius.large).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
         .padding(.horizontal, EUMSpacing.homeContentInset)
     }

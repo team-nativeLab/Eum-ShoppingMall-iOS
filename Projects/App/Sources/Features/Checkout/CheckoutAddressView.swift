@@ -87,13 +87,15 @@ struct CheckoutAddressView: View {
 
     private var checkoutContent: some View {
         ScrollView {
-            VStack(spacing: 0) {
+            VStack(spacing: 8) {
                 addressSection
                 deliveryRequestSection
                 deliveryMethodSection
                 orderItemsSection
                 paymentSummary
             }
+            .padding(.horizontal, EUMSpacing.homeContentInset)
+            .padding(.top, 8)
             .padding(.bottom, 24)
         }
         .scrollIndicators(.hidden)
@@ -101,8 +103,7 @@ struct CheckoutAddressView: View {
     }
 
     private var addressSection: some View {
-        VStack(spacing: 0) {
-            sectionTitle("배송지 정보")
+        sectionCard("배송지 정보") {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 8) {
                     Text("홍길동")
@@ -134,15 +135,11 @@ struct CheckoutAddressView: View {
                     .foregroundStyle(EUMColor.text1SwiftUI)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(.horizontal, EUMSpacing.homeContentInset)
-            .padding(.vertical, 16)
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
     private var deliveryRequestSection: some View {
-        VStack(spacing: 0) {
-            sectionTitle("배송 요청사항")
+        sectionCard("배송 요청사항") {
             Button {
                 isShowingDeliveryRequest = true
             } label: {
@@ -160,19 +157,16 @@ struct CheckoutAddressView: View {
                 .padding(.horizontal, 14)
                 .frame(height: 48)
                 .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
-                .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).stroke(EUMColor.text3SwiftUI, lineWidth: 1))
+                .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).strokeBorder(EUMColor.lineControlSwiftUI, lineWidth: 1))
             }
             .buttonStyle(.plain)
             .accessibilityLabel("배송 요청사항 선택")
             .accessibilityIdentifier("checkout-delivery-request")
-            .padding(.horizontal, EUMSpacing.homeContentInset)
-            .padding(.vertical, 16)
         }
     }
 
     private var deliveryMethodSection: some View {
-        VStack(spacing: 0) {
-            sectionTitle("배송 방법")
+        sectionCard("배송 방법") {
             HStack {
                 Text("일반 배송 (2~3일)")
                     .font(EUMTypography.bodySmall)
@@ -183,14 +177,11 @@ struct CheckoutAddressView: View {
                     .tracking(-0.07)
             }
             .foregroundStyle(EUMColor.text1SwiftUI)
-            .padding(.horizontal, EUMSpacing.homeContentInset)
-            .frame(height: 56)
         }
     }
 
     private var orderItemsSection: some View {
-        VStack(spacing: 0) {
-            sectionTitle("주문 상품")
+        sectionCard("주문 상품") {
             HStack {
                 Text(viewModel.orderSummaryTitle)
                     .font(EUMTypography.labelMedium)
@@ -215,17 +206,17 @@ struct CheckoutAddressView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(viewModel.isOrderItemsExpanded ? "주문 상품 접기" : "주문 상품 펼치기")
             }
-            .padding(.horizontal, EUMSpacing.homeContentInset)
-            .frame(height: 40)
+            .padding(.bottom, 6)
 
             if viewModel.isOrderItemsExpanded {
-                VStack(spacing: 8) {
-                    ForEach(viewModel.orderItems) { item in
+                VStack(spacing: 6) {
+                    ForEach(Array(viewModel.orderItems.enumerated()), id: \.element.id) { index, item in
+                        if index > 0 {
+                            Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
+                        }
                         CheckoutOrderItemRow(item: item)
                     }
                 }
-                .padding(.horizontal, EUMSpacing.homeContentInset)
-                .padding(.bottom, 20)
             }
         }
     }
@@ -242,9 +233,9 @@ struct CheckoutAddressView: View {
                 .tracking(-0.08)
                 .foregroundStyle(EUMColor.text1SwiftUI)
         }
-        .padding(.horizontal, EUMSpacing.homeContentInset)
-        .frame(height: 64)
-        .background(EUMColor.backgroundSubtleSwiftUI)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
+        .eumCardBackground(cornerRadius: 16)
     }
 
     private var bottomAction: some View {
@@ -259,15 +250,25 @@ struct CheckoutAddressView: View {
         }
     }
 
-    private func sectionTitle(_ title: String) -> some View {
-        Text(title)
-            .font(EUMTypography.labelLarge)
-            .tracking(-0.16)
-            .foregroundStyle(EUMColor.text2SwiftUI)
-            .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-            .padding(.horizontal, EUMSpacing.homeContentInset)
-            .background(EUMColor.backgroundSubtleSwiftUI)
-            .accessibilityAddTraits(.isHeader)
+    /// Figma checkout section: r16 card, 32 pt title row, 16/20/20 pt body insets.
+    private func sectionCard<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(title)
+                .font(EUMTypography.labelLarge)
+                .tracking(-0.16)
+                .foregroundStyle(EUMColor.text2SwiftUI)
+                .frame(height: 32)
+                .padding(.horizontal, 16)
+                .accessibilityAddTraits(.isHeader)
+            VStack(alignment: .leading, spacing: 0) {
+                content()
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 16)
+            .padding(.bottom, 20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .eumCardBackground(cornerRadius: 16)
     }
 }
 
@@ -278,14 +279,14 @@ struct CheckoutProgress: View {
     private let titles = ["배송지", "결제", "완료"]
 
     var body: some View {
-        HStack(spacing: 0) {
+        HStack(alignment: .top, spacing: 8) {
             ForEach(titles.indices, id: \.self) { index in
                 if index > 0 {
                     Rectangle()
                         .fill(index + 1 <= currentStep ? EUMColor.text1SwiftUI : EUMColor.lineSwiftUI)
-                        .frame(height: 1)
+                        .frame(height: 1.5)
                         .frame(maxWidth: .infinity)
-                        .padding(.horizontal, 8)
+                        .padding(.top, 11.25)
                 }
                 VStack(spacing: 6) {
                     let isComplete = index + 1 < currentStep || (marksCurrentStepComplete && index + 1 == currentStep)
@@ -306,21 +307,23 @@ struct CheckoutProgress: View {
                         in: Circle()
                     )
                     .overlay {
-                        Circle().stroke(
+                        Circle().strokeBorder(
                             isComplete || index + 1 == currentStep ? Color.clear : EUMColor.lineStrongSwiftUI,
-                            lineWidth: 1
+                            lineWidth: 1.5
                         )
                     }
                     Text(titles[index])
-                        .font(EUMTypography.labelExtraSmall)
+                        .font(index + 1 <= currentStep ? EUMTypography.captionMedium : EUMTypography.captionRegular)
                         .foregroundStyle(index + 1 <= currentStep ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI)
                 }
-                .frame(width: 52)
+                .fixedSize()
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 40)
         .padding(.top, 12)
-        .padding(.bottom, 16)
+        .frame(height: 72, alignment: .top)
+        .frame(maxWidth: .infinity)
+        .background(EUMColor.backgroundSwiftUI)
     }
 }
 
@@ -328,19 +331,25 @@ private struct CheckoutOrderItemRow: View {
     let item: CheckoutOrderItem
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .center, spacing: 12) {
             RoundedRectangle(cornerRadius: EUMRadius.medium)
                 .fill(EUMColor.surfaceSecondarySwiftUI)
                 .frame(width: 56, height: 56)
+                .overlay {
+                    Image("ProductPlaceholder")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                }
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.title)
-                    .font(EUMTypography.labelMedium)
+                    .font(EUMTypography.bodySmall)
                     .tracking(-0.07)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                 Text("\(item.option) · \(item.quantity)개")
-                    .font(EUMTypography.captionMedium)
+                    .font(EUMTypography.captionRegular)
                     .foregroundStyle(EUMColor.text3SwiftUI)
                 Text(item.price)
                     .font(EUMTypography.labelMedium)

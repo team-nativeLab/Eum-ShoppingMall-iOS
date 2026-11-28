@@ -120,9 +120,10 @@ struct AddressEditorView: View {
                         .scaledToFit()
                         .frame(width: 20, height: 20)
                 }
-                .padding(.horizontal, 14)
+                .padding(.horizontal, 15)
                 .frame(height: 48)
-                .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).stroke(EUMColor.lineControlSwiftUI, lineWidth: 1))
+                .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
+                .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).strokeBorder(EUMColor.lineControlSwiftUI, lineWidth: 1))
                 .contentShape(Rectangle())
             }
         }
@@ -214,9 +215,9 @@ private struct AddressEditorField: View {
                 .font(EUMTypography.bodyMedium)
                 .tracking(-0.075)
                 .foregroundStyle(isDisabled ? EUMColor.textDisabledSwiftUI : EUMColor.text1SwiftUI)
-                .padding(.horizontal, 14)
+                .padding(.horizontal, 15)
                 .frame(height: 48)
-                .background(isDisabled ? EUMColor.surfaceSecondarySwiftUI : EUMColor.backgroundSwiftUI)
+                .background(EUMColor.backgroundSwiftUI)
                 .clipShape(RoundedRectangle(cornerRadius: EUMRadius.button))
                 .overlay {
                     RoundedRectangle(cornerRadius: EUMRadius.button)

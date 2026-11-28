@@ -36,7 +36,7 @@ struct ProductShippingPolicyView: View {
                         policyRow(title: "반품 배송비", value: detail.shippingPolicy.returnShippingFee)
                     }
                     .padding(.horizontal, 16)
-                    .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+                    .eumCardBackground()
 
                     ReturnRequestNotice(
                         message: "표시된 수치와 조건은 현재 상품 상세의 샘플 문구입니다. 실제 상품별 배송·교환 정책은 운영 정보 연동 전까지 확정 정보로 사용할 수 없습니다."

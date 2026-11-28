@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import SwiftUI
 
 enum QuoteInquiryStatus: String, CaseIterable, Identifiable {
     case all = "전체"
@@ -10,6 +11,30 @@ enum QuoteInquiryStatus: String, CaseIterable, Identifiable {
     case canceled = "취소"
 
     var id: String { rawValue }
+}
+
+/// Figma A-25 HF/Badge: warning tint (접수·견적 발송), success tint (완료), outlined (상담중), plain (취소).
+extension QuoteInquiryStatus {
+    var badgeForeground: Color {
+        switch self {
+        case .received, .quoteSent: EUMColor.warningSwiftUI
+        case .completed: EUMColor.successSwiftUI
+        case .canceled: EUMColor.text3SwiftUI
+        default: EUMColor.text2SwiftUI
+        }
+    }
+
+    var badgeBackground: Color {
+        switch self {
+        case .received, .quoteSent: EUMColor.warningTintSwiftUI
+        case .completed: EUMColor.successTintSwiftUI
+        default: .clear
+        }
+    }
+
+    var badgeBorder: Color {
+        self == .consulting ? EUMColor.lineStrongSwiftUI : .clear
+    }
 }
 
 struct QuoteInquiryRecord: Identifiable, Equatable {

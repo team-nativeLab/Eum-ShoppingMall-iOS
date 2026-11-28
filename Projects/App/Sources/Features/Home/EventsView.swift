@@ -53,14 +53,12 @@ struct EventsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            EUMBackTopBar(
+            EUMLeadingTitleTopBar(
                 title: "이벤트",
                 backAccessibilityLabel: "이전 화면으로 돌아가기",
                 backAccessibilityIdentifier: "events-back",
                 onBack: onBack
-            ) {
-                Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
-            }
+            )
 
             if items.isEmpty {
                 emptyState
@@ -135,14 +133,12 @@ struct EventDetailView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            EUMBackTopBar(
+            EUMLeadingTitleTopBar(
                 title: event.title,
                 backAccessibilityLabel: "이벤트 목록으로 돌아가기",
                 backAccessibilityIdentifier: "event-detail-back",
                 onBack: onBack
-            ) {
-                Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
-            }
+            )
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 40) {

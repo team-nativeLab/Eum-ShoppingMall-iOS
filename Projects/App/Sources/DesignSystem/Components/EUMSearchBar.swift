@@ -15,7 +15,7 @@ struct EUMSearchBar: View {
                 .foregroundStyle(EUMColor.text3SwiftUI)
                 .accessibilityHidden(true)
 
-            TextField(placeholder, text: $text)
+            TextField(placeholder, text: $text, prompt: Text(placeholder).foregroundColor(EUMColor.text3SwiftUI))
                 .font(EUMTypography.bodyMedium)
                 .tracking(-0.5)
                 .foregroundStyle(EUMColor.text1SwiftUI)
@@ -26,6 +26,7 @@ struct EUMSearchBar: View {
         .padding(.horizontal, 16)
         .frame(height: 44)
         .background(EUMColor.surfaceSwiftUI, in: Capsule())
+        .overlay(Capsule().strokeBorder(EUMColor.text1SwiftUI, lineWidth: 1))
     }
 }
 

@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import SwiftUI
 
 enum OrderHistoryStatus: String, CaseIterable, Identifiable {
     case all = "전체"
@@ -10,6 +11,32 @@ enum OrderHistoryStatus: String, CaseIterable, Identifiable {
     case delivered = "배송완료"
 
     var id: String { rawValue }
+}
+
+/// Figma HF/Badge colors for order states (A-16, A-17, A-19s).
+extension OrderHistoryStatus {
+    var badgeForeground: Color {
+        switch self {
+        case .awaitingPayment, .paymentComplete: EUMColor.warningSwiftUI
+        case .delivered: EUMColor.successSwiftUI
+        default: EUMColor.text2SwiftUI
+        }
+    }
+
+    var badgeBackground: Color {
+        switch self {
+        case .awaitingPayment, .paymentComplete: EUMColor.warningTintSwiftUI
+        case .delivered: EUMColor.successTintSwiftUI
+        default: .clear
+        }
+    }
+
+    var badgeBorder: Color {
+        switch self {
+        case .preparing, .inTransit: EUMColor.lineStrongSwiftUI
+        default: .clear
+        }
+    }
 }
 
 enum OrderHistoryPeriod: String, CaseIterable, Identifiable {

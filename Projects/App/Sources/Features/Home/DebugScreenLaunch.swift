@@ -53,7 +53,7 @@ enum DebugScreenLaunch {
         let products = content.recommendedProducts + content.bestSellerProducts
         let pricedProduct = products.first { $0.price != nil } ?? products.first
         let hiddenPriceProduct = products.first { $0.price == nil }
-        let order = OrderHistoryItem.samples.first
+        let order = OrderHistoryItem.samples.first { $0.status == .inTransit } ?? OrderHistoryItem.samples.first
         let deliveredOrder = OrderHistoryItem.samples.first { $0.status == .delivered } ?? order
 
         switch code {

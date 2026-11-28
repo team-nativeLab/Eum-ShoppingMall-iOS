@@ -55,14 +55,19 @@ struct CouponsView: View {
 
     private var registerForm: some View {
         HStack(alignment: .bottom, spacing: 8) {
-            TextField("쿠폰 코드를 입력해 주세요", text: $couponCode)
+            TextField(
+                "쿠폰 코드를 입력해 주세요",
+                text: $couponCode,
+                prompt: Text("쿠폰 코드를 입력해 주세요").foregroundColor(EUMColor.text3SwiftUI)
+            )
                 .font(EUMTypography.bodyMedium)
                 .tracking(-0.075)
-                .padding(.horizontal, 14)
+                .padding(.horizontal, 15)
                 .frame(height: 48)
+                .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
                 .overlay {
                     RoundedRectangle(cornerRadius: EUMRadius.button)
-                    .stroke(EUMColor.lineControlSwiftUI, lineWidth: 1)
+                        .strokeBorder(EUMColor.lineControlSwiftUI, lineWidth: 1)
                 }
                 .textInputAutocapitalization(.characters)
                 .autocorrectionDisabled()
@@ -91,14 +96,14 @@ struct CouponsView: View {
                     .font(EUMTypography.labelLarge)
                     .tracking(-0.08)
                     .foregroundStyle(EUMColor.text1SwiftUI)
-                Image("ProductOptionChevron")
+                Image("MyPageChevron")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 16, height: 16)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
-            .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+            .eumCardBackground()
             .contentShape(RoundedRectangle(cornerRadius: EUMRadius.large))
         }
         .buttonStyle(.plain)
@@ -114,16 +119,13 @@ struct CouponsView: View {
                     Text(tab.rawValue)
                         .font(EUMTypography.labelMedium)
                         .tracking(-0.07)
-                        .foregroundStyle(tab == viewModel.selectedTab ? EUMColor.text1SwiftUI : EUMColor.text2SwiftUI)
+                        .foregroundStyle(tab == viewModel.selectedTab ? EUMColor.inverseSwiftUI : EUMColor.text2SwiftUI)
                         .frame(maxWidth: .infinity)
                         .frame(height: 36)
-                        .background {
-                            if tab == viewModel.selectedTab {
-                                RoundedRectangle(cornerRadius: EUMRadius.small)
-                                    .fill(EUMColor.backgroundSwiftUI)
-                                    .shadow(color: Color.black.opacity(0.06), radius: 3, y: 1)
-                            }
-                        }
+                        .background(
+                            tab == viewModel.selectedTab ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI,
+                            in: RoundedRectangle(cornerRadius: EUMRadius.medium)
+                        )
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -131,7 +133,9 @@ struct CouponsView: View {
             }
         }
         .padding(4)
-        .eumCardBackground(cornerRadius: EUMRadius.button)
+        // Figma HF/Segmented: white track with a 1 pt text-1 outline; the selected tab is filled text-1.
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
+        .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).strokeBorder(EUMColor.text1SwiftUI, lineWidth: 1))
     }
 
     @ViewBuilder

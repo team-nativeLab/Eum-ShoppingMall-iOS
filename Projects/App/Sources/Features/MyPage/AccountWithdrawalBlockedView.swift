@@ -83,7 +83,7 @@ struct AccountWithdrawalBlockedView: View {
                 .frame(maxWidth: .infinity)
         }
         .padding(20)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
 
@@ -107,8 +107,9 @@ struct AccountWithdrawalBlockedView: View {
 
     private var blockedNotice: some View {
         VStack(alignment: .trailing, spacing: 8) {
+            // Figma A-26b HF/NoticeInline (danger): #FFE9E9 fill, hf/line border, danger text.
             HStack(alignment: .top, spacing: 8) {
-                Image("ProductDetailInfo")
+                Image("LoginErrorAlert")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 16, height: 16)
@@ -117,14 +118,15 @@ struct AccountWithdrawalBlockedView: View {
                 Text(viewModel.blockedMessage)
                     .font(EUMTypography.bodySmall)
                     .tracking(-0.07)
-                    .foregroundStyle(EUMColor.text2SwiftUI)
+                    .foregroundStyle(EUMColor.dangerSwiftUI)
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .eumCardBackground(cornerRadius: 12)
+            .background(EUMColor.dangerBackgroundSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(EUMColor.lineSwiftUI, lineWidth: 1))
 
             Button(action: onOrderHistory) {
                 HStack(spacing: 2) {
