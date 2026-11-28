@@ -112,36 +112,12 @@ struct OrderHistoryOrderCard: View {
     private var statusBadge: some View {
         Text(order.status.rawValue)
             .font(EUMTypography.labelExtraSmall)
-            .foregroundStyle(selectionAction == nil ? defaultBadgeForeground : selectionBadgeForeground)
+            .foregroundStyle(order.status.badgeForeground)
             .padding(.horizontal, 6)
             .frame(height: 20)
-            .background(selectionAction == nil ? defaultBadgeBackground : selectionBadgeBackground)
-            .clipShape(RoundedRectangle(cornerRadius: EUMRadius.small))
+            .background(order.status.badgeBackground, in: RoundedRectangle(cornerRadius: EUMRadius.small))
+            .overlay(RoundedRectangle(cornerRadius: EUMRadius.small).strokeBorder(order.status.badgeBorder, lineWidth: 1))
             .fixedSize()
-    }
-
-    private var defaultBadgeForeground: Color {
-        order.status == .delivered ? EUMColor.inverseSwiftUI : EUMColor.text2SwiftUI
-    }
-
-    private var defaultBadgeBackground: Color {
-        order.status == .delivered ? EUMColor.text1SwiftUI : EUMColor.surfaceSwiftUI
-    }
-
-    private var selectionBadgeForeground: Color {
-        switch order.status {
-        case .awaitingPayment, .paymentComplete: Color(red: 138 / 255, green: 90 / 255, blue: 0)
-        case .delivered: Color(red: 30 / 255, green: 122 / 255, blue: 60 / 255)
-        default: EUMColor.text2SwiftUI
-        }
-    }
-
-    private var selectionBadgeBackground: Color {
-        switch order.status {
-        case .awaitingPayment, .paymentComplete: Color(red: 1, green: 244 / 255, blue: 224 / 255)
-        case .delivered: Color(red: 232 / 255, green: 243 / 255, blue: 236 / 255)
-        default: EUMColor.backgroundSwiftUI
-        }
     }
 
     @ViewBuilder

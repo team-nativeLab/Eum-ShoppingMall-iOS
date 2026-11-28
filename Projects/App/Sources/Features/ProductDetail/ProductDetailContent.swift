@@ -89,9 +89,10 @@ struct ProductDetailContent {
 struct ProductDetailRatingStars: View {
     let rating: Double
     var size: CGFloat = 16
+    var spacing: CGFloat = 2
 
     var body: some View {
-        HStack(spacing: 2) {
+        HStack(spacing: spacing) {
             ForEach(0..<5, id: \.self) { index in
                 Image(index < Int(rating) ? "RatingStarFilled" : "RatingStarOutline")
                     .resizable()
@@ -154,15 +155,11 @@ struct ProductDetailSummaryView: View {
 
                     if let rating = detail.rating, rating > 0 {
                         HStack(spacing: 8) {
-                            ProductDetailRatingStars(rating: rating, size: 20)
+                            ProductDetailRatingStars(rating: rating, size: 27, spacing: 8)
                             Text("\(rating, specifier: "%.1f") · 리뷰 \(detail.reviewCount)개")
                                 .font(EUMTypography.captionRegular)
                                 .foregroundStyle(EUMColor.text3SwiftUI)
                         }
-                    } else {
-                        Text("평점 없음")
-                            .font(EUMTypography.labelExtraSmall)
-                            .foregroundStyle(EUMColor.text3SwiftUI)
                     }
 
                     if product.isPriceHidden {

@@ -12,6 +12,7 @@ struct HomeView: View {
     @State private var isGuestAccount = false
     @State private var presentedMessage: String?
     @State private var companyIntroductionReturnsToDrawer = false
+    @State private var hasAppliedDebugScreen = false
 
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -81,7 +82,18 @@ struct HomeView: View {
             if case .loading = viewModel.state {
                 await viewModel.load()
             }
+            applyDebugScreenIfNeeded()
         }
+    }
+
+    private func applyDebugScreenIfNeeded() {
+        #if DEBUG
+        guard !hasAppliedDebugScreen, let code = DebugScreenLaunch.requestedCode(), case let .content(content) = viewModel.state,
+              let actions = DebugScreenLaunch.actions(for: code, content: content) else { return }
+        hasAppliedDebugScreen = true
+        DebugScreenLaunch.perform(actions, tab: { isGuestAccount = $1; selectTab($0) }, route: openRoute,
+                                  destination: { navigation.push($0) }, drawer: { isShowingDrawer = true })
+        #endif
     }
 
     @ViewBuilder

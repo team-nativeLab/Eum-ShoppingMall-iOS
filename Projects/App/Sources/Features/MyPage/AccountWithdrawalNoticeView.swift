@@ -83,7 +83,7 @@ struct AccountWithdrawalNoticeView: View {
                 .frame(maxWidth: .infinity)
         }
         .padding(20)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
 

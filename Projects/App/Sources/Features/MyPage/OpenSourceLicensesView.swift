@@ -16,7 +16,7 @@ struct OpenSourceLicensesView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("목록 예시입니다. 실제 포함 라이브러리는 앱 구성에 따라 표시됩니다.")
-                        .font(EUMTypography.bodySmall)
+                        .font(.custom(EUMFontName.regular, size: 13))
                         .foregroundStyle(EUMColor.text3SwiftUI)
                         .fixedSize(horizontal: false, vertical: true)
 
@@ -27,7 +27,7 @@ struct OpenSourceLicensesView: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 20)
+                .padding(.top, 22)
                 .padding(.bottom, 24)
             }
             .scrollIndicators(.hidden)
@@ -36,14 +36,12 @@ struct OpenSourceLicensesView: View {
     }
 
     private var topBar: some View {
-        EUMBackTopBar(
+        EUMLeadingTitleTopBar(
             title: "오픈소스 라이선스",
             backAccessibilityLabel: "뒤로 가기",
             backAccessibilityIdentifier: "open-source-licenses-back",
             onBack: onBack
-        ) {
-            Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
-        }
+        )
     }
 }
 
@@ -66,12 +64,12 @@ private struct LicenseCard: View {
                 .frame(width: 36, height: 36)
                 .background(Color(red: 231 / 255, green: 245 / 255, blue: 241 / 255), in: RoundedRectangle(cornerRadius: 11))
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(item.name)
-                    .font(EUMTypography.labelMedium)
+                    .font(.custom(EUMFontName.semibold, size: 14))
                     .foregroundStyle(EUMColor.text1SwiftUI)
                 Text(item.license)
-                    .font(EUMTypography.captionRegular)
+                    .font(.custom(EUMFontName.regular, size: 13))
                     .foregroundStyle(EUMColor.text3SwiftUI)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

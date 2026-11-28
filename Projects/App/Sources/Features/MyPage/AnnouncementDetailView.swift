@@ -138,6 +138,6 @@ struct AnnouncementDetailView: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+        .eumCardBackground(cornerRadius: 12)
     }
 }

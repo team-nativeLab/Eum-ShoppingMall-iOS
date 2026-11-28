@@ -210,7 +210,7 @@ struct BrandDirectoryView: View {
                     .font(.system(size: size == 64 ? 20 : 18))
                     .foregroundStyle(EUMColor.lineStrongSwiftUI)
                     .frame(width: size - 12, height: size - 12)
-                    .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.small))
+                    .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.small))
             }
             .overlay(RoundedRectangle(cornerRadius: EUMRadius.button).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
             .accessibilityHidden(true)

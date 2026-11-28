@@ -90,7 +90,7 @@ struct AccountWithdrawalCompleteView: View {
         .tracking(-0.07)
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
 
@@ -121,7 +121,7 @@ struct AccountWithdrawalCompleteView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+        .eumCardBackground(cornerRadius: 12)
     }
 
     private var homeAction: some View {

@@ -65,12 +65,18 @@ struct SearchView: View {
 
             HStack(spacing: 8) {
                 Image("DesignSearch")
+                    .renderingMode(.template)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 20, height: 20)
+                    .foregroundStyle(EUMColor.text3SwiftUI)
                     .accessibilityHidden(true)
 
-                TextField("검색어를 입력해 주세요", text: $searchText)
+                TextField(
+                    "검색어를 입력해 주세요",
+                    text: $searchText,
+                    prompt: Text("검색어를 입력해 주세요").foregroundColor(EUMColor.text3SwiftUI)
+                )
                     .font(EUMTypography.bodyMedium)
                     .tracking(-0.5)
                     .foregroundStyle(EUMColor.text1SwiftUI)

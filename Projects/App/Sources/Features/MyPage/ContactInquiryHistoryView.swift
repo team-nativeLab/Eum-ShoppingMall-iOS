@@ -192,17 +192,12 @@ private struct ContactInquiryCard: View {
     private var statusBadge: some View {
         Text(inquiry.status.rawValue)
             .font(EUMTypography.labelExtraSmall)
-            .foregroundStyle(inquiry.status == .answered ? EUMColor.inverseSwiftUI : EUMColor.text2SwiftUI)
+            .foregroundStyle(inquiry.status == .answered ? EUMColor.successSwiftUI : EUMColor.warningSwiftUI)
             .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .background {
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(inquiry.status == .answered ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI)
-            }
-            .overlay {
-                if inquiry.status == .pending {
-                    RoundedRectangle(cornerRadius: 4).stroke(EUMColor.lineStrongSwiftUI, lineWidth: 1)
-                }
-            }
+            .frame(height: 20)
+            .background(
+                inquiry.status == .answered ? EUMColor.successTintSwiftUI : EUMColor.warningTintSwiftUI,
+                in: RoundedRectangle(cornerRadius: 4)
+            )
     }
 }

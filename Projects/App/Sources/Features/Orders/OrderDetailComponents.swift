@@ -65,10 +65,13 @@ struct OrderDetailProductSection: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(product.status.rawValue)
                     .font(EUMTypography.labelExtraSmall)
-                    .foregroundStyle(EUMColor.text2SwiftUI)
+                    .foregroundStyle(product.status.badgeForeground)
                     .padding(.horizontal, 6)
                     .frame(height: 20)
-                    .background(EUMColor.surfaceSecondarySwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.small))
+                    .background(product.status.badgeBackground, in: RoundedRectangle(cornerRadius: EUMRadius.small))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: EUMRadius.small).strokeBorder(product.status.badgeBorder, lineWidth: 1)
+                    )
                     .fixedSize()
                 Text(product.name)
                     .font(EUMTypography.bodyMedium)

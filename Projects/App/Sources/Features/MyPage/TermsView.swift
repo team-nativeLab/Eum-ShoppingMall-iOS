@@ -174,7 +174,7 @@ struct TermsView: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+            .eumCardBackground(cornerRadius: 12)
             .accessibilityElement(children: .combine)
         }
     }
@@ -216,12 +216,10 @@ struct TermsView: View {
                 .font(EUMTypography.labelMedium)
                 .tracking(-0.07)
                 .foregroundStyle(EUMColor.text1SwiftUI)
-
-            Spacer(minLength: 0)
-
             Text("\(TermsDocument.articleCount)개 조항")
                 .font(EUMTypography.captionRegular)
                 .foregroundStyle(EUMColor.text3SwiftUI)
+            Spacer(minLength: 0)
 
             Image("TermsContentsChevron")
                 .accessibilityHidden(true)

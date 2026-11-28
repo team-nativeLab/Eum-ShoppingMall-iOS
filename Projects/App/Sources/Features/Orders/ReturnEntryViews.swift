@@ -80,7 +80,7 @@ struct ReturnOrderSelectionView: View {
                         .foregroundStyle(EUMColor.text2SwiftUI)
                         .frame(maxWidth: .infinity, minHeight: 30, alignment: .leading)
                         .padding(12)
-                        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 8))
+                        .background(EUMColor.surfaceSecondarySwiftUI, in: RoundedRectangle(cornerRadius: 8))
                     Menu {
                         ForEach(OrderHistoryPeriod.allCases) { period in
                             Button(period.rawValue) { viewModel.selectPeriod(period) }

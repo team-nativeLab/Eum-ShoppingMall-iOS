@@ -34,25 +34,25 @@ struct QuoteInquiryFieldsView: View {
     }
 
     private var inquiryTypePicker: some View {
-        LazyVGrid(
-            columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())],
-            alignment: .leading,
-            spacing: 12
-        ) {
+        // Figma A-15: four HF/Radio options on one row.
+        HStack(spacing: 16) {
             ForEach(QuoteInquiryType.allCases) { type in
                 Button {
                     viewModel.inquiryType = type
                 } label: {
-                    HStack(spacing: 8) {
+                    HStack(spacing: 6) {
                         Circle()
-                            .strokeBorder(
-                                viewModel.inquiryType == type ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI,
-                                lineWidth: 1.5
-                            )
-                            .frame(width: 20, height: 20)
+                            .fill(EUMColor.surfaceSecondarySwiftUI)
+                            .overlay {
+                                Circle().strokeBorder(
+                                    viewModel.inquiryType == type ? EUMColor.text1SwiftUI : EUMColor.lineControlSwiftUI,
+                                    lineWidth: 1.5
+                                )
+                            }
+                            .frame(width: 14, height: 14)
                             .overlay {
                                 if viewModel.inquiryType == type {
-                                    Circle().fill(EUMColor.text1SwiftUI).frame(width: 10, height: 10)
+                                    Circle().fill(EUMColor.text1SwiftUI).frame(width: 6, height: 6)
                                 }
                             }
                         Text(type.rawValue)
@@ -84,7 +84,7 @@ struct QuoteInquiryFieldsView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
     }
 
     private var deliveryDateField: some View {

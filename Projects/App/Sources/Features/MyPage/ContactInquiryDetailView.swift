@@ -116,7 +116,7 @@ struct ContactInquiryDetailView: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+        .eumCardBackground(cornerRadius: 12)
     }
 
     private func detailRow(title: String, value: String) -> some View {
@@ -154,7 +154,7 @@ struct ContactInquiryDetailView: View {
                     .accessibilityHidden(true)
             }
             .padding(12)
-            .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 8))
+            .eumCardBackground(cornerRadius: 8)
             .contentShape(RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.plain)

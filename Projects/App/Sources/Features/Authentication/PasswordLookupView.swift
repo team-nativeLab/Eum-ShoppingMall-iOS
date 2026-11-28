@@ -57,7 +57,7 @@ struct PasswordLookupView: View {
             tabButton(title: "비밀번호 찾기", isSelected: true) {}
         }
         .padding(4)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: 8))
+        .eumCardBackground(cornerRadius: 8)
     }
 
     private func tabButton(title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {

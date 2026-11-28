@@ -256,7 +256,7 @@ struct ProductDetailView: View {
                 } label: {
                     Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
                         .font(.system(size: 22, weight: .regular))
-                        .foregroundStyle(viewModel.isFavorite ? EUMColor.dangerSwiftUI : EUMColor.text1SwiftUI)
+                        .foregroundStyle(viewModel.isFavorite ? EUMColor.heartActiveSwiftUI : EUMColor.text1SwiftUI)
                         .frame(width: 56, height: 56)
                         .overlay(RoundedRectangle(cornerRadius: 8).stroke(EUMColor.lineStrongSwiftUI, lineWidth: 1))
                 }

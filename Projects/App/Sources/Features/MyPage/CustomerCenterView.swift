@@ -190,7 +190,7 @@ struct CustomerCenterView: View {
         }
         .padding(24)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 8))
+        .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 8))
         .overlay(RoundedRectangle(cornerRadius: 8).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
 }

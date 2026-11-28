@@ -106,7 +106,7 @@ struct BusinessSignUpInformationView: View {
                 .foregroundStyle(EUMColor.text1SwiftUI)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
-                .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
+                .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.button))
                 .overlay {
                     RoundedRectangle(cornerRadius: EUMRadius.button)
                         .strokeBorder(EUMColor.lineControlSwiftUI, style: StrokeStyle(lineWidth: 1, dash: [4]))
@@ -144,7 +144,7 @@ struct BusinessSignUpInformationView: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
         .accessibilityElement(children: .combine)
     }
 

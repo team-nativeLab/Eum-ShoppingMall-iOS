@@ -7,9 +7,10 @@ import UIKit
 enum EUMFontName {
     static let regular = "NotoSansKR-Thin_Regular"
     static let medium = "NotoSansKR-Thin_Medium"
+    static let semibold = "NotoSansKR-Thin_SemiBold"
     static let bold = "NotoSansKR-Thin_Bold"
 
-    static let all = [regular, medium, bold]
+    static let all = [regular, medium, semibold, bold]
 }
 
 enum EUMTypography {

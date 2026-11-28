@@ -74,7 +74,7 @@ struct CheckoutTaxInvoiceBusinessInfo: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
     }
 
     private var taxInvoiceEntry: some View {
@@ -114,7 +114,7 @@ struct CheckoutTaxInvoiceBusinessInfo: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
     }
 
     private func invoiceInfoRow(title: String, value: String) -> some View {
@@ -256,6 +256,6 @@ struct CheckoutCashReceiptPanel: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .eumCardBackground()
     }
 }

@@ -74,10 +74,11 @@ struct QuoteDetailView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text(viewModel.inquiry.status.rawValue)
                 .font(.custom(EUMFontName.medium, size: 11))
-                .foregroundStyle(EUMColor.text2SwiftUI)
+                .foregroundStyle(viewModel.inquiry.status.badgeForeground)
                 .padding(.horizontal, 6)
                 .frame(height: 20)
-                .background(EUMColor.surfaceSecondarySwiftUI, in: RoundedRectangle(cornerRadius: 4))
+                .background(viewModel.inquiry.status.badgeBackground, in: RoundedRectangle(cornerRadius: 4))
+                .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(viewModel.inquiry.status.badgeBorder, lineWidth: 1))
             Text(viewModel.inquiry.title)
                 .font(EUMTypography.heading3)
                 .tracking(-0.27)
@@ -117,7 +118,7 @@ struct QuoteDetailView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 20)
-        .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 12))
+        .eumCardBackground(cornerRadius: 12)
     }
 
     private func progressStep(title: String, index: Int) -> some View {
@@ -287,7 +288,7 @@ struct QuoteDetailView: View {
                     .frame(width: 20, height: 20)
             }
             .padding(12)
-            .background(EUMColor.backgroundSubtleSwiftUI, in: RoundedRectangle(cornerRadius: 8))
+            .eumCardBackground(cornerRadius: 8)
             .contentShape(RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.plain)
