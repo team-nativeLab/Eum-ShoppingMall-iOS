@@ -30,7 +30,7 @@ struct MarketingConsentInfoView: View {
         VStack(spacing: 0) {
             topBar
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: 40) {
                     Text("수신 동의 항목과 안내 내용을 확인한 후 선택해 주세요.")
                         .font(EUMTypography.bodySmall)
                         .foregroundStyle(EUMColor.text3SwiftUI)
@@ -95,7 +95,7 @@ private struct ConsentInfoCard: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, 13)
-        .frame(minHeight: 64)
+        .frame(height: 80)
         .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 14))
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
