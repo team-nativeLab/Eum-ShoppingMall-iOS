@@ -45,7 +45,7 @@ final class AccountEmptyStateUITests: XCTestCase {
     @MainActor
     func testClearRecentlyViewedShowsEmptyState() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-마이"].tap()
         app.buttons["최근 본 상품"].tap()
@@ -60,7 +60,7 @@ final class AccountEmptyStateUITests: XCTestCase {
     private func launchEmptyAccount() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["-ui-test-empty-account"]
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-마이"].tap()
         return app

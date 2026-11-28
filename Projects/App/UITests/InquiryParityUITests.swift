@@ -4,7 +4,7 @@ final class InquiryParityUITests: XCTestCase {
     @MainActor
     func testContactInquiryMatchesFigmaAndOpensReceipt() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-마이"].tap()
         let customerCenter = app.buttons["고객센터"]
@@ -40,7 +40,7 @@ final class InquiryParityUITests: XCTestCase {
     @MainActor
     func testProductInquiryMatchesFigmaAndReachesReceipt() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-카테고리"].tap()
         app.buttons["개인보호장비"].tap()

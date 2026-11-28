@@ -145,11 +145,16 @@ struct HomeView: View {
             onAllProductsTap: {
                 openProductList(title: "전체 제품", products: content.recommendedProducts + content.bestSellerProducts)
             },
-            onCategoryTap: { categoryID in
-                if categoryID == "custom" {
+            onCategoryTap: { category in
+                if category.id == "custom" {
                     openRoute(.quoteInquiry(nil))
-                } else if let category = content.categories.first(where: { $0.id == categoryID }) {
+                } else if CatalogRepository.usesLocalSamples {
                     openProductList(title: category.title, products: content.recommendedProducts + content.bestSellerProducts)
+                } else {
+                    Task {
+                        let products = (try? await CatalogRepository().products(categoryID: category.id)) ?? []
+                        openProductList(title: category.title, products: products)
+                    }
                 }
             },
             onProductTap: openProductDetail,

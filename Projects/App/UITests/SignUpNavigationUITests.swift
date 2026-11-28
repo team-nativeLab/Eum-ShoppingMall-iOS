@@ -25,7 +25,7 @@ final class SignUpNavigationUITests: XCTestCase {
 
     @MainActor
     private func openSignUp(in app: XCUIApplication) {
-        app.launch()
+        app.launchWithLocalData()
         let drawerButton = app.buttons["전체 메뉴"]
         XCTAssertTrue(drawerButton.waitForExistence(timeout: 10))
         drawerButton.tap()

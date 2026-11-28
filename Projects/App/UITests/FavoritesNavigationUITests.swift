@@ -4,7 +4,7 @@ final class FavoritesNavigationUITests: XCTestCase {
     @MainActor
     func testRemovingAllFavoritesBrowsesProductsAndReturnsToEmptyState() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-마이"].tap()
         app.buttons["찜한 상품"].tap()
