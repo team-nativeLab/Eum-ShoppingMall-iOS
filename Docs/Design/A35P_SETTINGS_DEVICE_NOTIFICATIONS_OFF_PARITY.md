@@ -23,4 +23,4 @@ This variant retains the signed-in A-35 groups and inserts a 64 pt inline notice
 - iPhone 17 Pro simulator build and launch: passed.
 - Simulator tests: 107 passed, 0 failed, including authorization-state mapping.
 - Xcode reported the existing Swift 6 actor-isolation warnings in `FavoritesViewModel.swift` and `RecentlyViewedViewModel.swift` during build.
-- Target-screen screenshot and visual comparison were unavailable because `SimulatorKit.framework` is missing from the installed Xcode. No pixel-parity claim is made.
+- A-35p was captured on iPhone 17e / iOS 27.0 and compared against Figma after the fix. The notice matches the Figma fill `#FFE9E9`, border `#E5E5E5`, text `#C5221F`, and original info icon stroke `#CC2E2E`.

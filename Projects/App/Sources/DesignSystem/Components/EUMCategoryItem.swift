@@ -74,30 +74,13 @@ struct EUMCategoryItem: View {
     }
 
     private var categoryIcon: some View {
-        Group {
-            if let symbolName = categorySymbolName {
-                Image(systemName: symbolName)
-                    .font(.system(size: 21, weight: .regular))
-            } else {
-                Image(iconName)
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-            }
-        }
-        .frame(width: 24, height: 24)
-        .foregroundStyle(EUMColor.text1SwiftUI)
-        .accessibilityHidden(true)
-    }
-
-    private var categorySymbolName: String? {
-        switch iconName {
-        case "CategoryRoad": "cone.fill"
-        case "CategoryFire": "flame"
-        case "CategoryIndustry": "wrench.and.screwdriver"
-        case "CategorySecurity": "video"
-        default: nil
-        }
+        Image(iconName)
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .frame(width: 24, height: 24)
+            .foregroundStyle(EUMColor.text1SwiftUI)
+            .accessibilityHidden(true)
     }
 }
 

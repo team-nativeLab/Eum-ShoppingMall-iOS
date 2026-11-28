@@ -15,6 +15,8 @@ let project = Project(
                 "UILaunchScreen": [:],
                 "UIAppFonts": ["NotoSansKR-Variable.ttf"],
                 "EUM_API_BASE_URL": "$(EUM_API_BASE_URL)",
+                "CFBundleDisplayName": "안전맛집",
+                "CFBundleName": "안전맛집",
                 "UIApplicationSceneManifest": [
                     "UIApplicationSupportsMultipleScenes": false,
                     "UISceneConfigurations": [
@@ -30,7 +32,7 @@ let project = Project(
             settings: .settings(base: [
                 "CODE_SIGNING_ALLOWED": "NO",
                 "ASSETCATALOG_COMPILER_APPICON_NAME": "",
-                "EUM_API_BASE_URL": ""
+                "EUM_API_BASE_URL": "https://eum.https.gsmsv.site"
             ])
         ),
         .target(

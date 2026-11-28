@@ -120,7 +120,7 @@ final class ReturnFlowUITests: XCTestCase {
         let app = XCUIApplication()
         if empty { app.launchArguments = ["-ui-test-empty-account"] }
         app.launch()
-        XCTAssertTrue(app.staticTexts["이음산업건설"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-마이"].tap()
         let entry = app.buttons["취소·반품·교환 내역"]
         if !entry.isHittable { app.swipeUp() }

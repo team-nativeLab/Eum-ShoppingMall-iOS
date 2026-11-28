@@ -16,7 +16,7 @@ struct DrawerMenuDestination: Identifiable, Equatable {
 
 @MainActor
 final class AppDrawerViewModel: ObservableObject {
-    let brandTitle = "이음산업건설"
+    let brandTitle = "안전맛집"
     let tagline = "사람이 있는 곳에, 더 안전한 내일을."
     let memberName = "홍길동님"
     let destinations = DrawerMenuDestination.all
