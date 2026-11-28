@@ -10,6 +10,14 @@ struct ShoppingMallAPI {
     let orders: OrdersAPI
     let support: SupportAPI
     let quotes: QuotesAPI
+    let brands: BrandsAPI
+    let events: EventsAPI
+    let legalDocuments: LegalDocumentsAPI
+    let addresses: AddressesAPI
+    let reviews: ReviewsAPI
+    let productQuestions: ProductQuestionsAPI
+    let discovery: DiscoveryAPI
+    let accountSettings: AccountSettingsAPI
 
     init(configuration: APIConfiguration, session: URLSession = .shared) {
         let client = APIClient(configuration: configuration, session: session)
@@ -22,6 +30,14 @@ struct ShoppingMallAPI {
         orders = OrdersAPI(client: client)
         support = SupportAPI(client: client)
         quotes = QuotesAPI(client: client)
+        brands = BrandsAPI(client: client)
+        events = EventsAPI(client: client)
+        legalDocuments = LegalDocumentsAPI(client: client)
+        addresses = AddressesAPI(client: client)
+        reviews = ReviewsAPI(client: client)
+        productQuestions = ProductQuestionsAPI(client: client)
+        discovery = DiscoveryAPI(client: client)
+        accountSettings = AccountSettingsAPI(client: client)
     }
 
     init(infoDictionary: [String: Any]? = Bundle.main.infoDictionary) throws {
