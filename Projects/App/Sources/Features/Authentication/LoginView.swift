@@ -2,29 +2,78 @@ import SwiftUI
 
 @MainActor
 final class LoginViewModel: ObservableObject {
+    static let maximumFailures = 5
+
     @Published var email: String
     @Published var password: String
     @Published private(set) var shouldKeepSignedIn = false
     @Published private(set) var showsLoginError: Bool
+    @Published private(set) var failureCount = 0
+    @Published private(set) var isSubmitting = false
+    @Published var alertMessage: String?
 
-    init(initialErrorState: Bool = false) {
+    private let login: (String, String) async throws -> Void
+
+    init(
+        initialErrorState: Bool = false,
+        login: ((String, String) async throws -> Void)? = nil
+    ) {
         email = initialErrorState ? "example@email.com" : ""
         password = initialErrorState ? "password" : ""
         showsLoginError = initialErrorState
+        self.login = login ?? { email, password in
+            try await AppServices.shared.login(email: email, password: password)
+        }
     }
 
     var canSubmit: Bool {
         !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             && !password.isEmpty
+            && !isSubmitting
+    }
+
+    /// Server does not report remaining attempts, so the screen counts failed tries (Figma `(n/5회)`).
+    var errorText: String {
+        "이메일 또는 비밀번호가 일치하지 않습니다. (\(failureCount)/\(Self.maximumFailures)회)"
     }
 
     func toggleKeepSignedIn() {
         shouldKeepSignedIn.toggle()
     }
 
-    func submit() {
-        guard canSubmit else { return }
-        showsLoginError = true
+    /// Returns `true` when the server accepted the credentials and tokens were stored.
+    @discardableResult
+    func submit() async -> Bool {
+        guard canSubmit else { return false }
+        isSubmitting = true
+        defer { isSubmitting = false }
+        do {
+            try await login(email.trimmingCharacters(in: .whitespacesAndNewlines), password)
+            showsLoginError = false
+            failureCount = 0
+            return true
+        } catch {
+            handle(error)
+            return false
+        }
+    }
+
+    private func handle(_ error: Error) {
+        switch error {
+        case let APIClientError.httpFailure(_, payload) where payload?.code == "LOGIN_FAILED":
+            failureCount = min(failureCount + 1, Self.maximumFailures)
+            showsLoginError = true
+        case let APIClientError.httpFailure(_, payload) where payload?.code == "LOGIN_LOCKED":
+            alertMessage = payload?.message ?? "로그인 시도가 많아 잠시 제한되었습니다. 10분 후 다시 시도해 주세요."
+        case let APIClientError.httpFailure(_, payload) where payload?.code == "CAPTCHA_REQUIRED":
+            alertMessage = payload?.message ?? "여러 번 틀렸습니다. 로봇이 아님을 확인해 주세요."
+        case let APIClientError.httpFailure(_, payload):
+            alertMessage = payload?.message ?? "로그인하지 못했습니다. 잠시 후 다시 시도해 주세요."
+        case is URLError:
+            alertMessage = "네트워크 연결을 확인한 뒤 다시 시도해 주세요."
+        default:
+            alertMessage = "로그인하지 못했습니다. 잠시 후 다시 시도해 주세요."
+        }
     }
 }
 
@@ -37,18 +86,21 @@ struct LoginView: View {
     var onSignUpTap: () -> Void
     var onEmailLookupTap: () -> Void
     var onPasswordLookupTap: () -> Void
+    var onLoginSuccess: () -> Void
 
     init(
         onClose: @escaping () -> Void,
         onSignUpTap: @escaping () -> Void,
         onEmailLookupTap: @escaping () -> Void,
         onPasswordLookupTap: @escaping () -> Void,
+        onLoginSuccess: (() -> Void)? = nil,
         initialErrorState: Bool = false
     ) {
         self.onClose = onClose
         self.onSignUpTap = onSignUpTap
         self.onEmailLookupTap = onEmailLookupTap
         self.onPasswordLookupTap = onPasswordLookupTap
+        self.onLoginSuccess = onLoginSuccess ?? onClose
         _viewModel = StateObject(wrappedValue: LoginViewModel(initialErrorState: initialErrorState))
     }
 
@@ -62,12 +114,12 @@ struct LoginView: View {
         }
         .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .alert("안내", isPresented: Binding(
-            get: { presentedMessage != nil },
-            set: { if !$0 { presentedMessage = nil } }
+            get: { presentedMessage != nil || viewModel.alertMessage != nil },
+            set: { if !$0 { presentedMessage = nil; viewModel.alertMessage = nil } }
         )) {
-            Button("확인", role: .cancel) { presentedMessage = nil }
+            Button("확인", role: .cancel) { presentedMessage = nil; viewModel.alertMessage = nil }
         } message: {
-            Text(presentedMessage ?? "")
+            Text(viewModel.alertMessage ?? presentedMessage ?? "")
         }
     }
 
@@ -131,8 +183,12 @@ struct LoginView: View {
             }
 
             VStack(spacing: 16) {
-                EUMButton(title: "로그인", size: .large) {
-                    viewModel.submit()
+                EUMButton(title: viewModel.isSubmitting ? "로그인 중…" : "로그인", size: .large) {
+                    Task {
+                        if await viewModel.submit() {
+                            onLoginSuccess()
+                        }
+                    }
                 }
                 .disabled(!viewModel.canSubmit)
 
@@ -218,7 +274,7 @@ struct LoginView: View {
                         .scaledToFit()
                         .frame(width: 14, height: 14)
                         .accessibilityHidden(true)
-                    Text("이메일 또는 비밀번호가 일치하지 않습니다. (0/5회)")
+                    Text(viewModel.errorText)
                         .font(EUMTypography.captionRegular)
                         .fixedSize(horizontal: true, vertical: false)
                 }
