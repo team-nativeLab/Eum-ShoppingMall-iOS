@@ -98,7 +98,7 @@ struct AccountWithdrawalBlockedView: View {
                 .font(EUMTypography.captionRegular)
                 .foregroundStyle(EUMColor.text2SwiftUI)
             Text(value)
-                .font(.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
+                .font(.custom(EUMFontName.bold, size: 24, relativeTo: .title))
                 .tracking(-0.36)
                 .foregroundStyle(EUMColor.text1SwiftUI)
         }

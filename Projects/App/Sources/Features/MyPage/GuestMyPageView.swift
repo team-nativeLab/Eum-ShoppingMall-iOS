@@ -166,7 +166,7 @@ struct GuestMyPageView: View {
                             .scaledToFit()
                             .frame(width: 20, height: 20)
                         Text(item.title)
-                            .font(.custom("NotoSansKR-Regular", size: 16))
+                            .font(.custom(EUMFontName.regular, size: 16))
                             .tracking(-0.16)
                             .foregroundStyle(EUMColor.text1SwiftUI)
                             .frame(maxWidth: .infinity, alignment: .leading)

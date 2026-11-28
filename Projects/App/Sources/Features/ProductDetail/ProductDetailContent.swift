@@ -184,7 +184,7 @@ struct ProductDetailSummaryView: View {
                             }
                             if let price = product.price {
                                 Text(price)
-                                    .font(Font.custom("NotoSansKR-Bold", size: 24, relativeTo: .title))
+                                    .font(Font.custom(EUMFontName.bold, size: 24, relativeTo: .title))
                                     .tracking(-0.36)
                                     .foregroundStyle(detail.discountPercentage == nil ? EUMColor.text1SwiftUI : EUMColor.dangerSwiftUI)
                             }

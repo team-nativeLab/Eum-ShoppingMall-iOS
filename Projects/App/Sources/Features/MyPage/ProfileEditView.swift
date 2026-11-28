@@ -108,7 +108,7 @@ struct ProfileEditView: View {
                     .scaledToFit()
                     .frame(width: 20, height: 20)
                 Text("비밀번호 변경")
-                    .font(Font.custom("NotoSansKR-Regular", size: 16, relativeTo: .body))
+                    .font(Font.custom(EUMFontName.regular, size: 16, relativeTo: .body))
                     .tracking(-0.16)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                 Spacer()

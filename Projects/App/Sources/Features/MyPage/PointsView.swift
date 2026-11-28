@@ -62,7 +62,7 @@ struct PointsView: View {
                     .font(EUMTypography.captionRegular)
                     .foregroundStyle(EUMColor.text2SwiftUI)
                 Text(viewModel.availablePoints)
-                    .font(Font.custom("NotoSansKR-Bold", size: 26, relativeTo: .title))
+                    .font(Font.custom(EUMFontName.bold, size: 26, relativeTo: .title))
                     .tracking(-0.65)
                     .foregroundStyle(EUMColor.text1SwiftUI)
             }

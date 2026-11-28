@@ -163,7 +163,7 @@ struct SettingsView: View {
         SettingsGroup(title: "앱 정보") {
             HStack(spacing: 8) {
                 Text("앱 버전")
-                    .font(.custom("NotoSansKR-Regular", size: 16, relativeTo: .body))
+                    .font(.custom(EUMFontName.regular, size: 16, relativeTo: .body))
                     .tracking(-0.16)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                 Spacer(minLength: 0)

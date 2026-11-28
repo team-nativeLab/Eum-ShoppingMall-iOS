@@ -219,7 +219,7 @@ struct ReturnRequestView: View {
                 HStack {
                     Text("추가 비용").font(EUMTypography.labelLarge)
                     Spacer()
-                    Text("신청 후 안내").font(.custom("NotoSansKR-Bold", size: 24))
+                    Text("신청 후 안내").font(.custom(EUMFontName.bold, size: 24))
                 }
                 .foregroundStyle(EUMColor.text1SwiftUI)
                 detailRow("비용 안내", value: "주문 정보 확인 후 안내")
@@ -242,7 +242,7 @@ struct ReturnRequestView: View {
     private var exchangeOptionSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("교환 상품 옵션")
-                .font(.custom("NotoSansKR-Bold", size: 14))
+                .font(.custom(EUMFontName.bold, size: 14))
                 .foregroundStyle(Color(red: 26 / 255, green: 33 / 255, blue: 31 / 255))
             optionRow("변경할 옵션", value: "상품 옵션 확인 후 선택")
             optionRow("재고 상태", value: "선택한 주문의 상품 상태를 확인해 주세요.")
@@ -259,7 +259,7 @@ struct ReturnRequestView: View {
             Text(value).foregroundStyle(Color(red: 26 / 255, green: 33 / 255, blue: 31 / 255))
                 .multilineTextAlignment(.trailing)
         }
-        .font(.custom("NotoSansKR-Regular", size: 12))
+        .font(.custom(EUMFontName.regular, size: 12))
         .frame(maxWidth: .infinity, minHeight: 24, alignment: .topLeading)
         .background(.white)
     }

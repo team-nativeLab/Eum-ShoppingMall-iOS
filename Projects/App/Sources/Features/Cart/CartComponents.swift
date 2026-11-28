@@ -79,7 +79,7 @@ struct CartItemRow: View {
 
                 HStack {
                     Text(item.isQuoteProduct ? "가격 문의" : "₩00,000")
-                        .font(.custom("NotoSansKR-Bold", size: 16))
+                        .font(.custom(EUMFontName.bold, size: 16))
                         .tracking(-0.08)
                         .foregroundStyle(item.isSoldOut ? EUMColor.text3SwiftUI : EUMColor.text1SwiftUI)
                         .padding(.top, 8)

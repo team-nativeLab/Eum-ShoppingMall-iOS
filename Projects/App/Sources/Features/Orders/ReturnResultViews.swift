@@ -24,7 +24,7 @@ struct ReturnRequestCompletionView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             Button(action: onViewHistory) {
                 Text("신청 내역 보기")
-                    .font(.custom("NotoSansKR-Bold", size: 15))
+                    .font(.custom(EUMFontName.bold, size: 15))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity, minHeight: 52, alignment: .leading)
                     .padding(.horizontal, 12)
@@ -54,7 +54,7 @@ struct ReturnRequestCompletionView: View {
             .accessibilityLabel("신청 화면으로 돌아가기")
             .accessibilityIdentifier("return-request-completion-back")
             Text("신청이 접수됐어요")
-                .font(.custom("NotoSansKR-Bold", size: 18))
+                .font(.custom(EUMFontName.bold, size: 18))
                 .foregroundStyle(Color(red: 31 / 255, green: 33 / 255, blue: 38 / 255))
             Spacer(minLength: 0)
         }
@@ -66,7 +66,7 @@ struct ReturnRequestCompletionView: View {
     private func valueField(title: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
-                .font(.custom("NotoSansKR-Bold", size: 13))
+                .font(.custom(EUMFontName.bold, size: 13))
                 .foregroundStyle(Color(red: 31 / 255, green: 33 / 255, blue: 38 / 255))
             Text(value)
                 .font(EUMTypography.bodySmall)
@@ -103,7 +103,7 @@ struct ReturnWithdrawalCompletionView: View {
                         .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 8) {
                         Text("철회가 완료됐어요")
-                            .font(.custom("NotoSansKR-Bold", size: 18))
+                            .font(.custom(EUMFontName.bold, size: 18))
                             .tracking(-0.27)
                             .foregroundStyle(Color(red: 17 / 255, green: 17 / 255, blue: 17 / 255))
                         Text("\(item.applicationNumber) \(item.kind.rawValue) 신청을 철회했습니다. 신청 내역에서 상태를 확인할 수 있습니다.")
@@ -143,7 +143,7 @@ struct ReturnWithdrawalCompletionView: View {
     private var summaryCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("철회된 신청")
-                .font(.custom("NotoSansKR-Medium", size: 16))
+                .font(.custom(EUMFontName.medium, size: 16))
                 .tracking(-0.08)
                 .foregroundStyle(Color(red: 17 / 255, green: 17 / 255, blue: 17 / 255))
                 .padding(.bottom, 2)

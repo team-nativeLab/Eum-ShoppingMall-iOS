@@ -29,10 +29,10 @@ struct ReturnHubView: View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 6) {
                 Text(title)
-                    .font(.custom("NotoSansKR-Bold", size: 16))
+                    .font(.custom(EUMFontName.bold, size: 16))
                     .foregroundStyle(Color(red: 26 / 255, green: 33 / 255, blue: 31 / 255))
                 Text(message)
-                    .font(.custom("NotoSansKR-Regular", size: 13))
+                    .font(.custom(EUMFontName.regular, size: 13))
                     .foregroundStyle(Color(red: 89 / 255, green: 102 / 255, blue: 97 / 255))
             }
             .frame(maxWidth: .infinity, minHeight: 60, alignment: .leading)

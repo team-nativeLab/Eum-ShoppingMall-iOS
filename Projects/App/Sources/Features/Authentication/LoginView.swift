@@ -108,7 +108,7 @@ struct LoginView: View {
 
     private var brandSection: some View {
         Text("안전맛집")
-            .font(.custom("NotoSansKR-Bold", size: 26))
+            .font(.custom(EUMFontName.bold, size: 26))
             .tracking(-0.65)
             .frame(height: 34)
             .foregroundStyle(EUMColor.text1SwiftUI)

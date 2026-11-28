@@ -92,7 +92,7 @@ struct OrderHistoryOrderCard: View {
                     .foregroundStyle(EUMColor.text1SwiftUI)
                     .lineLimit(1)
                 Text(order.priceAndQuantity)
-                    .font(.custom("NotoSansKR-Bold", size: 16, relativeTo: .body))
+                    .font(.custom(EUMFontName.bold, size: 16, relativeTo: .body))
                     .tracking(-0.32)
                     .foregroundStyle(EUMColor.text1SwiftUI)
                 if let depositDeadline = order.depositDeadline {

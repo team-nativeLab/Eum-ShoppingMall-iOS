@@ -97,7 +97,7 @@ struct AccountWithdrawalNoticeView: View {
                 .font(EUMTypography.captionRegular)
                 .foregroundStyle(EUMColor.text2SwiftUI)
             Text(value)
-                .font(.custom("NotoSansKR-Bold", size: 24))
+                .font(.custom(EUMFontName.bold, size: 24))
                 .tracking(-0.36)
                 .foregroundStyle(EUMColor.text1SwiftUI)
         }
