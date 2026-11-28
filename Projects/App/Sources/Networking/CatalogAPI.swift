@@ -116,6 +116,10 @@ struct APIProductSummary: Decodable {
     let soldOut: Bool
     let optionRequired: Bool
     let defaultSkuId: Int64?
+    let rating: Double?
+    let reviewCount: Int?
+    let featured: Bool?
+    let todayDeal: Bool?
 }
 
 struct APIProductDetail: Decodable {
@@ -132,6 +136,17 @@ struct APIProductDetail: Decodable {
     let status: String?
     let soldOut: Bool
     let skus: [APICatalogSKU]?
+    let rating: Double?
+    let reviewCount: Int?
+    let modelName: String?
+    let summary: String?
+    let countryOfOrigin: String?
+    let shippingEstimate: String?
+    let descriptionFormat: String?
+    let images: [APIProductImage]?
+    let specifications: [APIProductSpecification]?
+    let featured: Bool?
+    let todayDeal: Bool?
 }
 
 struct APICatalogSKU: Decodable {
@@ -164,4 +179,14 @@ struct APICatalogFacet<Value: Decodable>: Decodable {
     let value: Value?
     let label: String?
     let count: Int64
+}
+
+struct APIProductImage: Decodable {
+    let url: String?
+    let alt: String?
+}
+
+struct APIProductSpecification: Decodable {
+    let label: String?
+    let value: String?
 }

@@ -27,6 +27,10 @@ struct StorefrontAPI {
 struct APIHomeResponse: Decodable {
     let banners: [APIHomeBanner]?
     let newProducts: [APIProductSummary]?
+    let heroSlides: [APIHomeHeroSlide]?
+    let promoBanners: [APIHomePromoBanner]?
+    let serviceBenefits: [APIHomeServiceBenefit]?
+    let featuredProducts: [APIProductSummary]?
 }
 
 struct APIHomeBanner: Decodable {
@@ -53,4 +57,37 @@ struct APIShippingPolicyResponse: Decodable {
     let shippingFee: Int64
     let freeShippingThreshold: Int64?
     let updatedAt: String?
+}
+
+struct APIHomeHeroSlide: Decodable {
+    let id: String
+    let eyebrow: String
+    let title: [String]
+    let description: String?
+    let tagline: [String]?
+    let imageUrl: String
+    let destination: String
+    let ctaLabel: String
+    let secondaryCta: APIHomeLink?
+}
+
+struct APIHomeLink: Decodable {
+    let label: String
+    let destination: String
+}
+
+struct APIHomePromoBanner: Decodable {
+    let id: String
+    let title: [String]
+    let description: String?
+    let imageUrl: String
+    let tone: String
+    let destination: String
+}
+
+struct APIHomeServiceBenefit: Decodable {
+    let id: String
+    let title: String
+    let description: String?
+    let visible: Bool?
 }

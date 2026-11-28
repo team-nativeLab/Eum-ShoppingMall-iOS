@@ -107,6 +107,7 @@ struct APIOrderCreateResponse: Decodable {
 }
 
 struct APIOrderSummary: Decodable {
+    let id: Int64?
     let orderNo: String?
     let status: String?
     let orderName: String?

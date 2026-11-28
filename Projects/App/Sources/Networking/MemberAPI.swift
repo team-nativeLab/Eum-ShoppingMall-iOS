@@ -60,6 +60,9 @@ struct APIMemberProfile: Decodable {
     let name: String?
     let phone: String?
     let role: String?
+    let hasPassword: Bool?
+    let joinedAt: String?
+    let marketingAgreed: Bool?
 }
 
 struct APIProfileUpdateRequest: Encodable {
