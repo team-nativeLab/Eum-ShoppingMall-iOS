@@ -237,7 +237,7 @@ struct LoginView: View {
             HStack(spacing: 10) {
                 // Figma HF/Checkbox: 16 pt, 4 pt radius, 1.5 pt line-control border on surface-2.
                 RoundedRectangle(cornerRadius: 4)
-                    .fill(viewModel.shouldKeepSignedIn ? EUMColor.text1SwiftUI : EUMColor.surfaceSwiftUI)
+                    .fill(viewModel.shouldKeepSignedIn ? EUMColor.text1SwiftUI : EUMColor.surfaceSecondarySwiftUI)
                     .frame(width: 16, height: 16)
                     .overlay {
                         RoundedRectangle(cornerRadius: 4)
