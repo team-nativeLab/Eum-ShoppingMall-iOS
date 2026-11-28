@@ -13,7 +13,7 @@ final class LoginParityUITests: XCTestCase {
         let app = XCUIApplication()
         // Keep the test off the live server: the debug build returns LOGIN_FAILED for any credentials.
         app.launchArguments = ["-ui-test-auth-failure", "LOGIN_FAILED"]
-        app.launch()
+        app.launchWithLocalData()
         let drawerButton = app.buttons["전체 메뉴"]
         XCTAssertTrue(drawerButton.waitForExistence(timeout: 10))
         drawerButton.tap()

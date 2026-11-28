@@ -4,7 +4,7 @@ final class EventNavigationUITests: XCTestCase {
     @MainActor
     func testFeaturedEventMatchesFigmaAndOpensProducts() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
 
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["전체 메뉴"].tap()

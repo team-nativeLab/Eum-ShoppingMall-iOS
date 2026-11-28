@@ -11,7 +11,7 @@ final class SettingsNavigationUITests: XCTestCase {
     @MainActor
     func testPointsShortcutOpensPointsAndReturnsToMyPage() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
 
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-마이"].tap()
@@ -27,7 +27,7 @@ final class SettingsNavigationUITests: XCTestCase {
     @MainActor
     func testOpenSourceLicensesOpenAndReturnToSettings() {
         let app = XCUIApplication()
-        app.launch()
+        app.launchWithLocalData()
 
         XCTAssertTrue(app.staticTexts["안전맛집"].waitForExistence(timeout: 10))
         app.buttons["home-tab-마이"].tap()
