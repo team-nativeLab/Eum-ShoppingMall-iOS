@@ -16,8 +16,15 @@ struct CheckoutPaymentView: View {
         self.init(
             onBack: onBack,
             onPaymentComplete: onPaymentComplete,
-            viewModel: CheckoutPaymentViewModel()
+            viewModel: Self.initialViewModel()
         )
+    }
+
+    private static func initialViewModel() -> CheckoutPaymentViewModel {
+        #if DEBUG
+        if let debugViewModel = DebugScreenLaunch.checkoutPaymentViewModel() { return debugViewModel }
+        #endif
+        return CheckoutPaymentViewModel()
     }
 
     init(

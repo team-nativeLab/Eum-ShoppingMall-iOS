@@ -29,8 +29,27 @@ enum DebugScreenLaunch {
         "A-26", "A-26b", "A-26r", "A-26d", "A-31", "A-32", "A-35", "A-36", "A-37", "A-38",
         "A-42", "A-40", "A-41", "A-43-company", "A-45", "A-54-events", "A-55", "A-57",
         "A-31d", "A-43-inquiry", "A-44", "A-50", "A-51", "A-51-withdrawn", "A-52", "A-53", "A-54-reject",
-        "reviews", "review-write"
+        "reviews", "review-write",
+        "A-09c", "A-09c-p", "A-09t", "A-09t-in"
     ]
+
+    /// Receipt states for A-09c, A-09c-p, A-09t and A-09t-in (Figma shows bank transfer selected).
+    @MainActor
+    static func checkoutPaymentViewModel() -> CheckoutPaymentViewModel? {
+        switch requestedCode() {
+        case "A-09c": CheckoutPaymentViewModel(initialReceiptOption: .cashReceipt, initialPaymentMethod: .bankTransfer)
+        case "A-09c-p":
+            CheckoutPaymentViewModel(
+                initialReceiptOption: .cashReceipt, initialPaymentMethod: .bankTransfer, initialCashReceiptPurpose: .expenseEvidence
+            )
+        case "A-09t": CheckoutPaymentViewModel(initialReceiptOption: .taxInvoice, initialPaymentMethod: .bankTransfer)
+        case "A-09t-in":
+            CheckoutPaymentViewModel(
+                initialReceiptOption: .taxInvoice, startsWithDirectTaxInvoiceInput: true, initialPaymentMethod: .bankTransfer
+            )
+        default: nil
+        }
+    }
 
     static func perform(
         _ actions: [DebugScreenAction],
@@ -71,7 +90,7 @@ enum DebugScreenLaunch {
         case "A-06": return [.tab(.search)]
         case "A-07": return [.tab(.cart)]
         case "A-08": return [.destination(.checkoutAddress)]
-        case "A-09": return [.destination(.checkoutPayment)]
+        case "A-09", "A-09c", "A-09c-p", "A-09t", "A-09t-in": return [.destination(.checkoutPayment)]
         case "A-10": return [.destination(.checkoutComplete(.creditCard))]
         case "A-10v": return [.destination(.checkoutComplete(.virtualAccount))]
         case "A-11": return [.tab(.account)]
