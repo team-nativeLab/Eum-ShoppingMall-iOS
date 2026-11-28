@@ -4,7 +4,7 @@
 
 ## 1. 작업 규칙 (반드시 지킬 것)
 - 사용자에게 보내는 답변은 **항상 한국어**로 쓴다.
-- 작업은 사용자의 **원래 작업 폴더**(`/Users/isiu/Desktop/Eum-ShoppingMall-iOS`)에서 한다(2026-11-29 사용자 지시로 변경). 시작 전에 `git fetch origin` 후 최신 `origin/dev`에서 새 브랜치를 만든다. 커밋되지 않은 기존 파일(`.codex/`, 이름 끝에 " 2"가 붙은 파일)은 지우거나 커밋하지 않는다. 같은 폴더를 여러 에이전트가 동시에 쓰지 않는다.
+- 작업은 사용자의 **원래 작업 폴더**(`/Users/isiu/Desktop/Eum-ShoppingMall-iOS`)에서 한다(2026-11-29 사용자 지시로 변경). 시작 전에 `git fetch origin` 후 최신 `origin/dev`에서 새 브랜치를 만든다. 커밋되지 않은 기존 파일(`.codex/`, 이름 끝에 " 2"가 붙은 파일)은 지우거나 커밋하지 않는다. 같은 폴더를 여러 에이전트가 동시에 쓰지 않는다. 이 폴더에는 이름 끝에 " 2"가 붙은 추적되지 않은 중복 파일이 여러 개 있으므로 **`git add -A`나 `git add <폴더>`를 쓰지 말고 바꾼 파일만 경로로 지정해 add한다**(중복 테스트 파일이 들어가면 CI 빌드가 깨진다).
 - **force push 금지.** 일반 push만 한다.
 - 흐름: 이슈 → 브랜치(`fix|feat|design|chore/#번호-설명`) → PR(base `dev`) → CI 통과 → 머지 전 최신 dev·head·mergeable 재확인 → 머지(`Scripts/parity/merge_pr.sh <PR>`).
 - 브랜치는 항상 최신 `origin/dev`를 merge로 반영한다(rebase·force push 하지 않음).
