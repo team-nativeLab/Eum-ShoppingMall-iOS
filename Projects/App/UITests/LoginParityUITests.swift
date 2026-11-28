@@ -11,6 +11,8 @@ final class LoginParityUITests: XCTestCase {
     @MainActor
     func testLoginShowsFormWithoutNoticeAndInlineErrorAfterSubmit() {
         let app = XCUIApplication()
+        // Keep the test off the live server: the debug build returns LOGIN_FAILED for any credentials.
+        app.launchArguments = ["-ui-test-auth-failure", "LOGIN_FAILED"]
         app.launch()
         let drawerButton = app.buttons["전체 메뉴"]
         XCTAssertTrue(drawerButton.waitForExistence(timeout: 10))
@@ -31,7 +33,7 @@ final class LoginParityUITests: XCTestCase {
         app.staticTexts["안전맛집"].tap()
         app.buttons["로그인"].firstMatch.tap()
 
-        XCTAssertTrue(app.staticTexts["이메일 또는 비밀번호가 일치하지 않습니다. (0/5회)"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["이메일 또는 비밀번호가 일치하지 않습니다. (1/5회)"].waitForExistence(timeout: 5))
         // iOS excludes secure-entry glyphs from screenshots, so verify masking through the value.
         XCTAssertEqual(passwordField.value as? String, String(repeating: "•", count: 8))
         attachScreenshot(of: app, named: "A13e-login-error")
