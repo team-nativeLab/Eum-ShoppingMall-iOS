@@ -107,31 +107,12 @@ struct LoginView: View {
     }
 
     private var brandSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("안전맛집")
-                .font(.custom("NotoSansKR-Bold", size: 26))
-                .tracking(-0.65)
-                .foregroundStyle(EUMColor.text1SwiftUI)
-                .accessibilityAddTraits(.isHeader)
-
-            HStack(alignment: .top, spacing: 8) {
-                Image("LoginInfo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 16, height: 16)
-                    .padding(.top, 2)
-                    .accessibilityHidden(true)
-                Text("로그인 후 이용할 수 있습니다.")
-                    .font(EUMTypography.bodySmall)
-                    .tracking(-0.07)
-                    .foregroundStyle(EUMColor.text2SwiftUI)
-            }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
-            .accessibilityElement(children: .combine)
-        }
+        Text("안전맛집")
+            .font(.custom("NotoSansKR-Bold", size: 26))
+            .tracking(-0.65)
+            .frame(height: 34)
+            .foregroundStyle(EUMColor.text1SwiftUI)
+            .accessibilityAddTraits(.isHeader)
     }
 
     private var loginForm: some View {
@@ -160,19 +141,51 @@ struct LoginView: View {
         }
     }
 
+    private var passwordBorderWidth: CGFloat {
+        viewModel.showsLoginError ? 1.5 : 1
+    }
+
+    private var passwordPrompt: Text {
+        Text("비밀번호를 입력해 주세요")
+            .tracking(-0.075)
+            .foregroundColor(EUMColor.text3SwiftUI)
+    }
+
+    private var passwordVisibilityToggle: some View {
+        Button {
+            isPasswordVisible.toggle()
+        } label: {
+            Group {
+                if isPasswordVisible {
+                    Image(systemName: "eye")
+                        .font(.system(size: 18, weight: .regular))
+                        .foregroundStyle(EUMColor.text3SwiftUI)
+                } else {
+                    Image("LoginPasswordHidden")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                }
+            }
+            .frame(width: 20, height: 20)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(isPasswordVisible ? "비밀번호 숨기기" : "비밀번호 표시")
+    }
+
     private var passwordField: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("비밀번호")
                 .font(EUMTypography.labelMedium)
-                .tracking(-0.5)
+                .tracking(-0.07)
                 .foregroundStyle(EUMColor.text1SwiftUI)
 
             HStack(spacing: 8) {
                 Group {
                     if isPasswordVisible {
-                        TextField("비밀번호를 입력해 주세요", text: $viewModel.password)
+                        TextField("", text: $viewModel.password, prompt: passwordPrompt)
                     } else {
-                        SecureField("비밀번호를 입력해 주세요", text: $viewModel.password)
+                        SecureField("", text: $viewModel.password, prompt: passwordPrompt)
                     }
                 }
                 .font(EUMTypography.bodyMedium)
@@ -181,37 +194,36 @@ struct LoginView: View {
                 .textContentType(.password)
                 .accessibilityLabel("비밀번호")
 
-                Button {
-                    isPasswordVisible.toggle()
-                } label: {
-                    Image(systemName: isPasswordVisible ? "eye" : "eye.slash")
-                        .font(.system(size: 18, weight: .regular))
-                        .foregroundStyle(EUMColor.text3SwiftUI)
-                        .frame(width: 24, height: 24)
+                // A-13 (empty) has no trailing icon; A-13e (filled) shows the visibility toggle.
+                if !viewModel.password.isEmpty {
+                    passwordVisibilityToggle
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel(isPasswordVisible ? "비밀번호 숨기기" : "비밀번호 표시")
             }
-            .padding(.horizontal, 14)
+            // Figma uses border-box sizing: content starts after the border plus 14 pt padding.
+            .padding(.horizontal, 14 + passwordBorderWidth)
             .frame(height: 48)
             .background(EUMColor.backgroundSwiftUI, in: RoundedRectangle(cornerRadius: 8))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
                     .strokeBorder(
                         viewModel.showsLoginError ? EUMColor.dangerSwiftUI : EUMColor.lineControlSwiftUI,
-                        lineWidth: viewModel.showsLoginError ? 1.5 : 1
+                        lineWidth: passwordBorderWidth
                     )
             }
 
             if viewModel.showsLoginError {
                 HStack(spacing: 4) {
-                    Image(systemName: "exclamationmark.circle")
-                        .font(.system(size: 14, weight: .medium))
+                    Image("LoginErrorAlert")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 14, height: 14)
                         .accessibilityHidden(true)
                     Text("이메일 또는 비밀번호가 일치하지 않습니다. (0/5회)")
-                        .font(EUMTypography.captionMedium)
+                        .font(EUMTypography.captionRegular)
                         .fixedSize(horizontal: true, vertical: false)
                 }
+                // HF/Caption line height is 16 pt; the font's natural line is taller.
+                .frame(height: 16)
                 .foregroundStyle(EUMColor.dangerSwiftUI)
                 .accessibilityElement(children: .combine)
             }
@@ -223,17 +235,21 @@ struct LoginView: View {
             viewModel.toggleKeepSignedIn()
         } label: {
             HStack(spacing: 10) {
-                RoundedRectangle(cornerRadius: EUMRadius.small)
-                    .fill(viewModel.shouldKeepSignedIn ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI)
-                    .frame(width: 20, height: 20)
+                // Figma HF/Checkbox: 16 pt, 4 pt radius, 1.5 pt line-control border on surface-2.
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(viewModel.shouldKeepSignedIn ? EUMColor.text1SwiftUI : EUMColor.surfaceSecondarySwiftUI)
+                    .frame(width: 16, height: 16)
                     .overlay {
-                        RoundedRectangle(cornerRadius: EUMRadius.small)
-                            .stroke(viewModel.shouldKeepSignedIn ? EUMColor.text1SwiftUI : EUMColor.text3SwiftUI, lineWidth: 1.5)
+                        RoundedRectangle(cornerRadius: 4)
+                            .strokeBorder(
+                                viewModel.shouldKeepSignedIn ? EUMColor.text1SwiftUI : EUMColor.lineControlSwiftUI,
+                                lineWidth: 1.5
+                            )
                     }
                     .overlay {
                         if viewModel.shouldKeepSignedIn {
                             Image(systemName: "checkmark")
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(.system(size: 10, weight: .semibold))
                                 .foregroundStyle(EUMColor.inverseSwiftUI)
                         }
                     }
@@ -244,6 +260,7 @@ struct LoginView: View {
                     .foregroundStyle(EUMColor.text1SwiftUI)
                 Spacer(minLength: 0)
             }
+            .frame(height: 44)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -291,7 +308,8 @@ struct LoginView: View {
             HStack(spacing: 12) {
                 Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
                 Text("또는")
-                    .font(EUMTypography.captionMedium)
+                    .font(EUMTypography.captionRegular)
+                    .frame(height: 16)
                     .foregroundStyle(EUMColor.text3SwiftUI)
                 Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
             }
