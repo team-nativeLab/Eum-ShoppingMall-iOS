@@ -151,7 +151,8 @@ final class ProductListNavigationUITests: XCTestCase {
         hiddenPriceProduct.tap()
 
         XCTAssertTrue(app.staticTexts["금액 미표시"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["평점 없음"].exists)
+        // Figma A-05h omits the rating row for products without reviews.
+        XCTAssertFalse(app.staticTexts["평점 없음"].exists)
         attachScreenshot(of: app, named: "A-05h-hidden-price-top")
 
         let addToCartButton = app.buttons["장바구니 담기"]
