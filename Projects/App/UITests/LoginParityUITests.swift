@@ -32,6 +32,9 @@ final class LoginParityUITests: XCTestCase {
         app.buttons["로그인"].firstMatch.tap()
 
         XCTAssertTrue(app.staticTexts["이메일 또는 비밀번호가 일치하지 않습니다. (0/5회)"].waitForExistence(timeout: 5))
+        // iOS excludes secure-entry glyphs from screenshots, so verify masking through the value.
+        XCTAssertEqual(passwordField.value as? String, String(repeating: "•", count: 8))
+        XCTAssertTrue(app.buttons["비밀번호 표시"].exists)
         attachScreenshot(of: app, named: "A13e-login-error")
     }
 }

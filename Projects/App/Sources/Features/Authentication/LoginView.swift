@@ -219,9 +219,11 @@ struct LoginView: View {
                         .frame(width: 14, height: 14)
                         .accessibilityHidden(true)
                     Text("이메일 또는 비밀번호가 일치하지 않습니다. (0/5회)")
-                        .font(EUMTypography.captionMedium)
+                        .font(EUMTypography.captionRegular)
                         .fixedSize(horizontal: true, vertical: false)
                 }
+                // HF/Caption line height is 16 pt; the font's natural line is taller.
+                .frame(height: 16)
                 .foregroundStyle(EUMColor.dangerSwiftUI)
                 .accessibilityElement(children: .combine)
             }
@@ -306,7 +308,8 @@ struct LoginView: View {
             HStack(spacing: 12) {
                 Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
                 Text("또는")
-                    .font(EUMTypography.captionMedium)
+                    .font(EUMTypography.captionRegular)
+                    .frame(height: 16)
                     .foregroundStyle(EUMColor.text3SwiftUI)
                 Rectangle().fill(EUMColor.lineSwiftUI).frame(height: 1)
             }
