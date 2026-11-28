@@ -67,7 +67,7 @@ struct ReturnRequestDetailView: View {
             }
             .scrollIndicators(.hidden)
             if item.status == .requested && item.kind == .returnRequest {
-                ReturnWithdrawalActionButton(title: "신청 철회", isDestructive: false, action: onWithdraw)
+                ReturnWithdrawalActionButton(title: "신청 철회", isPrimary: true, action: onWithdraw)
                     .padding(.horizontal, 20)
                     .padding(.top, 12)
                     .padding(.bottom, 16)
@@ -113,7 +113,7 @@ struct ReturnRequestDetailView: View {
             )
             withdrawnCard(
                 title: "신청 상품",
-                value: "\(item.productName) · \(item.priceAndQuantity)",
+                value: "\(item.productName) / \(item.priceAndQuantity)",
                 icon: "ReturnStatusProduct"
             )
             withdrawnCard(title: "신청 사유", value: item.requestReason, icon: "ReturnStatusReason")
@@ -240,16 +240,28 @@ struct ReturnWithdrawalConfirmationView: View {
                     .background(EUMColor.dangerBackgroundSwiftUI, in: RoundedRectangle(cornerRadius: 12))
                     .accessibilityIdentifier("return-withdrawal-warning")
 
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("철회할 신청")
-                            .font(EUMTypography.labelLarge)
-                            .foregroundStyle(EUMColor.text1SwiftUI)
-                        withdrawalRow("신청 유형", value: "\(item.kind.rawValue) 신청")
-                        withdrawalRow("신청 상품", value: "\(item.productName) · \(item.priceAndQuantity)")
-                        withdrawalRow("신청 번호", value: item.applicationNumber)
-                        withdrawalRow("신청일", value: item.requestDate)
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack(spacing: 8) {
+                            Image("ReturnCompletionPackage")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .accessibilityHidden(true)
+                            Text("철회할 신청")
+                                .font(EUMTypography.labelLarge)
+                                .foregroundStyle(EUMColor.text1SwiftUI)
+                        }
+                        ReturnSummaryRow(icon: "ReturnCompletionReceipt", title: "신청 종류", value: "\(item.kind.rawValue) 신청")
+                        ReturnSummaryRow(
+                            icon: "ReturnCompletionPackage",
+                            title: "신청 상품",
+                            value: "\(item.productName) / \(item.priceAndQuantity)"
+                        )
+                        ReturnSummaryRow(icon: "ReturnCompletionReceipt", title: "신청 번호", value: item.applicationNumber)
+                        ReturnSummaryRow(icon: "ReturnCompletionCalendar", title: "신청일", value: item.requestDate)
                     }
-                    .padding(16)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 14)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(.white, in: RoundedRectangle(cornerRadius: 12))
                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
@@ -258,9 +270,9 @@ struct ReturnWithdrawalConfirmationView: View {
             }
             Spacer(minLength: 0)
             HStack(spacing: 12) {
-                ReturnWithdrawalActionButton(title: "취소", isDestructive: false, action: onCancel)
+                ReturnWithdrawalActionButton(title: "취소", isPrimary: false, action: onCancel)
                     .accessibilityIdentifier("return-withdrawal-cancel-button")
-                ReturnWithdrawalActionButton(title: "철회하기", isDestructive: true, action: onConfirm)
+                ReturnWithdrawalActionButton(title: "철회하기", isPrimary: true, action: onConfirm)
                     .accessibilityIdentifier("return-withdrawal-confirm")
             }
             .padding(.horizontal, 20)
@@ -271,35 +283,26 @@ struct ReturnWithdrawalConfirmationView: View {
         .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
     }
 
-    private func withdrawalRow(_ title: String, value: String) -> some View {
-        HStack(alignment: .top) {
-            Text(title).foregroundStyle(EUMColor.text3SwiftUI)
-            Spacer(minLength: 12)
-            Text(value).foregroundStyle(EUMColor.text1SwiftUI).multilineTextAlignment(.trailing)
-        }
-        .font(EUMTypography.bodySmall)
-    }
-
 }
 
 private struct ReturnWithdrawalActionButton: View {
     let title: String
-    let isDestructive: Bool
+    let isPrimary: Bool
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             Text(title)
                 .font(EUMTypography.labelLarge)
-                .foregroundStyle(isDestructive ? EUMColor.inverseSwiftUI : EUMColor.text1SwiftUI)
+                .foregroundStyle(isPrimary ? EUMColor.inverseSwiftUI : EUMColor.text1SwiftUI)
                 .frame(maxWidth: .infinity)
                 .frame(height: 52)
                 .background(
-                    isDestructive ? EUMColor.dangerSwiftUI : EUMColor.backgroundSwiftUI,
+                    isPrimary ? EUMColor.text1SwiftUI : EUMColor.backgroundSwiftUI,
                     in: RoundedRectangle(cornerRadius: 10)
                 )
                 .overlay {
-                    if !isDestructive {
+                    if !isPrimary {
                         RoundedRectangle(cornerRadius: 10).stroke(EUMColor.lineStrongSwiftUI, lineWidth: 1)
                     }
                 }

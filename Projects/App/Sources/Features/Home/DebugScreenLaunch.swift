@@ -27,7 +27,9 @@ enum DebugScreenLaunch {
         "A-11", "A-11g", "A-12", "A-13", "A-15", "A-16", "A-17", "A-18", "A-19", "A-19c", "A-19l", "A-19s",
         "A-20", "A-21", "A-22", "A-22p", "A-23", "A-23e", "A-24", "A-24e", "A-25", "A-25d",
         "A-26", "A-26b", "A-26r", "A-26d", "A-31", "A-32", "A-35", "A-36", "A-37", "A-38",
-        "A-42", "A-40", "A-41", "A-43-company", "A-45", "A-54-events", "A-55", "A-57"
+        "A-42", "A-40", "A-41", "A-43-company", "A-45", "A-54-events", "A-55", "A-57",
+        "A-31d", "A-43-inquiry", "A-44", "A-50", "A-51", "A-51-withdrawn", "A-52", "A-53", "A-54-reject",
+        "reviews", "review-write"
     ]
 
     static func perform(
@@ -48,13 +50,17 @@ enum DebugScreenLaunch {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    @MainActor
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     static func actions(for code: String, content: HomeContent) -> [DebugScreenAction]? {
         let products = content.recommendedProducts + content.bestSellerProducts
         let pricedProduct = products.first { $0.price != nil } ?? products.first
         let hiddenPriceProduct = products.first { $0.price == nil }
         let order = OrderHistoryItem.samples.first { $0.status == .inTransit } ?? OrderHistoryItem.samples.first
         let deliveredOrder = OrderHistoryItem.samples.first { $0.status == .delivered } ?? order
+        let requestedReturn = ReturnHistoryItem.samples.first { $0.status == .requested } ?? ReturnHistoryItem.samples.first
+        let withdrawnReturn = ReturnHistoryItem.samples.first { $0.status == .withdrawn }
+        let rejectedReturn = ReturnHistoryItem.samples.first { $0.status == .rejected }
 
         switch code {
         case "A-02": return [.tab(.home)]
@@ -108,6 +114,17 @@ enum DebugScreenLaunch {
         case "A-54-events": return [.route(.events)]
         case "A-55": return EventItem.samples.first.map { [.route(.eventDetail($0))] }
         case "A-57": return [.route(.openSourceLicenses)]
+        case "A-31d": return ContactInquiryHistoryViewModel().inquiries.first.map { [.route(.accountCollection(.contactDetail($0)))] }
+        case "A-43-inquiry": return [.route(.inquiryCompose(.contact))]
+        case "A-44": return pricedProduct.map { [.route(.inquiryCompose(.product(name: $0.title)))] }
+        case "A-50": return requestedReturn.map { [.route(.returnRequestComplete($0))] }
+        case "A-51": return requestedReturn.map { [.route(.returnRequestDetail($0))] }
+        case "A-51-withdrawn": return withdrawnReturn.map { [.route(.returnRequestDetail($0))] }
+        case "A-52": return requestedReturn.map { [.route(.returnWithdrawalConfirmation($0))] }
+        case "A-53": return requestedReturn.map { [.route(.returnWithdrawalComplete($0))] }
+        case "A-54-reject": return rejectedReturn.map { [.route(.returnRejectionReason($0))] }
+        case "reviews": return pricedProduct.map { [.route(.productReviews($0))] }
+        case "review-write": return pricedProduct.map { [.route(.productReviewRegistration($0))] }
         default: return nil
         }
     }

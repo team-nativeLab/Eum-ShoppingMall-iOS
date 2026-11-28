@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import PhotosUI
 import SwiftUI
+import UIKit
 import _PhotosUI_SwiftUI
 
 enum InquiryComposeContext: Equatable {
@@ -123,13 +124,14 @@ struct InquiryComposeView: View {
                     } else if case let .product(name) = viewModel.context {
                         labeledField(title: "상품") {
                             Text(name)
+                                .foregroundStyle(EUMColor.text1SwiftUI)
+                                .lineLimit(1)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
 
-                    if viewModel.context == .contact {
-                        EUMTextField(title: "제목", placeholder: "문의 제목을 입력해 주세요", text: $viewModel.title)
-                    }
+                    // Figma A-43 and A-44 both include the title field (optional for product inquiries).
+                    EUMTextField(title: "제목", placeholder: "문의 제목을 입력해 주세요", text: $viewModel.title)
                     contentField
 
                     if case .contact = viewModel.context {
@@ -144,6 +146,16 @@ struct InquiryComposeView: View {
             }
             .scrollIndicators(.hidden)
             .scrollDismissesKeyboard(.interactively)
+            .toolbar {
+                // Lets people (and UI tests on small devices) dismiss the keyboard to reach "문의 등록".
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("완료") {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
+                    .accessibilityIdentifier("inquiry-keyboard-done")
+                }
+            }
         }
         .background(EUMColor.backgroundSubtleSwiftUI.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) {
