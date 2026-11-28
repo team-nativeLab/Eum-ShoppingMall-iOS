@@ -2,26 +2,26 @@ import SwiftUI
 import UIKit
 
 enum EUMColor {
-    static let text1 = UIColor(red: 17 / 255, green: 17 / 255, blue: 17 / 255, alpha: 1)
-    static let text2 = UIColor(red: 85 / 255, green: 85 / 255, blue: 85 / 255, alpha: 1)
-    static let text3 = UIColor(red: 112 / 255, green: 112 / 255, blue: 112 / 255, alpha: 1)
+    static let text1 = UIColor(red: 23 / 255, green: 23 / 255, blue: 23 / 255, alpha: 1)
+    static let text2 = UIColor(red: 74 / 255, green: 74 / 255, blue: 74 / 255, alpha: 1)
+    static let text3 = UIColor(red: 102 / 255, green: 102 / 255, blue: 102 / 255, alpha: 1)
     static let background = UIColor.white
     static let backgroundSubtle = UIColor(red: 250 / 255, green: 250 / 255, blue: 250 / 255, alpha: 1)
     static let surface = UIColor(red: 245 / 255, green: 245 / 255, blue: 245 / 255, alpha: 1)
-    static let surfaceSecondary = UIColor(red: 235 / 255, green: 235 / 255, blue: 235 / 255, alpha: 1)
+    static let surfaceSecondary = UIColor(red: 242 / 255, green: 242 / 255, blue: 242 / 255, alpha: 1)
     static let imagePlaceholderTop = UIColor(red: 242 / 255, green: 242 / 255, blue: 242 / 255, alpha: 1)
     static let imagePlaceholderBottom = UIColor(red: 232 / 255, green: 232 / 255, blue: 232 / 255, alpha: 1)
     static let imagePlaceholderSecondaryTop = UIColor(red: 236 / 255, green: 236 / 255, blue: 236 / 255, alpha: 1)
     static let imagePlaceholderSecondaryBottom = UIColor(red: 220 / 255, green: 220 / 255, blue: 220 / 255, alpha: 1)
-    static let line = UIColor(red: 235 / 255, green: 235 / 255, blue: 235 / 255, alpha: 1)
-    static let lineStrong = UIColor(red: 212 / 255, green: 212 / 255, blue: 212 / 255, alpha: 1)
-    static let lineControl = UIColor(red: 148 / 255, green: 148 / 255, blue: 148 / 255, alpha: 1)
+    static let line = UIColor(red: 229 / 255, green: 229 / 255, blue: 229 / 255, alpha: 1)
+    static let lineStrong = UIColor(red: 140 / 255, green: 140 / 255, blue: 140 / 255, alpha: 1)
+    static let lineControl = UIColor(red: 119 / 255, green: 119 / 255, blue: 119 / 255, alpha: 1)
     static let inverse = UIColor.white
     static let inverseSecondary = UIColor.white.withAlphaComponent(0.72)
     static let pressedDark = UIColor(red: 51 / 255, green: 51 / 255, blue: 51 / 255, alpha: 1)
     static let toast = UIColor(red: 34 / 255, green: 34 / 255, blue: 34 / 255, alpha: 1)
-    static let surfaceDisabled = UIColor(red: 235 / 255, green: 235 / 255, blue: 235 / 255, alpha: 1)
-    static let textDisabled = UIColor(red: 179 / 255, green: 179 / 255, blue: 179 / 255, alpha: 1)
+    static let surfaceDisabled = UIColor(red: 242 / 255, green: 242 / 255, blue: 242 / 255, alpha: 1)
+    static let textDisabled = UIColor(red: 112 / 255, green: 112 / 255, blue: 112 / 255, alpha: 1)
     static let danger = UIColor(red: 197 / 255, green: 34 / 255, blue: 31 / 255, alpha: 1)
     static let dangerBackground = UIColor(red: 255 / 255, green: 233 / 255, blue: 233 / 255, alpha: 1)
 
