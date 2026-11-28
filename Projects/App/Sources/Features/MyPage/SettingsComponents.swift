@@ -174,7 +174,7 @@ struct SettingsDeviceNotificationNotice: View {
                 )
                 .font(EUMTypography.bodySmall)
                 .tracking(-0.07)
-                .foregroundColor(EUMColor.text2SwiftUI)
+                .foregroundStyle(EUMColor.dangerSwiftUI)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -184,7 +184,7 @@ struct SettingsDeviceNotificationNotice: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(EUMColor.surfaceSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
+        .background(EUMColor.dangerBackgroundSwiftUI, in: RoundedRectangle(cornerRadius: EUMRadius.large))
     }
 }
 
