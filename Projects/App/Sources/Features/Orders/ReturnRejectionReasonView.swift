@@ -25,7 +25,7 @@ struct ReturnRejectionReasonView: View {
                         .foregroundStyle(EUMColor.text3SwiftUI)
                         .frame(height: 58, alignment: .topLeading)
                     card("진행 상태", value: "반려 · 신청이 처리되지 않았습니다.", icon: "RejectionStatus")
-                    card("신청 상품", value: "\(item.productName) · \(item.priceAndQuantity)", icon: "RejectionProduct")
+                    card("신청 상품", value: "\(item.productName) / \(item.priceAndQuantity)", icon: "RejectionProduct")
                     card("반려 사유", value: item.rejectionReason ?? "반려 사유는 신청 내역에서 확인해 주세요.", icon: "RejectionReason")
                     card("신청 번호", value: "신청 내역에서 확인", icon: "RejectionNumber")
                 }

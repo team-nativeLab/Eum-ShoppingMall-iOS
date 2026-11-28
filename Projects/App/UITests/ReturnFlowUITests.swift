@@ -85,9 +85,10 @@ final class ReturnFlowUITests: XCTestCase {
         app.buttons["return-history-detail-return-requested"].tap()
         XCTAssertTrue(app.buttons["신청 철회"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["신청 접수"].exists)
-        XCTAssertTrue(app.staticTexts["경량 안전모 · 블랙"].exists)
-        XCTAssertTrue(app.staticTexts["신청 사유"].exists)
-        XCTAssertTrue(app.staticTexts["회수 주소"].exists)
+        // A-51 rows combine label and value for VoiceOver, so match by contained text.
+        XCTAssertTrue(hasText("경량 안전모 · 블랙 / 1개", in: app))
+        XCTAssertTrue(hasText("신청 사유", in: app))
+        XCTAssertTrue(hasText("회수 주소", in: app))
         capture(app, name: "A51-request-detail")
         app.buttons["신청 철회"].tap()
         XCTAssertTrue(app.buttons["철회하기"].waitForExistence(timeout: 5))
@@ -146,4 +147,10 @@ final class ReturnFlowUITests: XCTestCase {
         attachment.lifetime = .keepAlways
         add(attachment)
     }
+
+    @MainActor
+    private func hasText(_ text: String, in app: XCUIApplication) -> Bool {
+        app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", text)).firstMatch.exists
+    }
+
 }

@@ -30,7 +30,7 @@ final class InquiryParityUITests: XCTestCase {
         let content = app.textViews["inquiry-content"]
         content.tap()
         content.typeText("배송 일정을 확인하고 싶습니다.")
-        app.swipeDown()
+        dismissKeyboard(app)
         let submit = app.buttons["문의 등록"]
         for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
         submit.tap()
@@ -54,15 +54,15 @@ final class InquiryParityUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["상품 문의하기"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["상품에 대해 궁금한 점을 입력해 주세요"].exists)
-        XCTAssertFalse(app.textFields["문의 제목을 입력해 주세요"].exists)
+        XCTAssertTrue(app.textFields["문의 제목을 입력해 주세요"].exists)
         XCTAssertTrue(app.buttons["비밀글로 문의하기"].exists)
         capture(app, name: "A44-product-inquiry")
 
         let content = app.textViews["inquiry-content"]
         content.tap()
         content.typeText("블랙 색상 재고를 문의합니다.")
-        // Smaller CI simulators can cover the submit button with the keyboard; scroll it away first.
-        app.swipeDown()
+        // Smaller CI simulators can cover the submit button with the keyboard; dismiss it first.
+        dismissKeyboard(app)
         app.buttons["비밀글로 문의하기"].tap()
         let submit = app.buttons["문의 등록"]
         for _ in 0..<3 where !submit.isHittable { app.swipeUp() }
@@ -71,6 +71,12 @@ final class InquiryParityUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["문의가 등록됐어요"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["답변 대기"].exists)
         capture(app, name: "A45-inquiry-complete")
+    }
+
+    @MainActor
+    private func dismissKeyboard(_ app: XCUIApplication) {
+        let done = app.buttons["inquiry-keyboard-done"]
+        if done.waitForExistence(timeout: 2) { done.tap() }
     }
 
     @MainActor

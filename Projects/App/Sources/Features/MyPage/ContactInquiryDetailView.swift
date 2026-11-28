@@ -60,10 +60,13 @@ struct ContactInquiryDetailView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(viewModel.inquiry.status.rawValue)
                 .font(EUMTypography.labelExtraSmall)
-                .foregroundStyle(EUMColor.inverseSwiftUI)
+                .foregroundStyle(viewModel.inquiry.status == .answered ? EUMColor.successSwiftUI : EUMColor.warningSwiftUI)
                 .padding(.horizontal, 6)
                 .frame(height: 20)
-                .background(EUMColor.text1SwiftUI, in: RoundedRectangle(cornerRadius: 4))
+                .background(
+                    viewModel.inquiry.status == .answered ? EUMColor.successTintSwiftUI : EUMColor.warningTintSwiftUI,
+                    in: RoundedRectangle(cornerRadius: 4)
+                )
             Text(viewModel.inquiry.title)
                 .font(EUMTypography.heading3)
                 .tracking(-0.27)

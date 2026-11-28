@@ -147,10 +147,10 @@ struct ReturnWithdrawalCompletionView: View {
                 .tracking(-0.08)
                 .foregroundStyle(Color(red: 17 / 255, green: 17 / 255, blue: 17 / 255))
                 .padding(.bottom, 2)
-            summaryRow(icon: "ReturnCompletionReceipt", title: "신청 종류", value: "\(item.kind.rawValue) 신청")
-            summaryRow(icon: "ReturnCompletionPackage", title: "신청 상품", value: "\(item.productName) · \(item.priceAndQuantity)")
-            summaryRow(icon: "ReturnCompletionReceipt", title: "신청 번호", value: item.applicationNumber)
-            summaryRow(icon: "ReturnCompletionCalendar", title: "신청일", value: item.requestDate)
+            ReturnSummaryRow(icon: "ReturnCompletionReceipt", title: "신청 종류", value: "\(item.kind.rawValue) 신청")
+            ReturnSummaryRow(icon: "ReturnCompletionPackage", title: "신청 상품", value: "\(item.productName) / \(item.priceAndQuantity)")
+            ReturnSummaryRow(icon: "ReturnCompletionReceipt", title: "신청 번호", value: item.applicationNumber)
+            ReturnSummaryRow(icon: "ReturnCompletionCalendar", title: "신청일", value: item.requestDate)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
@@ -158,8 +158,15 @@ struct ReturnWithdrawalCompletionView: View {
         .background(.white, in: RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(EUMColor.lineSwiftUI, lineWidth: 1))
     }
+}
 
-    private func summaryRow(icon: String, title: String, value: String) -> some View {
+/// Figma A-52/A-53 summary row: 20 pt icon, 72 pt label (#555), body value (#111).
+struct ReturnSummaryRow: View {
+    let icon: String
+    let title: String
+    let value: String
+
+    var body: some View {
         HStack(spacing: 8) {
             Image(icon)
                 .resizable()

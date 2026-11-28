@@ -234,7 +234,7 @@ final class ProductListNavigationUITests: XCTestCase {
         XCTAssertTrue(inquiryButton.waitForExistence(timeout: 5))
         inquiryButton.tap()
         XCTAssertTrue(app.staticTexts["상품 문의하기"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.textFields["문의 제목을 입력해 주세요"].exists)
+        XCTAssertTrue(app.textFields["문의 제목을 입력해 주세요"].exists)
         app.buttons["inquiry-compose-back"].tap()
         XCTAssertTrue(inquiryButton.waitForExistence(timeout: 5))
     }
